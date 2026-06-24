@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0C0C0F">
+<title>Covenant</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS ─────────────────────────────────────────── */
+:root {
+  --gold:       #C9A84C;
+  --gold2:      #E8C97A;
+  --gold-glow:  rgba(201,168,76,0.18);
+  --gold-dim:   rgba(201,168,76,0.10);
+  --bg:         #0C0C0F;
+  --bg2:        #131318;
+  --bg3:        #1A1A22;
+  --bg4:        #212130;
+  --line:       #2A2A38;
+  --line2:      #353548;
+  --text:       #EDEAF2;
+  --text2:      #9896A8;
+  --text3:      #5A5870;
+  --spirit:     #7B6EBE;
+  --spirit-dim: rgba(123,110,190,0.15);
+  --body-c:     #3D9E6B;
+  --body-dim:   rgba(61,158,107,0.15);
+  --work:       #4A8FC8;
+  --work-dim:   rgba(74,143,200,0.15);
+  --money:      #C9A84C;
+  --money-dim:  rgba(201,168,76,0.12);
+  --danger:     #C85A5A;
+  --safe:  env(safe-area-inset-bottom, 0px);
+}
+
+/* ─── RESET ──────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none;}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  font-size:15px;
+  line-height:1.5;
+}
+
+/* ─── LAYOUT ─────────────────────────────────────────── */
+#app{
+  display:flex;
+  flex-direction:column;
+  height:100dvh;
+  height:100vh; /* fallback */
+  max-width:480px;
+  margin:0 auto;
+  position:relative;
+  background:var(--bg);
+}
+
+/* ─── HEADER ─────────────────────────────────────────── */
+.top-bar{
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 20px;
+  padding-top:calc(14px + env(safe-area-inset-top, 0px));
+  background:var(--bg);
+  border-bottom:1px solid var(--line);
+  z-index:10;
+}
+.top-bar-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;
+  font-weight:600;
+  color:var(--text);
+  letter-spacing:-0.3px;
+}
+.top-bar-sub{
+  font-family:'Space Mono',monospace;
+  font-size:9px;
+  letter-spacing:2px;
+  color:var(--gold);
+  text-transform:uppercase;
+  margin-top:1px;
+}
+.top-bar-date{
+  font-size:12px;
+  color:var(--text3);
+  text-align:right;
+}
+.top-bar-score-pill{
+  background:var(--gold-dim);
+  border:1px solid rgba(201,168,76,0.3);
+  border-radius:20px;
+  padding:4px 12px;
+  font-family:'Space Mono',monospace;
+  font-size:11px;
+  color:var(--gold);
+  font-weight:700;
+}
+
+/* ─── SCREENS ────────────────────────────────────────── */
+.screens{flex:1;overflow:hidden;position:relative;}
+.screen{
+  position:absolute;inset:0;
+  overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  padding-bottom:80px;
+  display:none;
+  opacity:0;
+  transition:opacity 0.18s ease;
+}
+.screen.active{display:block;opacity:1;}
+
+/* ─── BOTTOM NAV ─────────────────────────────────────── */
+.bottom-nav{
+  flex-shrink:0;
+  display:flex;
+  background:var(--bg2);
+  border-top:1px solid var(--line);
+  padding-bottom:calc(8px + var(--safe));
+}
+.nav-btn{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:10px 0 6px;
+  gap:3px;
+  border:none;
+  background:none;
+  color:var(--text3);
+  font-size:9px;
+  letter-spacing:0.8px;
+  text-transform:uppercase;
+  font-family:'Space Mono',monospace;
+  cursor:pointer;
+  transition:color 0.15s;
+  -webkit-user-select:none;user-select:none;
+}
+.nav-btn svg{width:20px;height:20px;stroke-width:1.6;fill:none;stroke:currentColor;transition:stroke 0.15s;}
+.nav-btn.active{color:var(--gold);}
+.nav-btn.active svg{stroke:var(--gold);}
+
+/* ─── SCROLLABLE CONTENT ─────────────────────────────── */
+.pad{padding:20px;}
+.pad-x{padding-left:20px;padding-right:20px;}
+
+/* ─── SECTION HEADER ─────────────────────────────────── */
+.sec-head{margin-bottom:20px;}
+.sec-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:30px;font-weight:600;
+  color:var(--text);letter-spacing:-0.5px;
+  line-height:1.1;
+}
+.sec-desc{font-size:13px;color:var(--text2);margin-top:6px;line-height:1.6;}
+
+/* ─── CARDS ──────────────────────────────────────────── */
+.card{
+  background:var(--bg3);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:18px;
+  margin-bottom:14px;
+}
+.card-label{
+  font-family:'Space Mono',monospace;
+  font-size:9px;letter-spacing:2.5px;
+  color:var(--text3);text-transform:uppercase;
+  margin-bottom:8px;
+}
+.card-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:600;
+  color:var(--text);margin-bottom:4px;
+}
+
+/* ─── DASHBOARD COVENANT RING ────────────────────────── */
+.dash-ring-wrap{
+  display:flex;flex-direction:column;align-items:center;
+  padding:28px 20px 20px;
+}
+.ring-container{position:relative;width:180px;height:180px;}
+.ring-svg{width:180px;height:180px;transform:rotate(-90deg);}
+.ring-bg{fill:none;stroke:var(--line);stroke-width:10;}
+.ring-fill{
+  fill:none;stroke:var(--gold);stroke-width:10;
+  stroke-linecap:round;
+  stroke-dasharray:502;
+  stroke-dashoffset:502;
+  transition:stroke-dashoffset 0.8s cubic-bezier(0.4,0,0.2,1);
+  filter:drop-shadow(0 0 8px rgba(201,168,76,0.5));
+}
+.ring-center{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+}
+.ring-score{
+  font-family:'Cormorant Garamond',serif;
+  font-size:52px;font-weight:700;
+  color:var(--gold);line-height:1;
+}
+.ring-label{
+  font-family:'Space Mono',monospace;
+  font-size:9px;letter-spacing:2px;
+  color:var(--text3);margin-top:4px;
+}
+.ring-grade{
+  font-size:12px;color:var(--text2);
+  margin-top:3px;font-weight:500;
+}
+.dash-streak-row{
+  display:flex;gap:10px;
+  margin-top:16px;width:100%;
+}
+.streak-pill{
+  flex:1;background:var(--bg3);
+  border:1px solid var(--line);
+  border-radius:10px;padding:12px 8px;
+  text-align:center;
+}
+.streak-val{
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px;font-weight:700;
+  line-height:1;
+}
+.streak-lbl{font-size:10px;color:var(--text3);margin-top:3px;}
+
+/* ─── PILLAR BARS ────────────────────────────────────── */
+.pillar-bars{padding:0 20px 20px;}
+.pillar-row{margin-bottom:14px;}
+.pillar-row-head{
+  display:flex;justify-content:space-between;
+  align-items:center;margin-bottom:6px;
+}
+.pillar-name{
+  font-size:12px;font-weight:500;
+  display:flex;align-items:center;gap:6px;
+}
+.pillar-dot{
+  width:7px;height:7px;border-radius:50%;
+  flex-shrink:0;
+}
+.pillar-pct{
+  font-family:'Space Mono',monospace;
+  font-size:10px;color:var(--text3);
+}
+.bar-track{
+  height:5px;background:var(--bg4);
+  border-radius:3px;overflow:hidden;
+}
+.bar-fill{
+  height:100%;border-radius:3px;
+  transition:width 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ─── HABITS ─────────────────────────────────────────── */
+.habit-group{margin-bottom:8px;}
+.habit-group-header{
+  display:flex;align-items:center;gap:8px;
+  padding:14px 20px 8px;
+}
+.habit-group-icon{
+  width:28px;height:28px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0;
+}
+.habit-group-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;font-weight:600;
+}
+.habit-group-score{
+  margin-left:auto;
+  font-family:'Space Mono',monospace;
+  font-size:10px;color:var(--text3);
+}
+
+.habit-item{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:14px 20px;
+  border-top:1px solid var(--line);
+  cursor:pointer;
+  transition:background 0.1s;
+  -webkit-user-select:none;user-select:none;
+}
+.habit-item:active{background:var(--bg3);}
+
+.habit-check{
+  width:24px;height:24px;border-radius:6px;
+  border:2px solid var(--line2);
+  flex-shrink:0;margin-top:1px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.15s;
+}
+.habit-check.done{
+  border-color:transparent;
+}
+.habit-check svg{
+  width:13px;height:13px;
+  fill:none;stroke:white;stroke-width:2.5;
+  stroke-linecap:round;stroke-linejoin:round;
+  opacity:0;transform:scale(0.6);
+  transition:all 0.15s;
+}
+.habit-check.done svg{opacity:1;transform:scale(1);}
+
+.habit-text{flex:1;}
+.habit-name{font-size:14px;font-weight:500;color:var(--text);}
+.habit-desc{font-size:12px;color:var(--text3);margin-top:2px;line-height:1.4;}
+.habit-pts{
+  font-family:'Space Mono',monospace;
+  font-size:9px;color:var(--text3);
+  margin-top:1px;
+}
+
+/* ─── JOURNAL ────────────────────────────────────────── */
+.journal-state-prompt{padding:20px;}
+.prompt-card{
+  background:var(--bg3);
+  border:1px solid var(--line);
+  border-left:3px solid var(--gold);
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:18px;
+}
+.prompt-eyebrow{
+  font-family:'Space Mono',monospace;
+  font-size:9px;letter-spacing:2px;color:var(--gold);
+  text-transform:uppercase;margin-bottom:8px;
+  display:flex;align-items:center;gap:8px;
+}
+.prompt-eyebrow-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--gold);animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.prompt-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:19px;font-style:italic;
+  color:var(--text);line-height:1.5;
+}
+.prompt-loading{
+  font-size:13px;color:var(--text3);
+  display:flex;align-items:center;gap:8px;
+}
+.spinner{
+  width:14px;height:14px;border-radius:50%;
+  border:2px solid var(--line);
+  border-top-color:var(--gold);
+  animation:spin 0.7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.word-counter-bar{
+  display:flex;align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+.word-count-num{
+  font-family:'Space Mono',monospace;
+  font-size:12px;
+}
+.word-count-needed{font-size:12px;color:var(--text3);}
+
+.wc-track{
+  height:3px;background:var(--bg4);
+  border-radius:2px;overflow:hidden;
+  margin-bottom:14px;
+}
+.wc-fill{
+  height:100%;background:var(--gold);
+  border-radius:2px;transition:width 0.3s;
+  max-width:100%;
+}
+.wc-fill.done-fill{background:var(--body-c);}
+
+.journal-textarea{
+  width:100%;
+  min-height:340px;
+  background:var(--bg3);
+  border:1px solid var(--line);
+  border-radius:12px;
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  font-size:15px;
+  line-height:1.7;
+  padding:18px;
+  resize:none;
+  outline:none;
+  transition:border-color 0.15s;
+  -webkit-user-select:text;user-select:text;
+}
+.journal-textarea:focus{border-color:var(--gold);}
+.journal-textarea::placeholder{color:var(--text3);}
+
+.submit-btn{
+  width:100%;padding:16px;
+  background:var(--gold);
+  color:#0C0C0F;
+  font-family:'Space Mono',monospace;
+  font-size:12px;letter-spacing:2px;
+  font-weight:700;text-transform:uppercase;
+  border:none;border-radius:10px;
+  cursor:pointer;margin-top:12px;
+  transition:opacity 0.15s, transform 0.1s;
+}
+.submit-btn:disabled{opacity:0.35;cursor:not-allowed;}
+.submit-btn:not(:disabled):active{transform:scale(0.98);}
+
+.new-entry-btn{
+  width:100%;padding:14px;
+  background:transparent;
+  color:var(--gold);
+  border:1px solid rgba(201,168,76,0.4);
+  border-radius:10px;
+  font-family:'Space Mono',monospace;
+  font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;cursor:pointer;
+  margin-bottom:16px;
+  transition:background 0.15s;
+}
+.new-entry-btn:active{background:var(--gold-dim);}
+
+.entry-card{
+  background:var(--bg3);border:1px solid var(--line);
+  border-radius:12px;padding:18px;margin-bottom:12px;
+}
+.entry-head{
+  display:flex;justify-content:space-between;
+  align-items:flex-start;margin-bottom:10px;
+}
+.entry-date{
+  font-family:'Space Mono',monospace;
+  font-size:10px;color:var(--gold);
+}
+.entry-wc{
+  font-family:'Space Mono',monospace;
+  font-size:9px;color:var(--text3);
+}
+.entry-prompt-preview{
+  font-family:'Cormorant Garamond',serif;
+  font-size:14px;font-style:italic;
+  color:var(--text2);margin-bottom:10px;
+  line-height:1.4;
+}
+.entry-text-preview{
+  font-size:13px;color:var(--text3);
+  line-height:1.6;
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.entry-expand-btn{
+  font-size:12px;color:var(--gold);
+  background:none;border:none;
+  cursor:pointer;margin-top:8px;
+  font-family:'Space Mono',monospace;
+  letter-spacing:1px;
+  padding:0;
+}
+
+/* ─── PROGRESS ───────────────────────────────────────── */
+.heatmap-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:5px;
+  padding:0 20px 20px;
+}
+.hm-cell{
+  aspect-ratio:1;
+  border-radius:4px;
+  background:var(--bg4);
+  position:relative;
+  cursor:default;
+}
+.hm-cell.level-1{background:rgba(201,168,76,0.2);}
+.hm-cell.level-2{background:rgba(201,168,76,0.45);}
+.hm-cell.level-3{background:rgba(201,168,76,0.7);}
+.hm-cell.level-4{background:var(--gold);}
+.hm-cell.today-cell{outline:2px solid var(--gold);outline-offset:1px;}
+
+.hm-days-row{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  gap:5px;padding:0 20px 8px;
+}
+.hm-day-label{
+  font-family:'Space Mono',monospace;
+  font-size:8px;letter-spacing:0.5px;
+  color:var(--text3);text-align:center;
+}
+
+.stats-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;padding:0 20px 20px;
+}
+.stat-card{
+  background:var(--bg3);border:1px solid var(--line);
+  border-radius:10px;padding:16px;
+}
+.stat-val{
+  font-family:'Cormorant Garamond',serif;
+  font-size:34px;font-weight:700;
+  line-height:1;margin-bottom:4px;
+}
+.stat-lbl{font-size:11px;color:var(--text3);}
+
+/* ─── BLUEPRINT ──────────────────────────────────────── */
+.bp-tab-row{
+  display:flex;
+  padding:0 20px 16px;
+  gap:8px;overflow-x:auto;
+  scrollbar-width:none;
+}
+.bp-tab-row::-webkit-scrollbar{display:none;}
+.bp-tab{
+  flex-shrink:0;
+  font-family:'Space Mono',monospace;
+  font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;
+  padding:7px 14px;
+  border-radius:20px;
+  border:1px solid var(--line);
+  background:none;color:var(--text3);
+  cursor:pointer;transition:all 0.15s;
+}
+.bp-tab.active{
+  background:var(--gold-dim);
+  border-color:rgba(201,168,76,0.4);
+  color:var(--gold);
+}
+
+.bp-section{display:none;padding:0 20px;}
+.bp-section.active{display:block;}
+
+.timeline-item{
+  display:flex;gap:14px;
+  padding:12px 0;
+  border-bottom:1px solid var(--line);
+}
+.timeline-item:last-child{border-bottom:none;}
+.time-badge{
+  font-family:'Space Mono',monospace;
+  font-size:9px;color:var(--gold);
+  background:var(--gold-dim);
+  border:1px solid rgba(201,168,76,0.2);
+  padding:4px 8px;border-radius:4px;
+  white-space:nowrap;min-width:72px;
+  text-align:center;height:fit-content;
+  flex-shrink:0;margin-top:2px;
+}
+.tl-content{}
+.tl-name{font-size:14px;font-weight:500;color:var(--text);margin-bottom:2px;}
+.tl-desc{font-size:12px;color:var(--text3);line-height:1.5;}
+
+.rule-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.rule-card{
+  background:var(--bg3);border:1px solid var(--line);
+  border-radius:10px;padding:14px;
+}
+.rule-card.gold-border{border-left:3px solid var(--gold);}
+.rule-card.spirit-border{border-left:3px solid var(--spirit);}
+.rule-card.body-border{border-left:3px solid var(--body-c);}
+.rule-card.work-border{border-left:3px solid var(--work);}
+.rule-num{
+  font-family:'Space Mono',monospace;
+  font-size:9px;color:var(--text3);
+  margin-bottom:6px;letter-spacing:1px;
+}
+.rule-text{font-size:12px;color:var(--text2);line-height:1.5;}
+.rule-text strong{color:var(--text);font-weight:500;}
+
+.income-step{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.inc-phase{
+  font-family:'Space Mono',monospace;
+  font-size:9px;color:var(--text3);
+  min-width:52px;text-align:right;
+}
+.inc-wrap{flex:1;height:28px;background:var(--bg4);border-radius:3px;overflow:hidden;position:relative;}
+.inc-bar{
+  height:100%;
+  background:linear-gradient(90deg,rgba(201,168,76,0.3),rgba(201,168,76,0.8));
+  display:flex;align-items:center;padding-left:10px;
+  font-size:11px;color:var(--gold);font-weight:500;white-space:nowrap;
+}
+
+.verse-block{
+  border-left:2px solid var(--gold);
+  padding:12px 16px;margin:16px 0;
+  background:var(--gold-dim);border-radius:0 8px 8px 0;
+}
+.verse-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:17px;font-style:italic;
+  color:var(--text);line-height:1.5;margin-bottom:4px;
+}
+.verse-ref{
+  font-family:'Space Mono',monospace;
+  font-size:9px;color:var(--gold);letter-spacing:1.5px;
+}
+
+/* ─── TOAST ──────────────────────────────────────────── */
+.toast{
+  position:fixed;bottom:calc(80px + var(--safe) + 12px);
+  left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--bg3);border:1px solid var(--line);
+  border-radius:10px;padding:10px 18px;
+  font-size:13px;color:var(--text);
+  white-space:nowrap;z-index:100;
+  opacity:0;transition:all 0.2s;pointer-events:none;
+  box-shadow:0 4px 24px rgba(0,0,0,0.4);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ─── MODAL ──────────────────────────────────────────── */
+.modal-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(12,12,15,0.92);
+  display:flex;align-items:flex-end;
+  opacity:0;transition:opacity 0.2s;pointer-events:none;
+}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-sheet{
+  width:100%;max-width:480px;margin:0 auto;
+  background:var(--bg2);
+  border-radius:20px 20px 0 0;
+  border-top:1px solid var(--line);
+  padding:20px;
+  padding-bottom:calc(20px + var(--safe));
+  transform:translateY(40px);
+  transition:transform 0.25s cubic-bezier(0.4,0,0.2,1);
+  max-height:85dvh;overflow-y:auto;
+}
+.modal-overlay.open .modal-sheet{transform:translateY(0);}
+.modal-handle{
+  width:36px;height:4px;
+  background:var(--line2);border-radius:2px;
+  margin:0 auto 18px;
+}
+.modal-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:600;
+  margin-bottom:14px;
+}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.7;}
+.modal-close-btn{
+  width:100%;padding:14px;
+  background:var(--bg4);color:var(--text2);
+  border:1px solid var(--line);
+  border-radius:10px;font-family:'Space Mono',monospace;
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;margin-top:16px;
+}
+
+/* ─── EMPTY STATE ────────────────────────────────────── */
+.empty-state{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:48px 24px;text-align:center;
+}
+.empty-icon{font-size:40px;margin-bottom:12px;opacity:0.5;}
+.empty-text{font-size:14px;color:var(--text3);line-height:1.6;}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div>
+      <div class="top-bar-title">Covenant</div>
+      <div class="top-bar-sub">Life System</div>
+    </div>
+    <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+      <div class="top-bar-score-pill" id="headerScore">Score: —</div>
+      <div class="top-bar-date" id="topBarDate"></div>
+    </div>
+  </div>
+
+  <!-- SCREENS -->
+  <div class="screens">
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="screen active" id="screen-dash">
+      <div class="dash-ring-wrap">
+        <div class="ring-container">
+          <svg class="ring-svg" viewBox="0 0 180 180">
+            <circle class="ring-bg" cx="90" cy="90" r="80"/>
+            <circle class="ring-fill" id="ringFill" cx="90" cy="90" r="80"/>
+          </svg>
+          <div class="ring-center">
+            <div class="ring-score" id="ringScore">0</div>
+            <div class="ring-label">COVENANT</div>
+            <div class="ring-grade" id="ringGrade">Begin today</div>
+          </div>
+        </div>
+        <div class="dash-streak-row">
+          <div class="streak-pill">
+            <div class="streak-val" id="habitStreak" style="color:var(--gold)">—</div>
+            <div class="streak-lbl">Habit Streak</div>
+          </div>
+          <div class="streak-pill">
+            <div class="streak-val" id="journalStreak" style="color:var(--spirit)">—</div>
+            <div class="streak-lbl">Journal Streak</div>
+          </div>
+          <div class="streak-pill">
+            <div class="streak-val" id="fastStreak" style="color:var(--body-c)">—</div>
+            <div class="streak-lbl">Fast Logged</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pillar-bars" id="pillarBars">
+        <!-- filled by JS -->
+      </div>
+
+      <div class="pad-x">
+        <div class="card">
+          <div class="card-label">Today's Focus</div>
+          <div class="card-title" id="todayFocus">Go to Habits to begin your day.</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:6px;line-height:1.5;" id="todayVerse"></div>
+        </div>
+        <div class="card" id="missedCard" style="display:none;">
+          <div class="card-label" style="color:var(--danger)">Needs Attention</div>
+          <div id="missedList" style="font-size:13px;color:var(--text2);line-height:1.8;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ HABITS ══ -->
+    <div class="screen" id="screen-habits">
+      <div class="pad sec-head">
+        <div class="sec-title">Daily Habits</div>
+        <div class="sec-desc">Check each completed habit. Your Covenant Score updates in real time.</div>
+      </div>
+      <div id="habitsList"></div>
+    </div>
+
+    <!-- ══ JOURNAL ══ -->
+    <div class="screen" id="screen-journal">
+      <div class="pad sec-head">
+        <div class="sec-title">Journal</div>
+        <div class="sec-desc">1,000 words. One prompt. Mental clarity through accountability.</div>
+      </div>
+
+      <!-- Past Entries toggle -->
+      <div class="pad-x" style="margin-bottom:6px;">
+        <button class="new-entry-btn" id="toggleEntries" onclick="togglePastEntries()">View Past Entries</button>
+      </div>
+
+      <!-- Past entries list -->
+      <div id="pastEntriesList" style="display:none;padding:0 20px 16px;"></div>
+
+      <!-- Writing area -->
+      <div class="journal-state-prompt" id="journalWriteArea">
+        <div class="prompt-card" id="promptCard">
+          <div class="prompt-eyebrow">
+            <div class="prompt-eyebrow-dot"></div>
+            Today's Prompt
+          </div>
+          <div id="promptText">
+            <div class="prompt-loading">
+              <div class="spinner"></div>
+              Generating your prompt…
+            </div>
+          </div>
+        </div>
+
+        <div class="word-counter-bar">
+          <span class="word-count-num" id="wordCountNum" style="color:var(--text3)">0 words</span>
+          <span class="word-count-needed" id="wordCountNeeded">1,000 required</span>
+        </div>
+        <div class="wc-track">
+          <div class="wc-fill" id="wcFill" style="width:0%"></div>
+        </div>
+
+        <textarea
+          class="journal-textarea"
+          id="journalText"
+          placeholder="Begin writing here. Let your thoughts flow without judgment. God sees the honest heart…"
+          oninput="onJournalInput()"
+        ></textarea>
+
+        <button class="submit-btn" id="submitJournalBtn" disabled onclick="submitJournal()">
+          Submit Entry — 1,000 Words Required
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ PROGRESS ══ -->
+    <div class="screen" id="screen-progress">
+      <div class="pad sec-head">
+        <div class="sec-title">Progress</div>
+        <div class="sec-desc">Your 28-day discipline record. Every cell is a day you showed up.</div>
+      </div>
+
+      <div class="hm-days-row">
+        <div class="hm-day-label">S</div>
+        <div class="hm-day-label">M</div>
+        <div class="hm-day-label">T</div>
+        <div class="hm-day-label">W</div>
+        <div class="hm-day-label">T</div>
+        <div class="hm-day-label">F</div>
+        <div class="hm-day-label">S</div>
+      </div>
+      <div class="heatmap-grid" id="heatmapGrid"></div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-val" id="statBestStreak" style="color:var(--gold)">0</div>
+          <div class="stat-lbl">Best Streak (days)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="statAvgScore" style="color:var(--spirit)">0%</div>
+          <div class="stat-lbl">Avg Daily Score</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="statJournals" style="color:var(--body-c)">0</div>
+          <div class="stat-lbl">Journal Entries</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="statTotalWords" style="color:var(--work)">0</div>
+          <div class="stat-lbl">Total Words Written</div>
+        </div>
+      </div>
+
+      <div class="pad-x">
+        <div class="card">
+          <div class="card-label">Pillar Breakdown — All Time</div>
+          <div id="allTimePillars"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ BLUEPRINT ══ -->
+    <div class="screen" id="screen-blueprint">
+      <div class="pad sec-head">
+        <div class="sec-title">Blueprint</div>
+        <div class="sec-desc">Your complete life system — always accessible.</div>
+      </div>
+
+      <div class="bp-tab-row">
+        <button class="bp-tab active" onclick="showBpTab('daily')">Daily</button>
+        <button class="bp-tab" onclick="showBpTab('spirit')">Spirit</button>
+        <button class="bp-tab" onclick="showBpTab('body')">Body</button>
+        <button class="bp-tab" onclick="showBpTab('wealth')">Wealth</button>
+        <button class="bp-tab" onclick="showBpTab('money')">Money</button>
+      </div>
+
+      <div class="bp-section active" id="bp-daily">
+        <div style="margin-bottom:12px;">
+          <div class="card-label" style="padding:0 0 8px">Morning — 5:00–7:15am</div>
+          <div class="timeline-item"><div class="time-badge">5:00 AM</div><div class="tl-content"><div class="tl-name">Wake + Hydrate</div><div class="tl-desc">16oz water. No phone. Let intention lead.</div></div></div>
+          <div class="timeline-item"><div class="time-badge">5:05 AM</div><div class="tl-content"><div class="tl-name">Prayer</div><div class="tl-desc">10–15 min. Speak your day aloud. Surrender outcomes.</div></div></div>
+          <div class="timeline-item"><div class="time-badge">5:20 AM</div><div class="tl-content"><div class="tl-name">Scripture</div><div class="tl-desc">One chapter. One verse to carry. One journal insight.</div></div></div>
+          <div class="timeline-item"><div class="time-badge">5:40 AM</div><div class="tl-content"><div class="tl-name">Training</div><div class="tl-desc">45 minutes. Strength or conditioning. Non-negotiable.</div></div></div>
+          <div class="timeline-item"><div class="time-badge">6:30 AM</div><div class="tl-content"><div class="tl-name">Cold Shower</div><div class="tl-desc">Finish discomfort before 7am. Prove you follow through.</div></div></div>
+          <div class="timeline-item"><div class="time-badge">6:50 AM</div><div class="tl-content"><div class="tl-name">3 Priorities</div><div class="tl-desc">Write your three wins for today. One must be revenue.</div></div></div>
+        </div>
+        <div style="margin-bottom:12px;margin-top:16px;">
+          <div class="card-label" style="padding:0 0 8px">Work — 8:00am–6:00pm</div>
+          <div class="timeline-item"><div class="time-badge">8:00 AM</div><div class="tl-content"><div class="tl-name">First Call Block</div><div class="tl-desc">Dial. Volume + consistency wins at New Western.</div></div></div>
+          <div class="timeline-item"><div class="time-badge">10:00 AM</div><div class="tl-content"><div class="tl-name">Market Study</div><div class="tl-desc">Active inventory, recent sales, buyer criteria review.</div></div></div>
+          <div class="timeline-item"><div class="time-badge">1:00 PM</div><div class="tl-content"><div class="tl-name">Buyer Relationship</div><div class="tl-desc">Follow up, match properties, build trust. Deals close here.</div></div></div>
+          <div class="timeline-item"><div class="time-badge">3:00 PM</div><div class="tl-content"><div class="tl-name">Second Call Block</div><div class="tl-desc">Sellers, acquisitions, referrals. Guard this block.</div></div></div>
+          <div class="timeline-item"><div class="time-badge">5:30 PM</div><div class="tl-content"><div class="tl-name">Daily Debrief</div><div class="tl-desc">What closed? What moved? What needs follow-up? 10 min.</div></div></div>
+        </div>
+        <div style="margin-bottom:12px;margin-top:16px;">
+          <div class="card-label" style="padding:0 0 8px">Evening — 6:30–9:30pm</div>
+          <div class="timeline-item"><div class="time-badge">6:30 PM</div><div class="tl-content"><div class="tl-name">Dinner</div><div class="tl-desc">No screens. Nourishment and decompression.</div></div></div>
+          <div class="timeline-item"><div class="time-badge">7:30 PM</div><div class="tl-content"><div class="tl-name">Read 20 Pages</div><div class="tl-desc">Rotate: wealth, real estate, faith. Always learning.</div></div></div>
+          <div class="timeline-item"><div class="time-badge">8:30 PM</div><div class="tl-content"><div class="tl-name">Evening Prayer</div><div class="tl-desc">Three wins. One thing to surrender. Thank God by name.</div></div></div>
+          <div class="timeline-item"><div class="time-badge">9:00 PM</div><div class="tl-content"><div class="tl-name">Wind Down</div><div class="tl-desc">No social media. Dim lights. Protect 8 hours of sleep.</div></div></div>
+        </div>
+        <div style="height:16px;"></div>
+      </div>
+
+      <div class="bp-section" id="bp-spirit">
+        <div class="verse-block">
+          <div class="verse-text">"But seek first his kingdom… and all these things will be given to you."</div>
+          <div class="verse-ref">Matthew 6:33</div>
+        </div>
+        <div class="rule-grid" style="margin-bottom:16px;">
+          <div class="rule-card spirit-border">
+            <div class="rule-num">Weekly Fast</div>
+            <div class="rule-text"><strong>24 Hours</strong> — Same day each week. Use meal time for prayer and planning. Mental clarity peaks at hour 16–18.</div>
+          </div>
+          <div class="rule-card spirit-border">
+            <div class="rule-num">Monthly Fast</div>
+            <div class="rule-text"><strong>72 Hours</strong> — First weekend each month. Deep reset. Vision-cast your life during this time.</div>
+          </div>
+          <div class="rule-card gold-border">
+            <div class="rule-num">Scripture</div>
+            <div class="rule-text"><strong>Proverbs daily</strong> — One chapter per day. 31 chapters = one month. The wisdom manual for your season.</div>
+          </div>
+          <div class="rule-card gold-border">
+            <div class="rule-num">Tithe</div>
+            <div class="rule-text"><strong>First 10%</strong> — Off every commission, before anything else. Faith declaration over your finances.</div>
+          </div>
+        </div>
+        <div class="verse-block">
+          <div class="verse-text">"The plans of the diligent lead to profit as surely as haste leads to poverty."</div>
+          <div class="verse-ref">Proverbs 21:5</div>
+        </div>
+        <div style="height:16px;"></div>
+      </div>
+
+      <div class="bp-section" id="bp-body">
+        <div class="rule-grid" style="margin-bottom:16px;">
+          <div class="rule-card body-border">
+            <div class="rule-num">Eat Freely</div>
+            <div class="rule-text">Clean meats, eggs, legumes, fruits, vegetables, olive oil, raw honey, nuts, whole grains</div>
+          </div>
+          <div class="rule-card" style="border-left:3px solid var(--danger)">
+            <div class="rule-num">Avoid</div>
+            <div class="rule-text">Pork, shellfish, processed seed oils, refined sugar, ultra-processed foods, alcohol</div>
+          </div>
+          <div class="rule-card body-border">
+            <div class="rule-num">MON / THU</div>
+            <div class="rule-text"><strong>Strength</strong> — Compound lifts, 3–4 sets × 5–8 reps. 40–45 minutes.</div>
+          </div>
+          <div class="rule-card body-border">
+            <div class="rule-num">TUE / FRI</div>
+            <div class="rule-text"><strong>Conditioning</strong> — HIIT, rucking, or running. 30–35 minutes.</div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-num">WED</div>
+            <div class="rule-text"><strong>Mobility</strong> — Yoga, stretching, or walking prayer. Active recovery.</div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-num">SAT / SUN</div>
+            <div class="rule-text"><strong>Rest</strong> — Sabbath is sacred. Protect fully one day each week.</div>
+          </div>
+        </div>
+        <div style="height:16px;"></div>
+      </div>
+
+      <div class="bp-section" id="bp-wealth">
+        <div class="card-label" style="margin-bottom:12px;">Income Ladder — New Western</div>
+        <div class="income-step"><div class="inc-phase">MO 3</div><div class="inc-wrap"><div class="inc-bar" style="width:20%">$30–50K pace</div></div></div>
+        <div class="income-step"><div class="inc-phase">MO 6</div><div class="inc-wrap"><div class="inc-bar" style="width:38%">$75–100K pace</div></div></div>
+        <div class="income-step"><div class="inc-phase">MO 12</div><div class="inc-wrap"><div class="inc-bar" style="width:58%">$150–200K pace</div></div></div>
+        <div class="income-step"><div class="inc-phase">MO 18</div><div class="inc-wrap"><div class="inc-bar" style="width:78%">$250–350K pace</div></div></div>
+        <div class="income-step"><div class="inc-phase">MO 24</div><div class="inc-wrap"><div class="inc-bar" style="width:98%">$400K+ Top Performer</div></div></div>
+        <div style="margin-top:20px;">
+          <div class="rule-grid">
+            <div class="rule-card work-border">
+              <div class="rule-num">Law 1</div>
+              <div class="rule-text"><strong>Know buyers cold.</strong> When a deal hits, you know in 60 seconds who it fits. Call first.</div>
+            </div>
+            <div class="rule-card work-border">
+              <div class="rule-num">Law 2</div>
+              <div class="rule-text"><strong>Speed is your edge.</strong> Analyze any deal in under 10 minutes. Act decisively.</div>
+            </div>
+            <div class="rule-card work-border">
+              <div class="rule-num">Law 3</div>
+              <div class="rule-text"><strong>Be a resource.</strong> Add value — market data, deal analysis, contractor connections. Not a salesperson.</div>
+            </div>
+            <div class="rule-card work-border">
+              <div class="rule-num">Law 4</div>
+              <div class="rule-text"><strong>Shadow top performers.</strong> NW has 20+ year veterans. Learn from them daily. Absorb everything.</div>
+            </div>
+          </div>
+        </div>
+        <div style="height:16px;"></div>
+      </div>
+
+      <div class="bp-section" id="bp-money">
+        <div class="card-label" style="margin-bottom:12px;">Commission Allocation — Every Dollar</div>
+        <div class="rule-grid" style="margin-bottom:20px;">
+          <div class="rule-card gold-border">
+            <div class="rule-num">10%</div>
+            <div class="rule-text"><strong>Tithe</strong> — First. Always. Faith declaration.</div>
+          </div>
+          <div class="rule-card" style="border-left:3px solid var(--danger)">
+            <div class="rule-num">20%</div>
+            <div class="rule-text"><strong>Taxes</strong> — Separate account. Treat as a bill not a surprise.</div>
+          </div>
+          <div class="rule-card body-border">
+            <div class="rule-num">20%</div>
+            <div class="rule-text"><strong>Invest / Save</strong> — Emergency fund first ($15K). Then Roth IRA + index funds.</div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-num">50%</div>
+            <div class="rule-text"><strong>Living</strong> — Everything else. As income grows, widen the gap — don't close it with lifestyle.</div>
+          </div>
+        </div>
+        <div class="verse-block">
+          <div class="verse-text">"The borrower is slave to the lender."</div>
+          <div class="verse-ref">Proverbs 22:7 — Never carry a balance.</div>
+        </div>
+        <div style="height:16px;"></div>
+      </div>
+
+    </div>
+  </div><!-- /screens -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" id="nav-dash" onclick="nav('dash')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l5 3"/></svg>
+      Today
+    </button>
+    <button class="nav-btn" id="nav-habits" onclick="nav('habits')">
+      <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      Habits
+    </button>
+    <button class="nav-btn" id="nav-journal" onclick="nav('journal')">
+      <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      Journal
+    </button>
+    <button class="nav-btn" id="nav-progress" onclick="nav('progress')">
+      <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Progress
+    </button>
+    <button class="nav-btn" id="nav-blueprint" onclick="nav('blueprint')">
+      <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+      Blueprint
+    </button>
+  </nav>
+</div><!-- /app -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-body" id="modalBody"></div>
+    <button class="modal-close-btn" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   HABITS DEFINITION
+═══════════════════════════════════════════════════════ */
+const HABITS = [
+  // Spirit (30 pts)
+  { id:'prayer',    group:'spirit', name:'Morning Prayer',       desc:'10+ minutes of intentional prayer before the day begins', pts:8 },
+  { id:'scripture', group:'spirit', name:'Read Scripture',       desc:'One chapter — meditate on one verse, write one insight', pts:8 },
+  { id:'fast',      group:'spirit', name:'Fasting / No Snacking',desc:'Weekly 24hr fast logged, or clean intermittent eating window', pts:7 },
+  { id:'eve-prayer',group:'spirit', name:'Evening Prayer',       desc:'Three wins named, one thing surrendered, specific gratitude', pts:7 },
+  // Body (25 pts)
+  { id:'train',     group:'body',   name:'Physical Training',    desc:'45 min strength, conditioning, or mobility session', pts:8 },
+  { id:'diet',      group:'body',   name:'Biblical Diet',        desc:'Zero processed food, sugar, pork, or alcohol all day', pts:7 },
+  { id:'sleep',     group:'body',   name:'In Bed by 9:30pm',     desc:'Protect 8 hours. Wind-down started by 9pm.', pts:5 },
+  { id:'water',     group:'body',   name:'1 Gallon Water',       desc:'Consistent hydration throughout the full day', pts:5 },
+  // Work (25 pts)
+  { id:'calls',     group:'work',   name:'Call Blocks Completed',desc:'Both morning and afternoon call blocks done at New Western', pts:10 },
+  { id:'buyers',    group:'work',   name:'Buyer Relationship',   desc:'At least one meaningful buyer touchpoint or deal match', pts:8 },
+  { id:'learn',     group:'work',   name:'NW Learning (30 min)', desc:'NW University training, market study, or top performer shadow', pts:7 },
+  // Money (20 pts)
+  { id:'budget',    group:'money',  name:'Reviewed Budget',      desc:'Checked spending, confirmed allocations, no surprise charges', pts:10 },
+  { id:'tithe-log', group:'money',  name:'Tithe / Savings Logged',desc:'Verified 10% tithe and 20% savings from any income received', pts:10 },
+];
+
+const GROUP_META = {
+  spirit:{ label:'Spirit & Faith', color:'var(--spirit)', dim:'var(--spirit-dim)', icon:'🕊️' },
+  body:  { label:'Body & Health',  color:'var(--body-c)', dim:'var(--body-dim)',   icon:'⚡' },
+  work:  { label:'Work & Career',  color:'var(--work)',   dim:'var(--work-dim)',   icon:'🏠' },
+  money: { label:'Money System',   color:'var(--money)',  dim:'var(--money-dim)',  icon:'💰' },
+};
+
+const TODAY_VERSES = [
+  { text:'Seek first his kingdom and his righteousness, and all these things will be given to you.', ref:'Matthew 6:33' },
+  { text:'The plans of the diligent lead to profit as surely as haste leads to poverty.', ref:'Proverbs 21:5' },
+  { text:'For I know the plans I have for you — plans to prosper you and not to harm you.', ref:'Jeremiah 29:11' },
+  { text:'Iron sharpens iron, and one man sharpens another.', ref:'Proverbs 27:17' },
+  { text:'Whatever you do, work at it with all your heart, as working for the Lord.', ref:'Colossians 3:23' },
+  { text:'Commit to the Lord whatever you do, and he will establish your plans.', ref:'Proverbs 16:3' },
+  { text:'No discipline seems pleasant at the time, but painful. Later on, however, it produces a harvest of righteousness.', ref:'Hebrews 12:11' },
+];
+
+const JOURNAL_PROMPTS = [
+  "Describe the version of yourself 12 months from now in exact detail — what does your morning look like, what does your bank account say, what does your relationship with God feel like? What is the single biggest obstacle standing between you and that man, and what specific lie are you telling yourself to stay comfortable?",
+  "Write about the last time fear stopped you from making a move — in your career, your finances, or your faith. What was the fear, what did you lose by not acting, and what would you do differently today? What does fear still have a grip on right now?",
+  "Take inventory of your closest relationships. Who sharpens you, and who is draining you? Who speaks truth into your life, and who flatters you? How are you showing up for the people who matter, and where are you falling short?",
+  "Reflect on money and your relationship with it from childhood to now. What beliefs were modeled for you? Where did scarcity thinking take root? Write about what wealth means to you spiritually, and why you believe God has abundance prepared for you — or why part of you doesn't believe that yet.",
+  "Write about discipline — not motivation, but discipline. On the mornings you didn't want to get up, the calls you didn't want to make, the prayers you rushed through. What keeps you going when nothing feels good? Where does your willpower break down, and what would it take to bulletproof that area?",
+  "Describe what breaking free from paycheck to paycheck living will feel like emotionally — not just financially. What changes in how you carry yourself, how you think about the future, how you parent or serve others? Write about what financial peace means to your soul, not just your spreadsheet.",
+  "Write an honest letter to your future self one year from today. Tell him what you're struggling with right now that you hope he's overcome. Tell him what you're proud of. Tell him where you need him to have been faithful. Make it specific — don't write the letter you want to write, write the one that's true.",
+  "Examine your prayer life with total honesty. Are you talking to God or performing? Are you listening or just broadcasting? Write about a time God clearly answered a prayer and what it taught you about trust. Where do you struggle to believe He's working even when you can't see it?",
+  "What does your current daily routine say about your actual priorities — not the priorities you claim? Write about the gap between who you say you are and how you spend your hours. What would a stranger conclude about what you value by watching how you spend each day?",
+  "New Western is a merit-based environment. Write about your first weeks — what's clicking, what's not, where you feel in over your head, and where you sense you have an edge. What does becoming a top performer require of you that you haven't fully committed to yet?",
+  "Write about your fasting practice — not just the physical side, but what happens spiritually when you deny yourself. What thoughts surface during a fast that don't appear otherwise? What does God seem to say to you in that space? What are you still holding onto that you need to lay down?",
+  "Describe the man you want your children — or the generation that comes after you — to see in you. Not your accomplishments. Your character. Your consistency. Your courage. What kind of legacy are you actually building right now, and does your daily life reflect it?",
+];
+
+/* ═══════════════════════════════════════════════════════
+   STATE & STORAGE
+═══════════════════════════════════════════════════════ */
+function todayKey(){ return new Date().toISOString().slice(0,10); }
+
+function loadState(){
+  try{ return JSON.parse(localStorage.getItem('covenant_v2')||'{}'); } catch(e){ return {}; }
+}
+function saveState(s){ localStorage.setItem('covenant_v2', JSON.stringify(s)); }
+
+let STATE = loadState();
+
+function getTodayHabits(){
+  const k = todayKey();
+  if(!STATE[k]) STATE[k] = { habits:{}, score:0, journalDone:false, journalWords:0 };
+  return STATE[k];
+}
+
+function getScore(dayData){
+  const done = dayData.habits || {};
+  let pts = 0, total = 0;
+  HABITS.forEach(h=>{ total+=h.pts; if(done[h.id]) pts+=h.pts; });
+  return total ? Math.round((pts/total)*100) : 0;
+}
+
+function getGroupScore(group, dayData){
+  const done = dayData.habits || {};
+  const hs = HABITS.filter(h=>h.group===group);
+  const total = hs.reduce((a,h)=>a+h.pts,0);
+  const pts = hs.filter(h=>done[h.id]).reduce((a,h)=>a+h.pts,0);
+  return total ? Math.round((pts/total)*100) : 0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   STREAK CALCULATION
+═══════════════════════════════════════════════════════ */
+function calcHabitStreak(){
+  let streak=0, d=new Date();
+  // Don't count today if score = 0
+  for(let i=0;i<365;i++){
+    const k = d.toISOString().slice(0,10);
+    const day = STATE[k];
+    if(!day) break;
+    const s = getScore(day);
+    if(s>=50) streak++; else break;
+    d.setDate(d.getDate()-1);
+  }
+  return streak;
+}
+
+function calcJournalStreak(){
+  let streak=0, d=new Date();
+  for(let i=0;i<365;i++){
+    const k = d.toISOString().slice(0,10);
+    if(STATE[k]?.journalDone) streak++; else break;
+    d.setDate(d.getDate()-1);
+  }
+  return streak;
+}
+
+function calcFastStreak(){
+  let count=0;
+  Object.values(STATE).forEach(day=>{
+    if(day.habits?.fast) count++;
+  });
+  return count;
+}
+
+/* ═══════════════════════════════════════════════════════
+   RENDER DASHBOARD
+═══════════════════════════════════════════════════════ */
+function renderDash(){
+  const today = getTodayHabits();
+  const score = getScore(today);
+
+  // Ring
+  const circumference = 2*Math.PI*80; // 502.65
+  const offset = circumference - (circumference * score/100);
+  const ring = document.getElementById('ringFill');
+  if(ring){
+    ring.style.strokeDasharray = circumference;
+    ring.style.strokeDashoffset = offset;
+  }
+  document.getElementById('ringScore').textContent = score;
+
+  const gradeEl = document.getElementById('ringGrade');
+  if(score===100) gradeEl.textContent='Perfect Day 🔥';
+  else if(score>=80) gradeEl.textContent='Excellent';
+  else if(score>=60) gradeEl.textContent='Strong';
+  else if(score>=40) gradeEl.textContent='Building';
+  else if(score>0) gradeEl.textContent='Getting Started';
+  else gradeEl.textContent='Begin today';
+
+  document.getElementById('headerScore').textContent = `Score: ${score}`;
+
+  // Streaks
+  document.getElementById('habitStreak').textContent = calcHabitStreak();
+  document.getElementById('journalStreak').textContent = calcJournalStreak();
+  document.getElementById('fastStreak').textContent = calcFastStreak();
+
+  // Pillar bars
+  const bars = document.getElementById('pillarBars');
+  bars.innerHTML = Object.entries(GROUP_META).map(([grp,meta])=>{
+    const pct = getGroupScore(grp, today);
+    return `<div class="pillar-row">
+      <div class="pillar-row-head">
+        <span class="pillar-name"><span class="pillar-dot" style="background:${meta.color}"></span>${meta.label}</span>
+        <span class="pillar-pct">${pct}%</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${pct}%;background:${meta.color};"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Today focus
+  const dow = new Date().getDay();
+  const v = TODAY_VERSES[dow % TODAY_VERSES.length];
+  document.getElementById('todayFocus').textContent = `"${v.text}"`;
+  document.getElementById('todayVerse').textContent = `— ${v.ref}`;
+
+  // Missed habits
+  const missed = HABITS.filter(h=>!today.habits[h.id]);
+  const missedCard = document.getElementById('missedCard');
+  if(missed.length && score>0){
+    missedCard.style.display='block';
+    document.getElementById('missedList').innerHTML = missed.map(h=>
+      `• ${h.name}`
+    ).join('<br>');
+  } else {
+    missedCard.style.display='none';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   RENDER HABITS
+═══════════════════════════════════════════════════════ */
+function renderHabits(){
+  const today = getTodayHabits();
+  const groups = [...new Set(HABITS.map(h=>h.group))];
+  const list = document.getElementById('habitsList');
+
+  list.innerHTML = groups.map(grp=>{
+    const meta = GROUP_META[grp];
+    const habits = HABITS.filter(h=>h.group===grp);
+    const doneCount = habits.filter(h=>today.habits[h.id]).length;
+    const totalPts = habits.reduce((a,h)=>a+h.pts,0);
+    const earnedPts = habits.filter(h=>today.habits[h.id]).reduce((a,h)=>a+h.pts,0);
+    return `
+    <div class="habit-group">
+      <div class="habit-group-header" style="background:${meta.dim}">
+        <div class="habit-group-icon" style="background:${meta.dim}">${meta.icon}</div>
+        <span class="habit-group-name" style="color:${meta.color}">${meta.label}</span>
+        <span class="habit-group-score">${earnedPts}/${totalPts}pts</span>
+      </div>
+      ${habits.map(h=>`
+        <div class="habit-item" onclick="toggleHabit('${h.id}')" id="hitem-${h.id}">
+          <div class="habit-check ${today.habits[h.id]?'done':''}" id="hcheck-${h.id}" style="${today.habits[h.id]?'background:'+meta.color:''}">
+            <svg viewBox="0 0 13 13"><polyline points="2,7 5,10 11,3"/></svg>
+          </div>
+          <div class="habit-text">
+            <div class="habit-name">${h.name}</div>
+            <div class="habit-desc">${h.desc}</div>
+          </div>
+          <div class="habit-pts">+${h.pts}pts</div>
+        </div>
+      `).join('')}
+    </div>`;
+  }).join('');
+}
+
+function toggleHabit(id){
+  const today = getTodayHabits();
+  today.habits[id] = !today.habits[id];
+  const k = todayKey();
+  STATE[k] = today;
+  today.score = getScore(today);
+  saveState(STATE);
+
+  // Update check UI
+  const h = HABITS.find(x=>x.id===id);
+  const meta = GROUP_META[h.group];
+  const check = document.getElementById(`hcheck-${id}`);
+  if(today.habits[id]){
+    check.classList.add('done');
+    check.style.background = meta.color;
+    showToast(`+${h.pts}pts — ${h.name}`);
+  } else {
+    check.classList.remove('done');
+    check.style.background='';
+  }
+
+  renderDash();
+  renderProgress();
+}
+
+/* ═══════════════════════════════════════════════════════
+   JOURNAL
+═══════════════════════════════════════════════════════ */
+let currentPrompt = '';
+let pastEntriesVisible = false;
+
+function getPromptForToday(){
+  const k = todayKey();
+  if(STATE[k]?.savedPrompt) return STATE[k].savedPrompt;
+  const dayNum = Math.floor(Date.now()/86400000);
+  return JOURNAL_PROMPTS[dayNum % JOURNAL_PROMPTS.length];
+}
+
+async function loadJournalPrompt(){
+  const promptEl = document.getElementById('promptText');
+
+  // Check if today already has a prompt saved
+  const k = todayKey();
+  if(STATE[k]?.savedPrompt){
+    currentPrompt = STATE[k].savedPrompt;
+    promptEl.innerHTML = `<div class="prompt-text">${currentPrompt}</div>`;
+    return;
+  }
+
+  // Try to generate via Claude API
+  promptEl.innerHTML = `<div class="prompt-loading"><div class="spinner"></div>Generating your prompt…</div>`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:300,
+        messages:[{
+          role:'user',
+          content:`Generate a single deep, challenging journal prompt for a 33-year-old man who is:
+- A new real estate agent at New Western, striving to become a top performer earning $400K+
+- Following a biblical diet and fasting practice (24hr weekly, 72hr monthly)
+- Committed to spiritual growth, prayer, and Scripture reading
+- Working to break out of paycheck-to-paycheck living
+- Building discipline in all areas of life
+
+The prompt should:
+- Push him to confront a specific mental or spiritual obstacle
+- Require genuine self-reflection about character, habits, or beliefs
+- Connect faith, wealth, and discipline themes
+- Feel personal and challenging, not generic
+- Be 2-4 sentences long
+- NOT start with "Reflect on" or "Think about"
+
+Return ONLY the prompt text, nothing else.`
+        }]
+      })
+    });
+    const data = await response.json();
+    if(data.content?.[0]?.text){
+      currentPrompt = data.content[0].text.trim();
+    } else {
+      throw new Error('no content');
+    }
+  } catch(e){
+    // Fallback to local prompts
+    currentPrompt = getPromptForToday();
+  }
+
+  // Save the prompt for today
+  const today = getTodayHabits();
+  today.savedPrompt = currentPrompt;
+  STATE[k] = today;
+  saveState(STATE);
+
+  promptEl.innerHTML = `<div class="prompt-text">${currentPrompt}</div>`;
+}
+
+function onJournalInput(){
+  const text = document.getElementById('journalText').value;
+  const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+  const pct = Math.min(100, (words/1000)*100);
+  const countEl = document.getElementById('wordCountNum');
+  const wcFill = document.getElementById('wcFill');
+  const btn = document.getElementById('submitJournalBtn');
+
+  countEl.textContent = `${words.toLocaleString()} words`;
+  if(words >= 1000){
+    countEl.style.color = 'var(--body-c)';
+    wcFill.classList.add('done-fill');
+    btn.disabled = false;
+    btn.textContent = `Submit Entry ✓`;
+    document.getElementById('wordCountNeeded').textContent = `Goal reached!`;
+  } else {
+    countEl.style.color = words > 500 ? 'var(--gold)' : 'var(--text3)';
+    wcFill.classList.remove('done-fill');
+    btn.disabled = true;
+    btn.textContent = `${1000-words} more words needed`;
+    document.getElementById('wordCountNeeded').textContent = `${(1000-words).toLocaleString()} to go`;
+  }
+  wcFill.style.width = pct+'%';
+}
+
+function submitJournal(){
+  const text = document.getElementById('journalText').value.trim();
+  const words = text.split(/\s+/).length;
+  if(words < 1000){ showToast('Need 1,000 words to submit'); return; }
+
+  const k = todayKey();
+  const today = getTodayHabits();
+  today.journalDone = true;
+  today.journalWords = words;
+  today.journalText = text;
+  today.journalPrompt = currentPrompt;
+  STATE[k] = today;
+  saveState(STATE);
+
+  // Clear textarea
+  document.getElementById('journalText').value='';
+  document.getElementById('wcFill').style.width='0%';
+  document.getElementById('wordCountNum').textContent='0 words';
+  document.getElementById('submitJournalBtn').disabled=true;
+  document.getElementById('submitJournalBtn').textContent='Submit Entry — 1,000 Words Required';
+  document.getElementById('wordCountNeeded').textContent='1,000 required';
+  document.getElementById('wcFill').classList.remove('done-fill');
+
+  showToast('Entry saved 🙏 Well done.');
+  renderDash();
+  renderProgress();
+  renderPastEntries();
+}
+
+function togglePastEntries(){
+  pastEntriesVisible = !pastEntriesVisible;
+  const list = document.getElementById('pastEntriesList');
+  const btn = document.getElementById('toggleEntries');
+  if(pastEntriesVisible){
+    list.style.display='block';
+    btn.textContent='Hide Past Entries';
+    renderPastEntries();
+  } else {
+    list.style.display='none';
+    btn.textContent='View Past Entries';
+  }
+}
+
+function renderPastEntries(){
+  const entries = Object.entries(STATE)
+    .filter(([k,v])=>v.journalDone && v.journalText)
+    .sort((a,b)=>b[0].localeCompare(a[0]));
+
+  const list = document.getElementById('pastEntriesList');
+  if(!entries.length){
+    list.innerHTML='<div class="empty-state"><div class="empty-icon">📓</div><div class="empty-text">No entries yet. Complete your first 1,000-word entry below.</div></div>';
+    return;
+  }
+
+  list.innerHTML = entries.map(([date,entry])=>{
+    const d = new Date(date+'T12:00:00');
+    const label = d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    const preview = entry.journalText?.slice(0,180)+'…' || '';
+    const promptPrev = entry.journalPrompt?.slice(0,90)+'…' || '';
+    return `
+    <div class="entry-card">
+      <div class="entry-head">
+        <div class="entry-date">${label}</div>
+        <div class="entry-wc">${(entry.journalWords||0).toLocaleString()} words</div>
+      </div>
+      <div class="entry-prompt-preview">"${promptPrev}"</div>
+      <div class="entry-text-preview" id="ep-${date}">${preview}</div>
+      <button class="entry-expand-btn" onclick="expandEntry('${date}')">Read full entry →</button>
+    </div>`;
+  }).join('');
+}
+
+function expandEntry(date){
+  const entry = STATE[date];
+  if(!entry) return;
+  const d = new Date(date+'T12:00:00');
+  const label = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  openModal(label,
+    `<div style="font-size:13px;color:var(--text3);font-style:italic;margin-bottom:14px;line-height:1.5;">"${entry.journalPrompt}"</div>
+     <div style="font-size:14px;color:var(--text2);line-height:1.8;white-space:pre-wrap;">${entry.journalText}</div>`
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   PROGRESS
+═══════════════════════════════════════════════════════ */
+function renderProgress(){
+  // Heat map — last 28 days
+  const grid = document.getElementById('heatmapGrid');
+  const cells = [];
+  const today = new Date();
+  // Pad to start on Sunday
+  const startDate = new Date(today);
+  startDate.setDate(today.getDate()-27);
+  // Pad start to prev Sunday
+  const padding = startDate.getDay();
+  startDate.setDate(startDate.getDate()-padding);
+
+  const totalDays = 28+padding;
+  let html='';
+  for(let i=0;i<totalDays;i++){
+    const d=new Date(startDate);
+    d.setDate(startDate.getDate()+i);
+    const k=d.toISOString().slice(0,10);
+    const todayK = today.toISOString().slice(0,10);
+    const day=STATE[k];
+    const score=day?getScore(day):0;
+    const isToday=k===todayK;
+    const isFuture=k>todayK;
+    let level=0;
+    if(!isFuture && score>0){
+      if(score>=80) level=4;
+      else if(score>=60) level=3;
+      else if(score>=40) level=2;
+      else level=1;
+    }
+    html+=`<div class="hm-cell level-${level}${isToday?' today-cell':''}" title="${k}: ${score}%"></div>`;
+  }
+  grid.innerHTML=html;
+
+  // Stats
+  const allDays = Object.values(STATE).filter(v=>typeof v==='object'&&v.habits);
+  const scores = allDays.map(d=>getScore(d)).filter(s=>s>0);
+  const avg = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : 0;
+  const journals = allDays.filter(d=>d.journalDone).length;
+  const totalWords = allDays.reduce((a,d)=>a+(d.journalWords||0),0);
+
+  // Best streak
+  let best=0,cur=0;
+  const sorted = Object.keys(STATE).sort();
+  sorted.forEach(k=>{
+    const d=STATE[k];
+    if(d&&getScore(d)>=50) cur++; else cur=0;
+    best=Math.max(best,cur);
+  });
+
+  document.getElementById('statBestStreak').textContent=best;
+  document.getElementById('statAvgScore').textContent=avg+'%';
+  document.getElementById('statJournals').textContent=journals;
+  document.getElementById('statTotalWords').textContent=totalWords>=1000?Math.round(totalWords/1000)+'K':totalWords;
+
+  // All-time pillar breakdown
+  const groups = Object.keys(GROUP_META);
+  const atContainer = document.getElementById('allTimePillars');
+  if(allDays.length){
+    atContainer.innerHTML = groups.map(grp=>{
+      const meta=GROUP_META[grp];
+      const avg2=allDays.length?Math.round(allDays.reduce((a,d)=>a+getGroupScore(grp,d),0)/allDays.length):0;
+      return `<div class="pillar-row" style="margin-bottom:12px;margin-top:8px;">
+        <div class="pillar-row-head">
+          <span class="pillar-name"><span class="pillar-dot" style="background:${meta.color}"></span>${meta.label}</span>
+          <span class="pillar-pct">${avg2}%</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${avg2}%;background:${meta.color};"></div>
+        </div>
+      </div>`;
+    }).join('');
+  } else {
+    atContainer.innerHTML='<div style="font-size:13px;color:var(--text3);padding:8px 0;">Start tracking habits to see your breakdown.</div>';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════════════ */
+let currentScreen = 'dash';
+let journalPromptLoaded = false;
+
+function nav(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  document.getElementById('nav-'+id).classList.add('active');
+  currentScreen = id;
+
+  if(id==='dash') renderDash();
+  if(id==='habits') renderHabits();
+  if(id==='progress') renderProgress();
+  if(id==='journal' && !journalPromptLoaded){
+    journalPromptLoaded=true;
+    loadJournalPrompt();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   BLUEPRINT TABS
+═══════════════════════════════════════════════════════ */
+function showBpTab(id){
+  document.querySelectorAll('.bp-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.bp-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('bp-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+/* ═══════════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════════ */
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+/* ═══════════════════════════════════════════════════════
+   MODAL
+═══════════════════════════════════════════════════════ */
+function openModal(title, body){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalBody').innerHTML=body;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(e){
+  if(!e || e.target===document.getElementById('modal')){
+    document.getElementById('modal').classList.remove('open');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   DATE
+═══════════════════════════════════════════════════════ */
+function setDate(){
+  const d=new Date();
+  const label=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+  document.getElementById('topBarDate').textContent=label;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PWA SERVICE WORKER
+═══════════════════════════════════════════════════════ */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+
+/* ═══════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════ */
+setDate();
+renderDash();
+</script>
+</body>
+</html>
