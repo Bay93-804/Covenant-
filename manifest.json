@@ -1,0 +1,17 @@
+{
+  "name": "Covenant — Life System",
+  "short_name": "Covenant",
+  "description": "Your daily discipline, faith, and wealth operating system.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0C0C0F",
+  "theme_color": "#0C0C0F",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%230C0C0F'/><circle cx='96' cy='96' r='70' fill='none' stroke='%23C9A84C' stroke-width='8'/><text x='96' y='108' text-anchor='middle' font-size='52' fill='%23C9A84C' font-family='serif'>C</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}
