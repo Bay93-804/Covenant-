@@ -1,0 +1,6487 @@
+{
+  "meta": {
+    "id": "coach-conde-long-game-athletic-edition-v1",
+    "title": "Coach Conde — The Long Game: Athletic Edition",
+    "subtitle": "Speed · Power · Deceleration · Strength · Mobility · Balance",
+    "tagline": "Still an athlete at 33 — and still one at 63",
+    "closingTagline": "The goal is not to be fast at 33. It is to still be fast at 53 — and to still be here at 83.",
+    "brandLines": [
+      "The Long Game",
+      "The Off-Field Coach",
+      "Mindset · Character · Purpose · Success",
+      "Absorb · Build · Express"
+    ],
+    "edition": "1.0",
+    "durationWeeks": 12,
+    "sessionsPerDay": 2,
+    "daysPerWeekTrained": 4,
+    "avgTrainingDayMinutes": 75,
+    "amMinutesRange": [
+      30,
+      40
+    ],
+    "pmMinutesRange": [
+      40,
+      45
+    ],
+    "sourceDocument": "Coach Conde - The Long Game Athletic Edition.pdf",
+    "sourcePages": 17,
+    "disclaimer": "Educational training resource, not medical advice. Get medically cleared before starting, particularly before any maximal aerobic test or maximal sprint. Nutrition guidance should come from a registered dietitian. Pain that alters movement is a referral to a qualified healthcare professional, not something to train through."
+  },
+  "clustersGlossary": [
+    {
+      "slot": "A1",
+      "role": "THE POWER MOVEMENT",
+      "description": "A jump, throw or swing. Fast, light, never fatiguing. Stop the moment output drops."
+    },
+    {
+      "slot": "B1",
+      "role": "THE MAIN LIFT",
+      "description": "The loaded movement the session is built around — hinge, squat, press."
+    },
+    {
+      "slot": "A2 / B2",
+      "role": "THE COMPLEMENT",
+      "description": "A pull for every press, a glute movement for every hinge, an opposing pattern that lets the main work recover."
+    },
+    {
+      "slot": "A3 / B3",
+      "role": "THE POSITION",
+      "description": "Hip, ankle or thoracic mobility, or a unilateral pattern, taken while the joint is warm."
+    },
+    {
+      "slot": "A4 / B4 / C",
+      "role": "THE ANCHOR",
+      "description": "Core as anti-movement, a balance progression, an eccentric, or a loaded carry."
+    }
+  ],
+  "executionRules": [
+    "Warm-up ramp on the main lift only. Nothing else gets warm-up sets.",
+    "One set of A1. Rest the stated interval. A2. Rest. A3. Rest. A4. Rest. That is one round.",
+    "Power and speed work follow a QUALITY CAP, not a rep count. Three good jumps beat five mediocre ones, and the fifth mediocre one is where the injuries live.",
+    "If time runs short, cut a round from C. Never from A or B, and never the speed session."
+  ],
+  "loadingMethods": [
+    {
+      "method": "PERCENTAGE",
+      "looksLike": "3x6 @ 75%",
+      "meaning": "Percentage of your estimated max — heavy set of 5 at RIR 1, multiplied by 1.15. Round to the nearest 5 lb."
+    },
+    {
+      "method": "RIR_CAP",
+      "looksLike": "3x8 @ RIR 2",
+      "meaning": "Reps In Reserve. Most sets in this program live at RIR 2-3."
+    },
+    {
+      "method": "QUALITY_CAP",
+      "looksLike": "4x3 — stop on output loss",
+      "meaning": "Jumps, throws, sprints, plyometrics, brake work. Stop when quality drops, regardless of the prescription."
+    }
+  ],
+  "twoSafetyRules": [
+    "Nothing above 80% and no true one-rep maxes.",
+    "No sprinting on cold, fatigued or under-slept legs."
+  ],
+  "weeklyTemplate": [
+    {
+      "day": "Monday",
+      "am": {
+        "minutes": [
+          30,
+          40
+        ],
+        "label": "SPEED — acceleration + plyometrics + 15-20 min easy run",
+        "ref": "mondaySpeedPlyo"
+      },
+      "pm": {
+        "minutes": [
+          40,
+          45
+        ],
+        "label": "STRENGTH A — Hinge, Glute & Horizontal Power",
+        "ref": "strengthA"
+      }
+    },
+    {
+      "day": "Tuesday",
+      "am": {
+        "minutes": [
+          30,
+          40
+        ],
+        "label": "CORE, BALANCE & BRAKE circuit",
+        "ref": "tuesdayCoreBalanceBrake"
+      },
+      "pm": {
+        "minutes": [
+          40,
+          45
+        ],
+        "label": "STRENGTH B — Upper Push / Pull & Rotational Power",
+        "ref": "strengthB"
+      }
+    },
+    {
+      "day": "Wednesday",
+      "am": {
+        "label": "OFF — walk 20-30 min if you want"
+      },
+      "pm": {
+        "label": "OFF"
+      }
+    },
+    {
+      "day": "Thursday",
+      "am": {
+        "minutes": [
+          30,
+          40
+        ],
+        "label": "TEMPO or repeat-sprint run + agility",
+        "ref": "weeklySpeedPlan.thuAm"
+      },
+      "pm": {
+        "minutes": [
+          40,
+          45
+        ],
+        "label": "STRENGTH C — Squat, Unilateral & Vertical Power",
+        "ref": "strengthC"
+      }
+    },
+    {
+      "day": "Friday",
+      "am": {
+        "label": "OFF — walk, or the mobility flow on its own"
+      },
+      "pm": {
+        "label": "OFF"
+      }
+    },
+    {
+      "day": "Saturday",
+      "am": {
+        "minutes": null,
+        "label": "LONG easy run + mobility flow",
+        "ref": "weeklySpeedPlan.satAm"
+      },
+      "pm": {
+        "minutes": [
+          40,
+          45
+        ],
+        "label": "STRENGTH D — Athletic Resilience",
+        "ref": "strengthD"
+      }
+    },
+    {
+      "day": "Sunday",
+      "am": {
+        "label": "OFF — full rest, or play something for fun"
+      },
+      "pm": {
+        "label": "OFF"
+      }
+    }
+  ],
+  "blocks": [
+    {
+      "id": 1,
+      "name": "ABSORB",
+      "weeks": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "deloadWeek": 4,
+      "strengthPowerNote": "Positions, glute work, jumps kept low and landed softly",
+      "speedPlyoNote": "Landing mechanics and short accelerations. Hills and sled only — no flat max-effort running.",
+      "loading": {
+        "pctRange": [
+          65,
+          72
+        ],
+        "rir": "3",
+        "repRange": [
+          8,
+          10
+        ]
+      },
+      "narrative": "Every session opens with a power cluster. In this block the power work is deliberately about ABSORBING force — landing well, stopping well, controlling the descent — because that is the capacity everything in Blocks 2 and 3 is built on top of."
+    },
+    {
+      "id": 2,
+      "name": "BUILD",
+      "weeks": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "deloadWeek": 8,
+      "retestWeek": 6,
+      "strengthPowerNote": "Load added to the same patterns. Throws and bounds enter.",
+      "speedPlyoNote": "Flat accelerations to 20 yards. Flying 10s. Elastic plyometrics. Reactive agility begins.",
+      "loading": {
+        "pctRange": [
+          72,
+          78
+        ],
+        "rir": "2-3",
+        "repRange": [
+          6,
+          8
+        ]
+      },
+      "narrative": "Load goes up, reps come down, and the power clusters move from absorbing force to producing it — bounds, throws, flat accelerations. Balance moves to eyes closed."
+    },
+    {
+      "id": 3,
+      "name": "EXPRESS",
+      "weeks": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "deloadWeek": 12,
+      "taperAndTestWeek": 12,
+      "strengthPowerNote": "Contrast training — heavy set paired with a jump. Highest loads, lowest volume.",
+      "speedPlyoNote": "Maximum velocity exposure. Flying 20s, 30-yard runs, full deceleration and cutting work.",
+      "loading": {
+        "pctRange": [
+          75,
+          80
+        ],
+        "rir": "2",
+        "repRange": [
+          5,
+          6
+        ]
+      },
+      "narrative": "The power cluster and the main lift now sit in the SAME cluster: a heavy set followed by an explosive one. That is contrast training, and it is where the strength built over eight weeks becomes speed. Bar speed governs everything — when the load stops moving fast, the cluster is finished regardless of rounds remaining."
+    }
+  ],
+  "deloadWeeksGeneric": {
+    "pctRange": [
+      60,
+      70
+    ],
+    "rir": "4",
+    "note": "Volume drops to about 60%. Written into the cards. Sprint volume halves. Landings only, no bounds."
+  },
+  "deloadWeeks": [
+    4,
+    8,
+    12
+  ],
+  "mondayAmSpeedPlyo": {
+    "title": "MONDAY AM — SPEED & PLYOMETRICS",
+    "minutes": 35,
+    "byBlock": {
+      "1": {
+        "warmup": "RAMP: jog 3 min · leg swings · lunge walk 20 yd · A-skip 2x20 yd · build-ups 2x30 yd",
+        "plyometric": "Drop-and-stick 3x5 (6\"→12\") · pogo hop 3x10",
+        "acceleration": "Hill or sled accel 4-5 x 10-15 yd",
+        "easyRun": "15-18 min conversational",
+        "flow": "Mobility flow, 10 min"
+      },
+      "2": {
+        "warmup": "Same as Block 1",
+        "plyometric": "Skater bound + stick 3x4 e/s · hurdle hop stick 3x4",
+        "acceleration": "Flat accel 5 x 15-20 yd",
+        "easyRun": "15 min conversational",
+        "flow": "Mobility flow, 10 min"
+      },
+      "3": {
+        "warmup": "Same as Block 1",
+        "plyometric": "Broad jump 4x3 · single-leg bound 3x3 e/s · low depth jump 3x3 from 12\"",
+        "acceleration": "Flying 15s and 20s x4-5 · one 30 yd run in Week 11",
+        "easyRun": "15 min conversational",
+        "flow": "Mobility flow, 10 min"
+      }
+    }
+  },
+  "tuesdayAmCoreBalanceBrake": {
+    "title": "TUESDAY AM — CORE, BALANCE & BRAKE",
+    "minutes": 30,
+    "structure": "Three rounds of A, two rounds of B.",
+    "narrative": "The Brake block is the addition in this edition and it is the part that protects a thirty-three-year-old playing pickup on a Saturday.",
+    "movements": [
+      {
+        "order": "A1",
+        "name": "Dead Bug — heels to floor",
+        "coachingKey": "Low back pinned. If it lifts, shorten the reach.",
+        "byBlock": {
+          "1": "x8 e/s",
+          "2": "x10 e/s",
+          "3": "x10 e/s, 3s lower"
+        },
+        "eachSide": true
+      },
+      {
+        "order": "A2",
+        "name": "Single-Leg Balance",
+        "coachingKey": "Barefoot, hands off. The wobble is the training.",
+        "byBlock": {
+          "1": "30s e/s, eyes open",
+          "2": "30s e/s, eyes closed",
+          "3": "45s e/s, eyes closed on a foam pad"
+        },
+        "eachSide": true
+      },
+      {
+        "order": "A3",
+        "name": "Side Plank",
+        "coachingKey": "Hips stacked and pushed forward",
+        "byBlock": {
+          "1": "30s e/s",
+          "2": "45s e/s",
+          "3": "45s e/s + top-leg lift"
+        },
+        "eachSide": true
+      },
+      {
+        "order": "A4",
+        "name": "Pallof Press",
+        "coachingKey": "Resist the rotation; the press is incidental",
+        "byBlock": {
+          "1": "x10 e/s",
+          "2": "x12 e/s",
+          "3": "x12 e/s + 3s hold"
+        },
+        "eachSide": true
+      },
+      {
+        "order": "B1",
+        "name": "BRAKE — Landing",
+        "coachingKey": "Three silent seconds. Knee over the foot, never inside it.",
+        "byBlock": {
+          "1": "Drop-and-stick x5",
+          "2": "Single-leg drop-and-stick x5 e/s",
+          "3": "SL drop-and-stick from 18\" x4 e/s"
+        }
+      },
+      {
+        "order": "B2",
+        "name": "BRAKE — Stop",
+        "coachingKey": "Chest over the base, hips back, short choppy final steps",
+        "byBlock": {
+          "1": "March-to-stop x4",
+          "2": "Build-to-stop over 10 yd x4",
+          "3": "10-to-5 stop x4, timed"
+        }
+      },
+      {
+        "order": "B3",
+        "name": "BRAKE — Redirect",
+        "coachingKey": "Plant wide. The cut is decided before the foot lands.",
+        "byBlock": {
+          "1": "Lateral shuffle to stop x4 e/w",
+          "2": "5-0-5 turn x3 e/s",
+          "3": "Reactive cut off a call x6"
+        }
+      },
+      {
+        "order": "B4",
+        "name": "Calf & Tibialis",
+        "coachingKey": "The Achilles insurance policy. Do not skip it.",
+        "byBlock": {
+          "1": "SL calf raise x15 e/s · tibialis x20",
+          "2": "SL calf raise x15 · pogo x15",
+          "3": "SL calf raise x20 · tibialis x25"
+        }
+      }
+    ]
+  },
+  "mobilityFlow": {
+    "title": "THE MOBILITY FLOW",
+    "minutes": 10,
+    "when": "After every AM run",
+    "movements": [
+      {
+        "name": "90/90 Hip Switch",
+        "byBlock": {
+          "1": "x8 each way",
+          "2": "x10 each way",
+          "3": "x10 each way + 5s end-range hold"
+        }
+      },
+      {
+        "name": "Couch Stretch / Hip Flexor ISO",
+        "byBlock": {
+          "1": "45s e/s",
+          "2": "60s e/s",
+          "3": "60s e/s + glute squeeze"
+        }
+      },
+      {
+        "name": "Deep Squat Hold",
+        "byBlock": {
+          "1": "60s",
+          "2": "90s",
+          "3": "2 min, hands off knees"
+        }
+      },
+      {
+        "name": "Thoracic Open Book",
+        "byBlock": {
+          "1": "x8 e/s",
+          "2": "x10 e/s",
+          "3": "x10 e/s + 3s hold"
+        }
+      },
+      {
+        "name": "Wall Shoulder Flexion Slide",
+        "byBlock": {
+          "1": "x10",
+          "2": "x12",
+          "3": "x12 + 3s overhead hold"
+        }
+      },
+      {
+        "name": "Ankle Rock to Wall",
+        "byBlock": {
+          "1": "x10 e/s",
+          "2": "x12 e/s",
+          "3": "x12 e/s, knee past toes"
+        }
+      },
+      {
+        "name": "Dead Hang",
+        "byBlock": {
+          "1": "20s",
+          "2": "30s",
+          "3": "45s"
+        }
+      }
+    ]
+  },
+  "weeklySpeedPlan": [
+    {
+      "week": 1,
+      "monAm": "Drop-and-stick 3x5 · pogo 3x10 · hill or sled accel 4x10 yd · 15 min easy",
+      "thuAm": "20 min easy + 4x20s strides + agility ladder",
+      "satAmMinutes": 30,
+      "sprintVolumeYd": 40,
+      "note": "Hills only. No flat max effort in Block 1."
+    },
+    {
+      "week": 2,
+      "monAm": "Drop-and-stick 3x5 · pogo 3x10 · hill accel 5x10 yd · 15 min easy",
+      "thuAm": "22 min + 5x20s strides + 5-10-5 walkthrough x4",
+      "satAmMinutes": 35,
+      "sprintVolumeYd": 50,
+      "note": null
+    },
+    {
+      "week": 3,
+      "monAm": "SL drop-and-stick 3x4 e/s · hill accel 5x15 yd · 18 min easy",
+      "thuAm": "25 min + 6x20s strides + agility square x4",
+      "satAmMinutes": 40,
+      "sprintVolumeYd": 75,
+      "note": null
+    },
+    {
+      "week": 4,
+      "monAm": "Landings only 3x5 · 15 min easy",
+      "thuAm": "20 min easy",
+      "satAmMinutes": 30,
+      "sprintVolumeYd": 0,
+      "note": "DELOAD — no sprinting",
+      "deload": true
+    },
+    {
+      "week": 5,
+      "monAm": "Skater bound 3x4 e/s · flat accel 5x15 yd · 15 min easy",
+      "thuAm": "25 min inc. 5x1min comfortably hard + pro agility 2E",
+      "satAmMinutes": 45,
+      "sprintVolumeYd": 75,
+      "note": "First flat accelerations"
+    },
+    {
+      "week": 6,
+      "monAm": "Hurdle hop stick 3x4 · flat accel 5x20 yd · 15 min easy",
+      "thuAm": "25 min inc. 6x1min + reactive mirror drill x4",
+      "satAmMinutes": 45,
+      "sprintVolumeYd": 100,
+      "note": "MID-PROGRAM RETEST",
+      "retest": true
+    },
+    {
+      "week": 7,
+      "monAm": "Skater bound 4x4 e/s · flying 10s x4 · 15 min easy",
+      "thuAm": "28 min inc. 6x2min + pro agility 3E",
+      "satAmMinutes": 50,
+      "sprintVolumeYd": 140,
+      "note": "First flying runs"
+    },
+    {
+      "week": 8,
+      "monAm": "Landings only 3x5 · 15 min easy",
+      "thuAm": "20 min + strides",
+      "satAmMinutes": 35,
+      "sprintVolumeYd": 0,
+      "note": "DELOAD — no sprinting",
+      "deload": true
+    },
+    {
+      "week": 9,
+      "monAm": "Broad jump 4x3 · flying 15s x4 · accel 4x20 yd · 15 min easy",
+      "thuAm": "28 min inc. 5x3min + 10-to-5-to-10 x4",
+      "satAmMinutes": 50,
+      "sprintVolumeYd": 180,
+      "note": null
+    },
+    {
+      "week": 10,
+      "monAm": "SL bound 3x3 e/s · flying 20s x4 · 15 min easy",
+      "thuAm": "30 min inc. 6x3min + reactive cut drill x6",
+      "satAmMinutes": 55,
+      "sprintVolumeYd": 220,
+      "note": null
+    },
+    {
+      "week": 11,
+      "monAm": "Low depth jump 3x3 (12\") · flying 20s x5 · 30 yd x2 · 15 min easy",
+      "thuAm": "30 min inc. 4x4min + pro agility 4E",
+      "satAmMinutes": 60,
+      "sprintVolumeYd": 280,
+      "note": "Peak week"
+    },
+    {
+      "week": 12,
+      "monAm": "Landings 2x5 · 2x10 yd at 90% · 15 min easy",
+      "thuAm": "ATHLETIC FIVE TEST DAY (see Week 12 schedule)",
+      "satAmMinutes": 30,
+      "sprintVolumeYd": null,
+      "sprintVolumeNote": "test only",
+      "note": "TEST WEEK",
+      "testWeek": true
+    }
+  ],
+  "speedRules": [
+    {
+      "rule": "Hills and sleds before flat ground",
+      "detail": "Resisted sprinting reduces the demand on the hamstring at the moment it is most vulnerable. Four weeks of it before flat max effort is cheap insurance at 33."
+    },
+    {
+      "rule": "Full recovery, always",
+      "detail": "10-15 yards: 1:30 minimum. 20-30 yards: 2:30. Flying runs: 4:00. If you are breathing hard, you are conditioning, not sprinting."
+    },
+    {
+      "rule": "Never sprint cold, tired, or under-slept",
+      "detail": "The warm-up is not optional and neither is the sleep. Sprinting is the only thing in this program with a genuinely serious downside if done badly."
+    },
+    {
+      "rule": "Build to speed, never jump into it",
+      "detail": "Every sprint session starts with build-ups: 2x30 yards at 70%, then 2x30 at 85%, then the work."
+    },
+    {
+      "rule": "Calves and Achilles get their own attention",
+      "detail": "Pogo hops, calf isometrics and tibialis work appear all twelve weeks. The Achilles is the tissue that ends recreational athletic careers in this age band."
+    },
+    {
+      "rule": "If you play a sport, that counts",
+      "detail": "See the pickup-sport protocol at the back. A Saturday basketball run replaces the Thursday agility work, not adds to it."
+    }
+  ],
+  "strengthDays": {
+    "A": {
+      "1": {
+        "day": "Monday",
+        "focus": "Hinge, Glute & Horizontal Power",
+        "mainLift": "Trap-Bar Deadlift",
+        "weeks": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "clusters": [
+          {
+            "id": "A",
+            "label": "POWER PRIMER",
+            "rounds": 3,
+            "restNote": "60s",
+            "qualityCap": true,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "A1",
+                "name": "Trap-Bar Jump",
+                "rest": "60s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 20
+                    },
+                    "reps": "x3"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 20
+                    },
+                    "reps": "x3"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 25
+                    },
+                    "reps": "x3"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 20
+                    },
+                    "reps": "x3"
+                  }
+                ]
+              },
+              {
+                "order": "A2",
+                "name": "90/90 Hip Switch",
+                "rest": "60s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/w"
+                  }
+                ]
+              },
+              {
+                "order": "A3",
+                "name": "Banded Glute Bridge",
+                "rest": "60s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15"
+                  }
+                ]
+              },
+              {
+                "order": "A4",
+                "name": "Dead Bug",
+                "rest": "60s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "B",
+            "label": "MAIN HINGE & GLUTE",
+            "rounds": 3,
+            "restNote": "75s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "B1",
+                "name": "Trap-Bar Deadlift",
+                "rest": "75s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 65
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 68
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 72
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 60
+                    },
+                    "reps": "x8"
+                  }
+                ]
+              },
+              {
+                "order": "B2",
+                "name": "Barbell or DB Hip Thrust",
+                "rest": "75s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8"
+                  }
+                ]
+              },
+              {
+                "order": "B3",
+                "name": "Single-Leg RDL",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x6 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "B4",
+                "name": "Copenhagen Plank — short lever",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "20s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "20s e/s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "C",
+            "label": "POSTERIOR FINISHER",
+            "rounds": 2,
+            "restNote": "45s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "C1",
+                "name": "Nordic or Leg Curl — 4s ecc",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8"
+                  }
+                ]
+              },
+              {
+                "order": "C2",
+                "name": "Chest-Supported Row",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x10"
+                  }
+                ]
+              },
+              {
+                "order": "C3",
+                "name": "Banded Lateral Walk",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/w"
+                  }
+                ]
+              },
+              {
+                "order": "C4",
+                "name": "Farmer Carry",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "40 yd"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "40 yd"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "50 yd"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "40 yd"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "2": {
+        "day": "Monday",
+        "focus": "Hinge, Glute & Horizontal Power",
+        "mainLift": "Trap-Bar Deadlift",
+        "weeks": [
+          5,
+          6,
+          7,
+          8
+        ],
+        "clusters": [
+          {
+            "id": "A",
+            "label": "POWER PRIMER",
+            "rounds": 3,
+            "restNote": "75s",
+            "qualityCap": true,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "A1",
+                "name": "Broad Jump — stick the landing",
+                "rest": "75s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x3"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x3"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x4"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x3"
+                  }
+                ]
+              },
+              {
+                "order": "A2",
+                "name": "90/90 Hip Switch",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/w"
+                  }
+                ]
+              },
+              {
+                "order": "A3",
+                "name": "Banded Glute Bridge",
+                "rest": "75s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15"
+                  }
+                ]
+              },
+              {
+                "order": "A4",
+                "name": "Dead Bug — 3s lower",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "B",
+            "label": "MAIN HINGE & GLUTE",
+            "rounds": 4,
+            "restNote": "90s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "B1",
+                "name": "Trap-Bar Deadlift",
+                "rest": "90s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 72
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 75
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 78
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 65
+                    },
+                    "reps": "x6"
+                  }
+                ]
+              },
+              {
+                "order": "B2",
+                "name": "Barbell Hip Thrust",
+                "rest": "90s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 72
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 75
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 78
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 65
+                    },
+                    "reps": "x8"
+                  }
+                ]
+              },
+              {
+                "order": "B3",
+                "name": "Single-Leg RDL",
+                "rest": "90s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x6 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "B4",
+                "name": "Copenhagen Plank — long lever",
+                "rest": "90s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "35s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s e/s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "C",
+            "label": "POSTERIOR FINISHER",
+            "rounds": 2,
+            "restNote": "45s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "C1",
+                "name": "Nordic or Leg Curl — 4s ecc",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8"
+                  }
+                ]
+              },
+              {
+                "order": "C2",
+                "name": "Chest-Supported Row",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x10"
+                  }
+                ]
+              },
+              {
+                "order": "C3",
+                "name": "Banded Lateral Walk",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/w"
+                  }
+                ]
+              },
+              {
+                "order": "C4",
+                "name": "Farmer Carry",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "50 yd"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "50 yd"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "60 yd"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "40 yd"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "3": {
+        "day": "Monday",
+        "focus": "Hinge & Horizontal Power — Contrast",
+        "mainLift": "Trap-Bar Deadlift",
+        "weeks": [
+          9,
+          10,
+          11,
+          12
+        ],
+        "clusters": [
+          {
+            "id": "A",
+            "label": "PRIMER",
+            "rounds": 3,
+            "restNote": "60s",
+            "qualityCap": true,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "A1",
+                "name": "90/90 Hip Switch + hold",
+                "rest": "60s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/w"
+                  }
+                ]
+              },
+              {
+                "order": "A2",
+                "name": "Banded Glute Bridge",
+                "rest": "60s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15"
+                  }
+                ]
+              },
+              {
+                "order": "A3",
+                "name": "Dead Bug — 3s lower",
+                "rest": "60s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "A4",
+                "name": "Pogo Hop",
+                "rest": "60s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "B",
+            "label": "CONTRAST",
+            "rounds": 4,
+            "restNote": "2:00 · heavy set -> 60s -> jump",
+            "qualityCap": false,
+            "contrast": true,
+            "exercises": [
+              {
+                "order": "B1",
+                "name": "Trap-Bar Deadlift",
+                "rest": "2:00",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 75
+                    },
+                    "reps": "x5"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 78
+                    },
+                    "reps": "x5"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 80
+                    },
+                    "reps": "x5"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 65
+                    },
+                    "reps": "x5"
+                  }
+                ]
+              },
+              {
+                "order": "B2",
+                "name": "Broad Jump — stick (contrast)",
+                "rest": "2:00",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x3"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x3"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x3"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x2"
+                  }
+                ],
+                "notes": "Contrast pair with B1"
+              },
+              {
+                "order": "B3",
+                "name": "Barbell Hip Thrust",
+                "rest": "2:00",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 75
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 78
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 80
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 65
+                    },
+                    "reps": "x8"
+                  }
+                ]
+              },
+              {
+                "order": "B4",
+                "name": "Copenhagen — long lever",
+                "rest": "2:00",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "35s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "40s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "45s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s e/s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "C",
+            "label": "POSTERIOR FINISHER",
+            "rounds": 2,
+            "restNote": "45s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "C1",
+                "name": "Nordic or Leg Curl — 4s ecc",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8"
+                  }
+                ]
+              },
+              {
+                "order": "C2",
+                "name": "Single-Leg RDL",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "C3",
+                "name": "Chest-Supported Row",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x10"
+                  }
+                ]
+              },
+              {
+                "order": "C4",
+                "name": "Farmer Carry",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "60 yd"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "60 yd"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "70 yd"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "40 yd"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "B": {
+      "1": {
+        "day": "Tuesday",
+        "focus": "Upper Push / Pull & Rotational Power",
+        "mainLift": "DB Bench Press",
+        "weeks": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "clusters": [
+          {
+            "id": "A",
+            "label": "POWER PRIMER",
+            "rounds": 3,
+            "restNote": "60s",
+            "qualityCap": true,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "A1",
+                "name": "Med Ball Rotational Throw",
+                "rest": "60s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x5 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x5 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x4 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "A2",
+                "name": "Half-Kneeling T-Spine Rotation",
+                "rest": "60s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "A3",
+                "name": "Band Pull-Apart",
+                "rest": "60s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15"
+                  }
+                ]
+              },
+              {
+                "order": "A4",
+                "name": "Hollow Hold",
+                "rest": "60s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "20s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "20s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "B",
+            "label": "MAIN PRESS & PULL",
+            "rounds": 3,
+            "restNote": "75s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "B1",
+                "name": "DB Bench Press",
+                "rest": "75s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8"
+                  }
+                ]
+              },
+              {
+                "order": "B2",
+                "name": "Chin-up or Lat Pulldown",
+                "rest": "75s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x6"
+                  }
+                ]
+              },
+              {
+                "order": "B3",
+                "name": "Half-Kneeling 1-Arm DB Press",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "B4",
+                "name": "1-Arm DB Row",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x12 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x12 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x10 e/s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "C",
+            "label": "SHOULDER HEALTH & GRIP",
+            "rounds": 2,
+            "restNote": "45s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "C1",
+                "name": "Face Pull",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15"
+                  }
+                ]
+              },
+              {
+                "order": "C2",
+                "name": "Band External Rotation",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "C3",
+                "name": "Suitcase Carry",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "40 yd e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "40 yd e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "50 yd e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "40 yd e/s"
+                  }
+                ]
+              },
+              {
+                "order": "C4",
+                "name": "Biceps / Triceps — choice",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x12"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "2": {
+        "day": "Tuesday",
+        "focus": "Upper Push / Pull & Rotational Power",
+        "mainLift": "Bench Press",
+        "weeks": [
+          5,
+          6,
+          7,
+          8
+        ],
+        "clusters": [
+          {
+            "id": "A",
+            "label": "POWER PRIMER",
+            "rounds": 3,
+            "restNote": "75s",
+            "qualityCap": true,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "A1",
+                "name": "Med Ball Rotational Throw — step-behind",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x5 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x5 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x5 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x4 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "A2",
+                "name": "Half-Kneeling T-Spine Rotation",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "A3",
+                "name": "Band Pull-Apart",
+                "rest": "75s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15"
+                  }
+                ]
+              },
+              {
+                "order": "A4",
+                "name": "Hollow Hold",
+                "rest": "75s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "35s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "B",
+            "label": "MAIN PRESS & PULL",
+            "rounds": 4,
+            "restNote": "90s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "B1",
+                "name": "Bench Press or DB Bench",
+                "rest": "90s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 72
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 75
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 78
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 65
+                    },
+                    "reps": "x6"
+                  }
+                ]
+              },
+              {
+                "order": "B2",
+                "name": "Chin-up + weight or Lat Pulldown",
+                "rest": "90s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8"
+                  }
+                ]
+              },
+              {
+                "order": "B3",
+                "name": "Half-Kneeling 1-Arm DB Press",
+                "rest": "90s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "B4",
+                "name": "1-Arm DB Row",
+                "rest": "90s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x10 e/s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "C",
+            "label": "SHOULDER HEALTH & GRIP",
+            "rounds": 2,
+            "restNote": "45s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "C1",
+                "name": "Face Pull",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15"
+                  }
+                ]
+              },
+              {
+                "order": "C2",
+                "name": "Band External Rotation",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "C3",
+                "name": "Suitcase Carry",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "50 yd e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "50 yd e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "60 yd e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "40 yd e/s"
+                  }
+                ]
+              },
+              {
+                "order": "C4",
+                "name": "Biceps / Triceps — choice",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x12"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "3": {
+        "day": "Tuesday",
+        "focus": "Upper & Rotational Power — Contrast",
+        "mainLift": "Bench Press",
+        "weeks": [
+          9,
+          10,
+          11,
+          12
+        ],
+        "clusters": [
+          {
+            "id": "A",
+            "label": "PRIMER",
+            "rounds": 3,
+            "restNote": "60s",
+            "qualityCap": true,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "A1",
+                "name": "Half-Kneeling T-Spine Rotation",
+                "rest": "60s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "A2",
+                "name": "Band Pull-Apart",
+                "rest": "60s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15"
+                  }
+                ]
+              },
+              {
+                "order": "A3",
+                "name": "Hollow Hold",
+                "rest": "60s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "35s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "40s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "40s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s"
+                  }
+                ]
+              },
+              {
+                "order": "A4",
+                "name": "Dead Hang",
+                "rest": "60s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "35s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "40s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "45s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "B",
+            "label": "CONTRAST",
+            "rounds": 4,
+            "restNote": "2:00",
+            "qualityCap": false,
+            "contrast": true,
+            "exercises": [
+              {
+                "order": "B1",
+                "name": "Bench Press",
+                "rest": "2:00",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 75
+                    },
+                    "reps": "x5"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 78
+                    },
+                    "reps": "x5"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 80
+                    },
+                    "reps": "x5"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 65
+                    },
+                    "reps": "x5"
+                  }
+                ]
+              },
+              {
+                "order": "B2",
+                "name": "Med Ball Chest Pass or Explosive Push-up (contrast)",
+                "rest": "2:00",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x4"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x4"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x4"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x3"
+                  }
+                ],
+                "notes": "Contrast pair with B1"
+              },
+              {
+                "order": "B3",
+                "name": "Chin-up + weight",
+                "rest": "2:00",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x5"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x5"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x5"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8"
+                  }
+                ]
+              },
+              {
+                "order": "B4",
+                "name": "Med Ball Rotational Throw",
+                "rest": "2:00",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x4 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x4 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x4 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x3 e/s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "C",
+            "label": "SHOULDER & GRIP",
+            "rounds": 2,
+            "restNote": "45s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "C1",
+                "name": "Half-Kneeling 1-Arm DB Press",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "C2",
+                "name": "1-Arm DB Row",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x10 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "C3",
+                "name": "Face Pull + Band External Rotation",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20 / x15"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20 / x15"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20 / x15"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15 / x12"
+                  }
+                ],
+                "comboExercise": true,
+                "notes": "Combo cell: Face Pull reps / Band External Rotation reps"
+              },
+              {
+                "order": "C4",
+                "name": "Suitcase Carry",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "60 yd e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "60 yd e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "70 yd e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "40 yd e/s"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "C": {
+      "1": {
+        "day": "Thursday",
+        "focus": "Squat, Unilateral & Vertical Power",
+        "mainLift": "Back or Goblet Squat",
+        "weeks": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "clusters": [
+          {
+            "id": "A",
+            "label": "POWER PRIMER",
+            "rounds": 3,
+            "restNote": "60s",
+            "qualityCap": true,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "A1",
+                "name": "Countermovement Jump — stick the landing",
+                "rest": "60s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x4"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x4"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x5"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x3"
+                  }
+                ]
+              },
+              {
+                "order": "A2",
+                "name": "Couch Stretch / Hip Flexor ISO",
+                "rest": "60s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "40s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "45s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "50s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "40s e/s"
+                  }
+                ]
+              },
+              {
+                "order": "A3",
+                "name": "Ankle Rock to Wall",
+                "rest": "60s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "A4",
+                "name": "Bird Dog",
+                "rest": "60s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "B",
+            "label": "MAIN SQUAT & UNILATERAL",
+            "rounds": 3,
+            "restNote": "75s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "B1",
+                "name": "Back Squat or Goblet Squat",
+                "rest": "75s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 65
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 68
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 72
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 60
+                    },
+                    "reps": "x8"
+                  }
+                ]
+              },
+              {
+                "order": "B2",
+                "name": "Rear-Foot Elevated Split Squat",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "B3",
+                "name": "Lateral or Forward Step-Up",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "B4",
+                "name": "Pallof Press",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "C",
+            "label": "HIP, CALF & BALANCE",
+            "rounds": 2,
+            "restNote": "45s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "C1",
+                "name": "Cable Pull-Through or KB Swing",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x10"
+                  }
+                ]
+              },
+              {
+                "order": "C2",
+                "name": "Banded Hip Abduction ISO",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s e/s"
+                  }
+                ]
+              },
+              {
+                "order": "C3",
+                "name": "Single-Leg Calf Raise",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "C4",
+                "name": "Single-Leg Balance — eyes open",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "40s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "2": {
+        "day": "Thursday",
+        "focus": "Squat, Unilateral & Vertical Power",
+        "mainLift": "Back Squat",
+        "weeks": [
+          5,
+          6,
+          7,
+          8
+        ],
+        "clusters": [
+          {
+            "id": "A",
+            "label": "POWER PRIMER",
+            "rounds": 3,
+            "restNote": "75s",
+            "qualityCap": true,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "A1",
+                "name": "Hurdle Hop — stick the landing",
+                "rest": "75s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x4"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x4"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x5"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x3"
+                  }
+                ]
+              },
+              {
+                "order": "A2",
+                "name": "Couch Stretch / Hip Flexor ISO",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "50s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "55s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "60s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "45s e/s"
+                  }
+                ]
+              },
+              {
+                "order": "A3",
+                "name": "Ankle Rock to Wall",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "A4",
+                "name": "Bird Dog — 3s hold",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "B",
+            "label": "MAIN SQUAT & UNILATERAL",
+            "rounds": 4,
+            "restNote": "90s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "B1",
+                "name": "Back Squat",
+                "rest": "90s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 72
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 75
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 78
+                    },
+                    "reps": "x6"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 65
+                    },
+                    "reps": "x6"
+                  }
+                ]
+              },
+              {
+                "order": "B2",
+                "name": "Rear-Foot Elevated Split Squat",
+                "rest": "90s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "B3",
+                "name": "Lateral Step-Up",
+                "rest": "90s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "B4",
+                "name": "Pallof Press + 3s hold",
+                "rest": "90s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "C",
+            "label": "HIP, CALF & BALANCE",
+            "rounds": 2,
+            "restNote": "45s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "C1",
+                "name": "Cable Pull-Through or KB Swing",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x10"
+                  }
+                ]
+              },
+              {
+                "order": "C2",
+                "name": "Banded Hip Abduction ISO",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "35s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "35s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s e/s"
+                  }
+                ]
+              },
+              {
+                "order": "C3",
+                "name": "Single-Leg Calf Raise — 3s ecc",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "C4",
+                "name": "Single-Leg Balance — EYES CLOSED",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "20s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "20s e/s"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "3": {
+        "day": "Thursday",
+        "focus": "Squat & Vertical Power — Contrast",
+        "mainLift": "Back Squat",
+        "weeks": [
+          9,
+          10,
+          11,
+          12
+        ],
+        "clusters": [
+          {
+            "id": "A",
+            "label": "PRIMER",
+            "rounds": 3,
+            "restNote": "60s",
+            "qualityCap": true,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "A1",
+                "name": "Couch Stretch / Hip Flexor ISO",
+                "rest": "60s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "60s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "60s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "60s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "45s e/s"
+                  }
+                ]
+              },
+              {
+                "order": "A2",
+                "name": "Ankle Rock to Wall",
+                "rest": "60s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "A3",
+                "name": "Bird Dog — 5s hold",
+                "rest": "60s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "A4",
+                "name": "Single-Leg Calf Raise — 3s ecc",
+                "rest": "60s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x20 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12 e/s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "B",
+            "label": "CONTRAST",
+            "rounds": 4,
+            "restNote": "2:00",
+            "qualityCap": false,
+            "contrast": true,
+            "exercises": [
+              {
+                "order": "B1",
+                "name": "Back Squat",
+                "rest": "2:00",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 75
+                    },
+                    "reps": "x5"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 78
+                    },
+                    "reps": "x5"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 80
+                    },
+                    "reps": "x5"
+                  },
+                  {
+                    "load": {
+                      "type": "pct",
+                      "value": 65
+                    },
+                    "reps": "x5"
+                  }
+                ]
+              },
+              {
+                "order": "B2",
+                "name": "Countermovement Jump — stick (contrast)",
+                "rest": "2:00",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x3"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x3"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x3"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x2"
+                  }
+                ],
+                "notes": "Contrast pair with B1"
+              },
+              {
+                "order": "B3",
+                "name": "Rear-Foot Elevated Split Squat",
+                "rest": "2:00",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "B4",
+                "name": "Lateral Bound — stick (contrast)",
+                "rest": "2:00",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x3 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x3 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x3 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x2 e/s"
+                  }
+                ],
+                "notes": "Contrast pair with B3"
+              }
+            ]
+          },
+          {
+            "id": "C",
+            "label": "HIP & BALANCE",
+            "rounds": 2,
+            "restNote": "45s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "C1",
+                "name": "Cable Pull-Through or KB Swing",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x12"
+                  }
+                ]
+              },
+              {
+                "order": "C2",
+                "name": "Banded Hip Abduction ISO",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "35s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "40s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "40s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s e/s"
+                  }
+                ]
+              },
+              {
+                "order": "C3",
+                "name": "SL Balance — eyes closed, foam pad",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "35s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s e/s"
+                  }
+                ]
+              },
+              {
+                "order": "C4",
+                "name": "Front-Rack Carry",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "60 yd"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "60 yd"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "70 yd"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "40 yd"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "D": {
+      "1": {
+        "day": "Saturday",
+        "focus": "Athletic Resilience",
+        "mainLift": "Kettlebell Swing",
+        "weeks": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "clusters": [
+          {
+            "id": "A",
+            "label": "POWER PRIMER",
+            "rounds": 3,
+            "restNote": "60s",
+            "qualityCap": true,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "A1",
+                "name": "Kettlebell Swing or Med Ball Slam",
+                "rest": "60s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x15"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x10"
+                  }
+                ]
+              },
+              {
+                "order": "A2",
+                "name": "Half-Kneeling Landmine Press",
+                "rest": "60s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "A3",
+                "name": "90/90 Hip Switch",
+                "rest": "60s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/w"
+                  }
+                ]
+              },
+              {
+                "order": "A4",
+                "name": "Tandem Stance Balance",
+                "rest": "60s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "40s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "B",
+            "label": "FULL BODY",
+            "rounds": 3,
+            "restNote": "75s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "B1",
+                "name": "Glute Bridge March or Hip Thrust",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x12 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "B2",
+                "name": "Inverted Row",
+                "rest": "75s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x10"
+                  }
+                ]
+              },
+              {
+                "order": "B3",
+                "name": "DB Reverse Lunge",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "B4",
+                "name": "Copenhagen Plank — long lever",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "20s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "20s e/s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "C",
+            "label": "CARRY & GRIP",
+            "rounds": 2,
+            "restNote": "45s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "C1",
+                "name": "Carry Medley — farmer → front rack → overhead",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "30 yd ea"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "30 yd ea"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "40 yd ea"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "30 yd ea"
+                  }
+                ]
+              },
+              {
+                "order": "C2",
+                "name": "Ab Rollout or Stir-the-Pot",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8"
+                  }
+                ]
+              },
+              {
+                "order": "C3",
+                "name": "Side Plank",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "35s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "40s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  }
+                ]
+              },
+              {
+                "order": "C4",
+                "name": "Dead Hang",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "35s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "2": {
+        "day": "Saturday",
+        "focus": "Athletic Resilience",
+        "mainLift": "Kettlebell Swing",
+        "weeks": [
+          5,
+          6,
+          7,
+          8
+        ],
+        "clusters": [
+          {
+            "id": "A",
+            "label": "POWER PRIMER",
+            "rounds": 3,
+            "restNote": "75s",
+            "qualityCap": true,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "A1",
+                "name": "Kettlebell Swing or Med Ball Slam",
+                "rest": "75s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x15"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x15"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x15"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x12"
+                  }
+                ]
+              },
+              {
+                "order": "A2",
+                "name": "Half-Kneeling Landmine Press",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "A3",
+                "name": "90/90 Hip Switch + hold",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/w"
+                  }
+                ]
+              },
+              {
+                "order": "A4",
+                "name": "Tandem Walk — EYES CLOSED",
+                "rest": "75s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "10 steps"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "10 steps"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "12 steps"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "10 steps"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "B",
+            "label": "FULL BODY",
+            "rounds": 3,
+            "restNote": "90s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "B1",
+                "name": "Single-Leg Hip Thrust",
+                "rest": "90s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x10 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x10 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "B2",
+                "name": "Inverted Row — feet elevated",
+                "rest": "90s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x10"
+                  }
+                ]
+              },
+              {
+                "order": "B3",
+                "name": "Skater Squat or DB Reverse Lunge",
+                "rest": "90s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "B4",
+                "name": "Copenhagen Plank — long lever",
+                "rest": "90s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "35s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "40s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s e/s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "C",
+            "label": "CARRY & GRIP",
+            "rounds": 2,
+            "restNote": "45s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "C1",
+                "name": "Carry Medley",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "40 yd ea"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "40 yd ea"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "50 yd ea"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "30 yd ea"
+                  }
+                ]
+              },
+              {
+                "order": "C2",
+                "name": "Ab Rollout or Stir-the-Pot",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8"
+                  }
+                ]
+              },
+              {
+                "order": "C3",
+                "name": "Side Plank",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "40s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "45s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "50s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  }
+                ]
+              },
+              {
+                "order": "C4",
+                "name": "Dead Hang",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "35s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "40s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "45s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "3": {
+        "day": "Saturday",
+        "focus": "Athletic Resilience",
+        "mainLift": "Kettlebell Swing",
+        "weeks": [
+          9,
+          10,
+          11,
+          12
+        ],
+        "clusters": [
+          {
+            "id": "A",
+            "label": "POWER PRIMER",
+            "rounds": 3,
+            "restNote": "75s",
+            "qualityCap": true,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "A1",
+                "name": "Kettlebell Swing or Med Ball Slam",
+                "rest": "75s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x15"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x15"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 3
+                    },
+                    "reps": "x15"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x12"
+                  }
+                ]
+              },
+              {
+                "order": "A2",
+                "name": "Half-Kneeling Landmine Press",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "A3",
+                "name": "90/90 Hip Switch + hold",
+                "rest": "75s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x10 e/w"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8 e/w"
+                  }
+                ]
+              },
+              {
+                "order": "A4",
+                "name": "Tandem Walk — eyes closed, backward",
+                "rest": "75s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "10 steps"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "12 steps"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "12 steps"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "10 steps"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "B",
+            "label": "FULL BODY",
+            "rounds": 3,
+            "restNote": "90s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "B1",
+                "name": "Single-Leg Hip Thrust",
+                "rest": "90s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x10 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "B2",
+                "name": "Inverted Row — feet elevated",
+                "rest": "90s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x8"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x10"
+                  }
+                ]
+              },
+              {
+                "order": "B3",
+                "name": "Skater Squat or DB Reverse Lunge",
+                "rest": "90s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "x6 e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "x8 e/s"
+                  }
+                ]
+              },
+              {
+                "order": "B4",
+                "name": "Copenhagen — long lever",
+                "rest": "90s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "40s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "45s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "45s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "25s e/s"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "C",
+            "label": "CARRY & GRIP",
+            "rounds": 2,
+            "restNote": "45s",
+            "qualityCap": false,
+            "contrast": false,
+            "exercises": [
+              {
+                "order": "C1",
+                "name": "Carry Medley",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "50 yd ea"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "50 yd ea"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 2
+                    },
+                    "reps": "60 yd ea"
+                  },
+                  {
+                    "load": {
+                      "type": "rir",
+                      "value": 4
+                    },
+                    "reps": "30 yd ea"
+                  }
+                ]
+              },
+              {
+                "order": "C2",
+                "name": "Ab Rollout or Stir-the-Pot",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x12"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x15"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "x8"
+                  }
+                ]
+              },
+              {
+                "order": "C3",
+                "name": "Side Plank",
+                "rest": "45s",
+                "eachSide": true,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "50s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "55s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "60s e/s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s e/s"
+                  }
+                ]
+              },
+              {
+                "order": "C4",
+                "name": "Dead Hang",
+                "rest": "45s",
+                "eachSide": false,
+                "weeks": [
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "45s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "50s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "55s"
+                  },
+                  {
+                    "load": {
+                      "type": "none"
+                    },
+                    "reps": "30s"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "testing": {
+    "longevityTen": [
+      {
+        "num": 1,
+        "name": "Resting heart rate",
+        "protocol": "Morning, before rising, 3 days averaged",
+        "unit": "bpm",
+        "direction": "lower_better",
+        "baseline": 70,
+        "solid": 62,
+        "strong": 55,
+        "thresholdOp": "under"
+      },
+      {
+        "num": 2,
+        "name": "1.5-mile run for time",
+        "protocol": "Flat or treadmill at 1% incline, full warm-up",
+        "unit": "mm:ss",
+        "direction": "lower_better",
+        "baseline": "13:00",
+        "solid": "11:00",
+        "strong": "9:45",
+        "thresholdOp": "under"
+      },
+      {
+        "num": 3,
+        "name": "Grip strength",
+        "protocol": "Dynamometer, elbow at 90°, best of 3",
+        "unit": "kg",
+        "direction": "higher_better",
+        "baseline": 45,
+        "solid": 55,
+        "strong": 62,
+        "strongPlus": true,
+        "thresholdOp": "over"
+      },
+      {
+        "num": 4,
+        "name": "Single-leg balance, eyes closed",
+        "protocol": "Barefoot, hands on hips, best of 2",
+        "unit": "s",
+        "direction": "higher_better",
+        "baseline": 10,
+        "solid": 20,
+        "strong": 30,
+        "strongPlus": true,
+        "thresholdOp": "over",
+        "bilateral": true
+      },
+      {
+        "num": 5,
+        "name": "Sit-to-rise",
+        "protocol": "Start at 10, subtract 1 point per support hand/limb used getting up and down from the floor",
+        "unit": "score(0-10)",
+        "direction": "higher_better",
+        "baseline": 7,
+        "solid": 9,
+        "strong": 10,
+        "thresholdOp": "over"
+      },
+      {
+        "num": 6,
+        "name": "Deep squat hold",
+        "protocol": "Heels down, arms inside knees",
+        "unit": "time",
+        "direction": "higher_better",
+        "baseline": "60s",
+        "solid": "2:00",
+        "strong": "3:00",
+        "strongPlus": true,
+        "thresholdOp": "over"
+      },
+      {
+        "num": 7,
+        "name": "Trap-bar deadlift E1RM",
+        "protocol": "Heavy set of 5 at RIR 1, estimated 1RM = weight x 1.15 (round to nearest 5 lb)",
+        "unit": "x bodyweight",
+        "direction": "higher_better",
+        "baseline": 1.25,
+        "solid": 1.75,
+        "strong": 2.0,
+        "thresholdOp": "over",
+        "formula": "e1rm = heavy_set_of_5_weight * 1.15",
+        "normalizedToBodyweight": true
+      },
+      {
+        "num": 8,
+        "name": "Push-ups",
+        "protocol": "To technical failure",
+        "unit": "reps",
+        "direction": "higher_better",
+        "baseline": 20,
+        "solid": 35,
+        "strong": 45,
+        "strongPlus": true,
+        "thresholdOp": "over"
+      },
+      {
+        "num": 9,
+        "name": "Side plank",
+        "protocol": "Each side; record the difference between sides",
+        "unit": "s",
+        "direction": "higher_better",
+        "baseline": 45,
+        "solid": 75,
+        "strong": 90,
+        "strongPlus": true,
+        "thresholdOp": "over",
+        "bilateral": true,
+        "recordSideDifference": true
+      },
+      {
+        "num": 10,
+        "name": "Shoulder flexion at the wall",
+        "protocol": "Low back flat against wall, arms overhead",
+        "unit": "qualitative",
+        "direction": "higher_better",
+        "baseline": "Within 3\"",
+        "solid": "Thumbs graze",
+        "strong": "Thumbs flat",
+        "thresholdOp": "qualitative"
+      }
+    ],
+    "athleticFive": [
+      {
+        "num": 11,
+        "name": "10-yard sprint",
+        "protocol": "Two-point start, phone timing app or timing gates. 3 attempts, full recovery between.",
+        "unit": "s",
+        "direction": "lower_better",
+        "baseline": 2.05,
+        "solid": 1.9,
+        "strong": 1.78,
+        "thresholdOp": "under",
+        "attempts": 3,
+        "bestAttempt": true,
+        "caution": "If you have not run fast since your twenties, DO NOT test this at Week 0. Run Block 1 first and test at Week 6."
+      },
+      {
+        "num": 12,
+        "name": "Standing broad jump",
+        "protocol": "Two feet, arm swing allowed, measured to the nearest heel. 3 attempts.",
+        "unit": "ft-in",
+        "direction": "higher_better",
+        "baseline": "6'6\"",
+        "solid": "7'8\"",
+        "strong": "8'6\"",
+        "thresholdOp": "over",
+        "attempts": 3,
+        "bestAttempt": true
+      },
+      {
+        "num": 13,
+        "name": "Countermovement jump",
+        "protocol": "Hands on hips or arm swing — pick one and never change it. 3 attempts.",
+        "unit": "in",
+        "direction": "higher_better",
+        "baseline": 15,
+        "solid": 20,
+        "strong": 25,
+        "thresholdOp": "over",
+        "attempts": 3,
+        "bestAttempt": true,
+        "note": "Arm-swing method choice must be locked at Week 0 and reused every retest."
+      },
+      {
+        "num": 14,
+        "name": "5-10-5 (pro agility)",
+        "protocol": "2 attempts each direction, full recovery",
+        "unit": "s",
+        "direction": "lower_better",
+        "baseline": 5.3,
+        "solid": 4.9,
+        "strong": 4.6,
+        "thresholdOp": "under",
+        "attempts": 2,
+        "bothDirections": true,
+        "bestAttempt": true
+      },
+      {
+        "num": 15,
+        "name": "10-to-5 Deceleration Deficit",
+        "protocol": "Sprint-and-stop time minus sprint-through time, both measured over 10 yards",
+        "unit": "s",
+        "direction": "lower_better",
+        "baseline": 0.9,
+        "solid": 0.7,
+        "strong": 0.55,
+        "thresholdOp": "under",
+        "formula": "deficit = sprint_and_stop_time_10yd - sprint_through_time_10yd"
+      }
+    ],
+    "events": {
+      "week0": {
+        "label": "Week 0 Baseline",
+        "markers": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "note": "Complete baseline test for all 15 markers, finished before Week 1 begins. Get medically cleared first, particularly before the 1.5-mile test and before any maximal sprint, if largely inactive, carrying cardiovascular risk factors, or not having sprinted in years.",
+        "scheduleSpecifiedInPdf": false,
+        "schedulingRules": {
+          "restingHeartRate": "Marker #1 protocol requires morning-before-rising readings averaged over 3 days (per the Longevity Ten protocol) — Week 0 testing necessarily spans at least 3 calendar days for this marker alone.",
+          "athleticFive": "Markers #11-15 must be tested together on a separate, fresh day, after a full warm-up and build-ups. Never at the end of another session and never on tired legs (per the Athletic Five protocol).",
+          "sprintDeferral": "If the athlete has not run fast since their twenties, DO NOT test marker #11 (10-yard sprint) at Week 0 — defer it to Week 6, once four weeks of hills/sled work (Block 1) have prepared the tissue. Markers #12-15 are still tested at Week 0 as normal; only #11 is deferred."
+        },
+        "suggestedSchedule": {
+          "isFlexible": true,
+          "note": "The source PDF does not prescribe exact Week 0 weekdays (unlike Week 6 and Week 12, which do). This is an app-suggested default only, modeled on the Week 12 3-day test-week format — athletes/coaches may reorder or spread it across more days, as long as the resting-heart-rate 3-morning window and the Athletic-Five fresh-day rule above are respected.",
+          "days": [
+            {
+              "suggestedDay": "Morning 1 of 3",
+              "what": "Begin resting heart rate collection (#1). Optionally pair with the other quick Longevity Ten markers: grip strength (#3), single-leg balance eyes closed (#4), sit-to-rise (#5), deep squat hold (#6), shoulder flexion at the wall (#10).",
+              "markers": [
+                1,
+                3,
+                4,
+                5,
+                6,
+                10
+              ]
+            },
+            {
+              "suggestedDay": "Morning 2 of 3",
+              "what": "Resting heart rate, reading 2 of 3."
+            },
+            {
+              "suggestedDay": "Morning 3 of 3",
+              "what": "Resting heart rate, reading 3 of 3 — baseline RHR is now the 3-morning average."
+            },
+            {
+              "suggestedDay": "Athletic Five day (separate, fresh, full warm-up)",
+              "what": "10-yard sprint (#11, unless deferred — see sprintDeferral above), standing broad jump (#12), countermovement jump (#13), 5-10-5 (#14), 10-to-5 deceleration deficit (#15). Full recovery between everything. Nothing else that day.",
+              "markers": [
+                11,
+                12,
+                13,
+                14,
+                15
+              ]
+            },
+            {
+              "suggestedDay": "Strength/other day",
+              "what": "Trap-bar deadlift E1RM (#7, heavy set of 5 at RIR1 x1.15), push-ups to technical failure (#8), side plank (#9). The 1.5-mile run (#2) can be placed here or on its own day.",
+              "markers": [
+                7,
+                8,
+                9,
+                2
+              ]
+            }
+          ]
+        }
+      },
+      "week6": {
+        "label": "Week 6 Mid-Program Retest",
+        "day": "Wednesday (the off day)",
+        "markers": [
+          1,
+          4,
+          5,
+          9,
+          12,
+          15
+        ],
+        "conditionalMarkers": [
+          {
+            "num": 11,
+            "condition": "Add the 10-yard sprint ONLY when it was deferred at Week 0 (see week0.schedulingRules.sprintDeferral). Four weeks of hills/sled work have by now prepared the tissue for it."
+          }
+        ],
+        "note": "PARTIAL retest — exactly the six markers specified in the PDF: resting heart rate (#1), single-leg balance eyes closed (#4), sit-to-rise (#5), side plank (#9), standing broad jump (#12), and the 10-to-5 deceleration deficit (#15), plus the conditional 10-yard sprint (#11) above. This is intentional per the PDF. Do NOT treat Week 6 as a complete 15-marker retest, and do not present it to the user as one."
+      },
+      "week12": {
+        "label": "Week 12 Final Test — full taper and test week",
+        "markers": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "schedule": [
+          {
+            "day": "Monday",
+            "what": "AM: landings 2x5, 2x10 yd at 90%, 15 min easy. PM: Strength A at the deload (Wk12) column."
+          },
+          {
+            "day": "Tuesday",
+            "what": "AM: core, balance and brake at Block 1 volume (NOT Block 3 — an explicit taper override). PM: Strength B at the deload (Wk12) column."
+          },
+          {
+            "day": "Wednesday",
+            "what": "TEST DAY 1 — health markers: resting HR (#1), grip (#3), balance eyes closed (#4), sit-to-rise (#5), deep squat hold (#6), shoulder flexion (#10).",
+            "markers": [
+              1,
+              3,
+              4,
+              5,
+              6,
+              10
+            ]
+          },
+          {
+            "day": "Thursday",
+            "what": "TEST DAY 2 — THE ATHLETIC FIVE (#11-15). Full warm-up and build-ups first. 10-yard sprint, broad jump, CMJ, 5-10-5, 10-to-5 deceleration deficit. Full recovery between everything. Nothing else that day.",
+            "markers": [
+              11,
+              12,
+              13,
+              14,
+              15
+            ]
+          },
+          {
+            "day": "Friday",
+            "what": "Off."
+          },
+          {
+            "day": "Saturday",
+            "what": "TEST DAY 3 — trap-bar 5RM estimate (#7), push-ups (#8), side plank (#9). Then 30 minutes easy. The 1.5-mile run (#2) goes here if you want it separated from the sprint day.",
+            "markers": [
+              7,
+              8,
+              9,
+              2
+            ]
+          },
+          {
+            "day": "Sunday",
+            "what": "Off. Put the numbers next to Week 0 and decide what the next twelve weeks emphasize."
+          }
+        ],
+        "note": "Thursday and Saturday PM strength (Strength C, Strength D) are not prescribed this week — replaced by testing."
+      }
+    },
+    "maxRecalculation": {
+      "when": "Week 8, not before",
+      "rule": "Re-estimate maxes at Week 8, not before.",
+      "howSpecifiedInPdf": "Not explicitly detailed as a formal protocol — flagged in EXTRACTION_AUDIT.md.",
+      "appDefault": "Offer an 'Update Estimated Max' action on trap-bar deadlift, back squat, and bench press starting Week 8, using the same E1RM formula (heavy set of 5 at RIR1 x1.15, rounded to nearest 5 lb) applied to that week's B1 working set."
+    }
+  },
+  "pickupSportRules": [
+    {
+      "situation": "You play once a week",
+      "action": "That game replaces the Thursday AM agility work. Everything else stays. Lift the day AFTER the game, not the day before."
+    },
+    {
+      "situation": "You play twice a week",
+      "action": "Drop the Monday AM speed session to landings and build-ups only. The games supply your sprint exposure. Keep all four lifts."
+    },
+    {
+      "situation": "Game is on a Saturday",
+      "action": "Move Strength D to Sunday or drop its C cluster. Saturday AM becomes a warm-up, not a long run."
+    },
+    {
+      "situation": "You have not played in months",
+      "action": "Do not go back to a competitive game until you have finished Block 1. Four weeks of landings, hills and sled work first."
+    },
+    {
+      "situation": "Pre-game, always",
+      "action": "Full RAMP warm-up plus build-ups: 2x30 yd at 70%, 2x30 at 85%, 2x20 yd at 90%, and five drop-and-sticks. Ten minutes."
+    },
+    {
+      "situation": "Post-game",
+      "action": "Walk it out, hydrate, sleep. The next session drops one RIR column."
+    }
+  ],
+  "progressionRules": [
+    {
+      "category": "percentage",
+      "rule": "Percentage lifts: the card tells you. Re-estimate maxes at Week 8, not before."
+    },
+    {
+      "category": "rir",
+      "rule": "RIR lifts: add the smallest available increment when you hit the top of the rep range at the stated RIR for all sets, two sessions running."
+    },
+    {
+      "category": "jumpsThrows",
+      "rule": "Jumps and throws: progress by intent and quality, never by adding reps. A higher jump at three reps beats the same jump at six."
+    },
+    {
+      "category": "sprints",
+      "rule": "Sprints: progress distance before intensity, and resisted before flat. Never add both in the same week."
+    },
+    {
+      "category": "plyometrics",
+      "rule": "Plyometrics: progress absorb → elastic → express, in that order, and only when the landing is silent and the knee tracks over the foot."
+    },
+    {
+      "category": "balance",
+      "rule": "Balance: progress by removing information — eyes, then the stable surface — not by adding time."
+    }
+  ],
+  "substitutions": [
+    {
+      "missing": "A hill or a sled",
+      "useInstead": "Stadium steps, a treadmill at 8-10% incline, or a resistance band held by a partner"
+    },
+    {
+      "missing": "Somewhere to sprint",
+      "useInstead": "A bike or rower for the aerobic work, plus hill walking. But find somewhere to sprint — it is the least substitutable thing here."
+    },
+    {
+      "missing": "Trap bar",
+      "useInstead": "Barbell RDL or double-DB deadlift from blocks"
+    },
+    {
+      "missing": "Barbell hip thrust",
+      "useInstead": "DB hip thrust, single-leg hip thrust, or heavy banded glute bridge"
+    },
+    {
+      "missing": "Back squat",
+      "useInstead": "Goblet squat, safety-bar squat, heel-elevated front squat"
+    },
+    {
+      "missing": "Med ball",
+      "useInstead": "A light dumbbell for the rotational pattern, or a heavy band for the throw pattern"
+    },
+    {
+      "missing": "Hurdles",
+      "useInstead": "A cone, a rolled towel, a line on the floor. The height is not the point — the landing is."
+    },
+    {
+      "missing": "A joint that hurts in a movement",
+      "useInstead": "Do not work around pain that changes how you move. Physio referral, not substitution.",
+      "isSafetyRule": true
+    }
+  ],
+  "backOffSignals": [
+    {
+      "signal": "Resting heart rate up more than about 7 bpm for three straight mornings",
+      "response": "Take the deload column this week. Keep the AM sessions, cut the C clusters, no sprinting.",
+      "code": "RHR_ELEVATED"
+    },
+    {
+      "signal": "Calf or Achilles tightness, soreness or a \"twinge\"",
+      "response": "No sprinting and no plyometrics until it is fully clear for 72 hours. This is the warning shot; the rupture is what comes next if it is ignored.",
+      "code": "CALF_ACHILLES_WARNING"
+    },
+    {
+      "signal": "Sleep under six hours",
+      "response": "No speed session that day. Lift at RIR 4, skip the C cluster.",
+      "code": "SLEEP_UNDER_6H"
+    },
+    {
+      "signal": "A hamstring that feels \"grabby\" during build-ups",
+      "response": "End the sprint session there. Do the easy run instead. Return to hills for a week before flat sprinting again.",
+      "code": "HAMSTRING_GRABBY"
+    },
+    {
+      "signal": "Joint pain that changes how you move",
+      "response": "Stop and get it looked at. At 33 the small things fixed early are the ones that never become chronic.",
+      "code": "JOINT_PAIN_MOVEMENT_CHANGE",
+      "recommendEvaluation": true
+    },
+    {
+      "signal": "Two missed weeks",
+      "response": "Restart at the beginning of the block you were in. Do not resume sprinting where you left off.",
+      "code": "TWO_MISSED_WEEKS"
+    }
+  ],
+  "recoveryPrinciples": [
+    "Sleep is the intervention. Seven to nine hours, consistent times. It outperforms every supplement and most training decisions, and it matters more in this edition because sprinting is a nervous-system cost as much as a muscular one.",
+    "Protein spread across the day. For an adult doing resistance training, commonly cited intakes sit around 1.6-2.2 g per kg of bodyweight daily; a registered dietitian can tell you what fits you specifically.",
+    "Carbohydrate around sessions. Two-a-days on low fuel is how the PM session quietly becomes worthless.",
+    "Walk on off days. Twenty to thirty minutes.",
+    "Cold plunges after strength work may blunt the adaptation you just trained for. Use them for acute recovery, not habitually."
+  ]
+}
