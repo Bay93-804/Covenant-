@@ -77,6 +77,17 @@ export default function ProgramScreen() {
         </AppText>
       </Card>
 
+      <Pressable onPress={() => router.push('/(tabs)/program/sport-adjustment')}>
+        <Card className="mb-4">
+          <AppText variant="h3" color="primary" style={{ marginBottom: 4 }}>
+            Played a pickup game?
+          </AppText>
+          <AppText variant="bodySm" color="secondary">
+            Log it to see the matching schedule adjustment — nothing changes until you confirm.
+          </AppText>
+        </Card>
+      </Pressable>
+
       {visibleWeeks.map((week) => {
         const block = content.blocks.find((b) => b.weeks.includes(week.weekNumber));
         const weekContext = week.days[0]?.scheduledDay.weekContext;
