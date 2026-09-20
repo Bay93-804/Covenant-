@@ -6,7 +6,7 @@ import { AppText, Badge, Button, Card, Divider, Screen } from '../../../src/desi
 import { semanticColor } from '../../../src/design-system/tokens';
 import { useAuth } from '../../../src/lib/auth/AuthContext';
 import { calculateRecommendedLoad } from '../../../src/features/loadCalculator/loadCalculator';
-import { LIFT_KEY_BY_STRENGTH_LETTER } from '../../../src/features/loadCalculator/liftKeyForStrengthDay';
+import { resolveLiftKeyFromMainLift } from '../../../src/features/loadCalculator/resolveLiftKeyFromMainLift';
 import { listSubstitutions } from '../../../src/content';
 import { parseRestLabelToMs, formatMs } from '../../../src/lib/timers/timerEngine';
 import { useTimer } from '../../../src/lib/timers/useTimer';
@@ -80,21 +80,19 @@ function ExerciseCard({
   exercise,
   sessionId,
   weekNumber,
-  strengthLetter,
+  mainLift,
   onSetLogged,
 }: {
   exercise: PlayerExercise;
   sessionId: string;
   weekNumber: number;
-  strengthLetter: string | null;
+  mainLift: string | null;
   onSetLogged: (restLabel: string | null) => void;
 }) {
   const { user } = useAuth();
   const logSet = useLogSet(sessionId);
   const { data: previousSets } = usePreviousPerformance(exercise.workoutExerciseId, sessionId);
-  const liftKey = strengthLetter
-    ? LIFT_KEY_BY_STRENGTH_LETTER[strengthLetter as 'A' | 'B' | 'C' | 'D']
-    : null;
+  const liftKey = resolveLiftKeyFromMainLift(mainLift);
 
   const { data: exerciseMax } = useQuery({
     queryKey: ['exercise-max', user?.id, liftKey],
@@ -494,7 +492,7 @@ export default function WorkoutPlayerScreen() {
             exercise={exercise}
             sessionId={session.id}
             weekNumber={plan.weekNumber}
-            strengthLetter={plan.strengthLetter}
+            mainLift={plan.mainLift}
             onSetLogged={(restLabel) => handleSetLogged(exercise.key, restLabel)}
           />
         ))

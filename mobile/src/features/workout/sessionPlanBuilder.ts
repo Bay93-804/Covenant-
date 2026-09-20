@@ -66,6 +66,8 @@ export interface PlayerSessionPlan {
   title: string;
   weekNumber: number;
   strengthLetter: StrengthDayLetter | null;
+  /** The resolved day's authoritative `mainLift` field (e.g. "Trap-Bar Deadlift"), or null when the day has none (e.g. Strength D, or any AM session) — the single source the load calculator classifies against, never a hard-coded per-letter lookup. */
+  mainLift: string | null;
   supportsPerSetLogging: boolean;
   exercises: PlayerExercise[];
   segments: PlayerSegment[];
@@ -113,9 +115,9 @@ function buildStrengthPlan(
   letter: StrengthDayLetter,
   weekNumber: number,
   flags: SessionAdjustmentFlags | undefined,
-): { exercises: PlayerExercise[]; adjustmentSummary: string[] } {
+): { exercises: PlayerExercise[]; adjustmentSummary: string[]; mainLift: string | null } {
   const resolved = getStrengthDayForWeek(letter, weekNumber);
-  if (!resolved) return { exercises: [], adjustmentSummary: [] };
+  if (!resolved) return { exercises: [], adjustmentSummary: [], mainLift: null };
 
   const adjusted = flags
     ? applyAdjustmentsToStrengthDay(resolved.dayBlock, flags)
@@ -164,7 +166,7 @@ function buildStrengthPlan(
     adjustmentSummary.push('Using deload-week loading today.');
   }
 
-  return { exercises, adjustmentSummary };
+  return { exercises, adjustmentSummary, mainLift: resolved.dayBlock.mainLift };
 }
 
 function buildTuesdayPlan(weekNumber: number): PlayerExercise[] {
@@ -341,6 +343,7 @@ export function buildSessionPlayerPlan(params: BuildSessionPlanParams): PlayerSe
     title: session.title,
     weekNumber,
     strengthLetter: session.strengthLetter,
+    mainLift: null,
     supportsPerSetLogging: false,
     exercises: [],
     segments: [],
@@ -350,12 +353,12 @@ export function buildSessionPlayerPlan(params: BuildSessionPlanParams): PlayerSe
   };
 
   if (slot === 'pm' && session.strengthLetter) {
-    const { exercises, adjustmentSummary } = buildStrengthPlan(
+    const { exercises, adjustmentSummary, mainLift } = buildStrengthPlan(
       session.strengthLetter,
       weekNumber,
       readinessAdjustments,
     );
-    return { ...base, supportsPerSetLogging: true, exercises, adjustmentSummary };
+    return { ...base, supportsPerSetLogging: true, exercises, adjustmentSummary, mainLift };
   }
 
   switch (session.sessionType) {

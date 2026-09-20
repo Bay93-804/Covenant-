@@ -145,38 +145,60 @@ scripts/                       validate-program.ts · seed-print.ts · seed-supa
 __tests__/                     Program-content and onboarding-schema unit tests
 ```
 
-## What's real vs. placeholder in this phase
+## What's real vs. placeholder, as of Phase 3
 
-Per the Phase 2 brief, later-phase screens get **attractive placeholder states**, not fabricated
-functionality:
-
-- **Real, content-driven:** the full onboarding flow; Today's week/block/day resolution and AM/PM
-  session titles (pulled live from the program JSON, never hardcoded); the Program tab's block
-  overview; the Testing tab's Week 0/6/12 marker counts; Profile.
-- **Placeholder (Phase 3+):** the guided workout player / set logging, the readiness-check safety
-  gate UI, sport-adjustment flow, and the Progress dashboard's charts — all of these need real user
-  _instance_ data (workout sessions, completed sets) that this phase's schema supports but doesn't
-  yet have a logging UI for.
+- **Real, content-driven, with live user instance data:** onboarding; the schedule engine (Week
+  0-12, timezone-aware, pause/resume/restart-at-block-start); the Today screen (readiness gate,
+  safety-adjustment confirmation, session status, missed-week restart banner); the Program calendar
+  (12-week grid, week/day detail, read-only history); the guided workout player (cluster-based set
+  logging for PM strength and Tuesday AM Core/Balance/Brake, segment checklists for the other three
+  AM session types, rest/session timers, substitutions, completion summary); the pickup-sport
+  adjustment flow. All of it is offline-first and works identically in demo mode and Supabase mode.
+- **Placeholder (Phase 4):** the Progress dashboard's charts, and the full Week 0/6/12
+  testing-entry system (the Testing tab still only shows marker counts).
 
 Every safety rule, progression rule, substitution, and sport-adjustment rule from the source
 program is preserved in `data/program/*.json` and typed end-to-end in `src/content/schema.ts` —
-none of it is dropped, even though the runtime "safety engine" that acts on it during a live
-workout is future work.
+none of it is dropped, and the program JSON was never reinterpreted or overwritten to build any of
+the above.
 
 ## Known limitations (honest, not hidden)
 
 - Date of birth and the Week 1 Start Date use the native OS date picker
   (`@react-native-community/datetimepicker`) on iOS/Android; since that library has no web
-  implementation, the web build (used only as a bundling smoke test) falls back to a plain
-  validated text field instead.
+  implementation, the web build falls back to a plain validated text field instead.
 - Native date pickers can't restrict which weekdays are selectable, so the Week 1 Start Date field
   accepts any date from the picker and relies on Zod (`week1StartDateSchema`) to reject a
   non-Monday choice with an inline error, rather than graying out non-Mondays in the calendar UI.
-- The Today screen's "Start Session" and Testing's marker-entry rows are intentionally
-  non-functional placeholders (see above) — the program _plan_ shown is real, the _logging_ isn't
-  built yet.
 - `src/lib/supabase/database.types.ts` is hand-written from the approved DDL rather than generated
   by the Supabase CLI (there's no live project to generate from yet); regenerate and diff it once
   one exists.
 - Push notifications are modeled as user preferences (`notification_preferences`) but no actual
   scheduling/delivery is wired up yet.
+- **Single-device sync only.** The offline sync engine (`src/features/workout/syncEngine.ts`)
+  assumes one writer per athlete, per the PRD's single-athlete-per-install scope. It pushes local
+  writes to Supabase with an idempotent upsert-on-id (safe to retry, never duplicates), but it does
+  not pull or merge edits made from a second device — if the same athlete ever logged workouts from
+  two devices concurrently, the two devices' local stores would not reconcile with each other. This
+  is an accepted limitation for Phase 3, not something silently working around a real need.
+- **Not tested on a physical iOS/Android simulator or device.** This environment has no Xcode or
+  Android SDK; iOS/Android builds were verified with `expo export --platform ios|android`, which
+  bundles the JS/asset payload each platform would run cleanly, but native rendering, gestures, and
+  platform-specific timer/haptic/audio behavior have only been exercised via the web build (Chromium,
+  Playwright, mobile viewport) and are unverified on an actual iOS/Android runtime.
+- **AM session logging.** Monday Speed/Plyo, Thursday Tempo/Agility, and Saturday's long run are
+  prose-described blocks in the source PDF (warm-up/plyo/acceleration/easy-run text), not a
+  sets/reps grid — the guided player logs these at the session/journal level (an ordered segment
+  checklist with notes) rather than inventing a per-exercise sets table the program doesn't
+  prescribe. Tuesday's Core/Balance/Brake circuit, which _does_ have a clean per-movement structure
+  in the source JSON, gets full per-set logging like PM strength.
+- **Percentage-load-calculator lift mapping.** The source PDF prescribes percentage loads per
+  exercise but never states which of the athlete's three tracked estimated maxes (trap-bar
+  deadlift, back squat, bench press) a given day's percentage column is a percentage _of_. This is
+  derived from each strength day's own authoritative `mainLift` field
+  (`src/features/loadCalculator/resolveLiftKeyFromMainLift.ts` classifies the `mainLift` text
+  itself — trap-bar/squat/bench keywords — rather than hard-coding a lookup by day letter), so a
+  future edition that changes what a letter's main lift is keeps working with no code change. For
+  this program version that resolves to: Day A → trap-bar deadlift, Day B → bench press, Day C →
+  back squat, Day D (Athletic Resilience, kettlebell/bodyweight work) → no percentage-load
+  calculator, since its `mainLift` ("Kettlebell Swing") matches none of the three tracked lifts.
