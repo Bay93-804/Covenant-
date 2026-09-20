@@ -33,6 +33,8 @@ export interface DemoEnrollment {
   start_date: string;
   status: 'active' | 'paused' | 'completed' | 'restarted' | 'abandoned';
   defer_week0_sprint_test: boolean;
+  current_week_override: number | null;
+  restart_anchor_date: string | null;
   created_at: string;
 }
 
@@ -97,10 +99,23 @@ export async function createDemoEnrollment(
     start_date: input.start_date,
     status: 'active',
     defer_week0_sprint_test: input.defer_week0_sprint_test,
+    current_week_override: null,
+    restart_anchor_date: null,
     created_at: new Date().toISOString(),
   };
   await writeJson(demoStorageKeys.enrollment(userId), enrollment);
   return enrollment;
+}
+
+export async function updateDemoEnrollment(
+  userId: string,
+  patch: Partial<Omit<DemoEnrollment, 'id' | 'user_id' | 'created_at'>>,
+): Promise<DemoEnrollment> {
+  const existing = await getDemoEnrollment(userId);
+  if (!existing) throw new Error(`No demo enrollment for user ${userId}`);
+  const next: DemoEnrollment = { ...existing, ...patch };
+  await writeJson(demoStorageKeys.enrollment(userId), next);
+  return next;
 }
 
 const defaultNotificationPreferences = (userId: string): DemoNotificationPreferences => ({

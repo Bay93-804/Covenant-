@@ -130,7 +130,9 @@ export function useTimer({
     if (complete && !completedRef.current) {
       completedRef.current = true;
       onComplete?.();
-      (kind === 'rest' ? playRestTimerCompleteFeedback() : playTimerCompleteFeedback()).catch(() => {});
+      (kind === 'rest' ? playRestTimerCompleteFeedback() : playTimerCompleteFeedback()).catch(
+        () => {},
+      );
     }
     if (!complete) completedRef.current = false;
   }, [complete, kind, onComplete]);
@@ -143,5 +145,15 @@ export function useTimer({
     clearPersistedTimer(persistKey).catch(() => {});
   }, [persistKey]);
 
-  return { elapsedMs, remainingMs, isComplete: complete, isRunning: running, restored, start, pause, resume, reset };
+  return {
+    elapsedMs,
+    remainingMs,
+    isComplete: complete,
+    isRunning: running,
+    restored,
+    start,
+    pause,
+    resume,
+    reset,
+  };
 }

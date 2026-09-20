@@ -32,7 +32,11 @@ export function pauseTimer(state: TimerState, nowMs: number): TimerState {
 export function resumeTimer(state: TimerState, nowMs: number): TimerState {
   if (state.pausedAtMs == null) return state;
   const pausedDuration = nowMs - state.pausedAtMs;
-  return { ...state, pausedAtMs: null, accumulatedPausedMs: state.accumulatedPausedMs + pausedDuration };
+  return {
+    ...state,
+    pausedAtMs: null,
+    accumulatedPausedMs: state.accumulatedPausedMs + pausedDuration,
+  };
 }
 
 export function resetTimer(state: TimerState): TimerState {
