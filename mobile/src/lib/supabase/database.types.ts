@@ -227,6 +227,8 @@ export type ProgramEnrollmentRow = {
   start_date: string;
   status: EnrollmentStatus;
   current_week_override: number | null;
+  /** Calendar date (a Monday) that `current_week_override`'s week begins counting from. */
+  restart_anchor_date: string | null;
   paused_at: string | null;
   restarted_from_enrollment_id: string | null;
   created_at: string;
@@ -235,6 +237,19 @@ export type ProgramEnrollmentRow = {
 export type ProgramEnrollmentInsert = Partial<ProgramEnrollmentRow> &
   Pick<ProgramEnrollmentRow, 'user_id' | 'program_version_id' | 'start_date'>;
 export type ProgramEnrollmentUpdate = Partial<ProgramEnrollmentRow>;
+
+export type EnrollmentPauseEventRow = {
+  id: string;
+  enrollment_id: string;
+  user_id: string;
+  paused_at: string;
+  resumed_at: string | null;
+  reason: string | null;
+  created_at: string;
+};
+export type EnrollmentPauseEventInsert = Partial<EnrollmentPauseEventRow> &
+  Pick<EnrollmentPauseEventRow, 'enrollment_id' | 'user_id'>;
+export type EnrollmentPauseEventUpdate = Partial<EnrollmentPauseEventRow>;
 
 export type WorkoutSessionRow = {
   id: string;
@@ -490,6 +505,11 @@ export type Database = {
         ProgramEnrollmentRow,
         ProgramEnrollmentInsert,
         ProgramEnrollmentUpdate
+      >;
+      enrollment_pause_events: TableDef<
+        EnrollmentPauseEventRow,
+        EnrollmentPauseEventInsert,
+        EnrollmentPauseEventUpdate
       >;
       workout_sessions: TableDef<WorkoutSessionRow, WorkoutSessionInsert, WorkoutSessionUpdate>;
       completed_sets: TableDef<CompletedSetRow, CompletedSetInsert, CompletedSetUpdate>;
