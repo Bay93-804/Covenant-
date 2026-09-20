@@ -338,7 +338,7 @@ export async function createSafetyAdjustment(
   input: CreateSafetyAdjustmentInput,
 ): Promise<SafetyAdjustment> {
   const row: SafetyAdjustment = {
-    id: input.id,
+    id: input.id || generateId(),
     user_id: input.userId,
     workout_session_id: input.workoutSessionId ?? null,
     readiness_entry_id: input.readinessEntryId ?? null,
@@ -378,7 +378,7 @@ export async function listSafetyAdjustments(userId: string): Promise<SafetyAdjus
 
 export async function createSportSession(input: CreateSportSessionInput): Promise<SportSession> {
   const row: SportSession = {
-    id: input.id,
+    id: input.id || generateId(),
     user_id: input.userId,
     played_on: input.playedOn,
     sport: input.sport,
@@ -415,7 +415,7 @@ export async function listSportSessions(userId: string): Promise<SportSession[]>
 
 export async function createJournalEntry(input: CreateJournalEntryInput): Promise<JournalEntry> {
   const row: JournalEntry = {
-    id: input.id,
+    id: input.id || generateId(),
     user_id: input.userId,
     level: input.level,
     workout_session_id: input.workoutSessionId ?? null,
@@ -447,7 +447,7 @@ export async function listJournalEntriesForSession(
 
 export async function createExerciseMax(input: CreateExerciseMaxInput): Promise<ExerciseMax> {
   const row: ExerciseMax = {
-    id: input.id,
+    id: input.id || generateId(),
     user_id: input.userId,
     lift_key: input.liftKey,
     estimated_1rm: input.estimated1Rm,
@@ -489,7 +489,7 @@ export async function createPersonalRecord(
   input: CreatePersonalRecordInput,
 ): Promise<PersonalRecord> {
   const row: PersonalRecord = {
-    id: input.id,
+    id: input.id || generateId(),
     user_id: input.userId,
     record_type: input.recordType,
     reference_key: input.referenceKey,

@@ -39,7 +39,11 @@ describe('buildSessionPlayerPlan', () => {
       jointPainFlag: false,
       readinessScore: 3,
     });
-    const plan = buildSessionPlayerPlan({ scheduledDay: day, slot: 'pm', readinessAdjustments: adjustments });
+    const plan = buildSessionPlayerPlan({
+      scheduledDay: day,
+      slot: 'pm',
+      readinessAdjustments: adjustments,
+    });
     expect(plan.exercises.some((e) => e.clusterId === 'C')).toBe(false);
     expect(plan.adjustmentSummary.some((s) => s.includes('Cluster'))).toBe(true);
   });
@@ -72,7 +76,11 @@ describe('buildSessionPlayerPlan', () => {
       jointPainFlag: false,
       readinessScore: 3,
     });
-    const plan = buildSessionPlayerPlan({ scheduledDay: day, slot: 'am', readinessAdjustments: adjustments });
+    const plan = buildSessionPlayerPlan({
+      scheduledDay: day,
+      slot: 'am',
+      readinessAdjustments: adjustments,
+    });
     const accel = plan.segments.find((s) => s.key === 'acceleration');
     const plyo = plan.segments.find((s) => s.key === 'plyometric');
     expect(accel?.blocked).toBe(true);
