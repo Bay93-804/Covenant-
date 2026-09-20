@@ -81,3 +81,38 @@ export async function getActiveEnrollment(userId: string) {
   if (error) throw error;
   return data;
 }
+
+/** The athlete's most recent enrollment regardless of status (active or paused) — used by the schedule engine, which needs to keep working while paused. */
+export async function getCurrentEnrollment(userId: string) {
+  const supabase = requireSupabase();
+  const { data, error } = await supabase
+    .from('program_enrollments')
+    .select('*')
+    .eq('user_id', userId)
+    .in('status', ['active', 'paused'])
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateEnrollment(
+  id: string,
+  patch: Partial<{
+    status: 'active' | 'paused' | 'completed' | 'restarted' | 'abandoned';
+    current_week_override: number | null;
+    restart_anchor_date: string | null;
+    paused_at: string | null;
+  }>,
+) {
+  const supabase = requireSupabase();
+  const { data, error } = await supabase
+    .from('program_enrollments')
+    .update(patch)
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}

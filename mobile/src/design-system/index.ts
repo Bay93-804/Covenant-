@@ -13,3 +13,4 @@ export * from './ToggleRow';
 export * from './TabIcon';
 export * from './ProgressDots';
 export * from './PlaceholderState';
+export * from './Stepper';

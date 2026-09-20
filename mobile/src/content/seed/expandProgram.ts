@@ -168,6 +168,28 @@ const STRENGTH_DAY_MAP: Record<StrengthDayLetter, { dayOfWeek: number; sessionTy
   D: { dayOfWeek: 5, sessionType: 'pm_strength_d' }, // Saturday
 };
 
+/**
+ * AM sessions, by weekly-template day-of-week (0=Mon..6=Sun). Monday,
+ * Thursday, and Saturday AM are prose-described blocks in the source PDF
+ * (warm-up/plyo/acceleration/easy-run text, not a sets/reps grid), so they
+ * only get a `workout_templates` row here — enough to satisfy
+ * `workout_sessions.workout_template_id`'s FK — with no `workout_exercises`
+ * underneath (Phase 3 logs those sessions at the session/journal level, see
+ * src/features/workout/sessionPlanBuilder.ts). Tuesday's Core/Balance/Brake
+ * circuit *does* have a clean per-movement structure in the source JSON
+ * (`tuesdayAmCoreBalanceBrake.movements[]`), so it gets full
+ * `workout_exercises` + `prescribed_sets` rows, same as PM strength.
+ */
+const AM_DAY_MAP: Record<
+  number,
+  { sessionType: string; ref: 'mondaySpeedPlyo' | 'tuesdayCoreBalanceBrake' | 'thu' | 'sat' }
+> = {
+  0: { sessionType: 'am_speed_plyo', ref: 'mondaySpeedPlyo' },
+  1: { sessionType: 'am_core_balance_brake', ref: 'tuesdayCoreBalanceBrake' },
+  3: { sessionType: 'am_tempo_agility', ref: 'thu' },
+  5: { sessionType: 'am_long_run', ref: 'sat' },
+};
+
 function loadTypeFor(type: 'pct' | 'rir' | 'none'): SeedPrescribedSet['load_type'] {
   if (type === 'pct') return 'percentage';
   if (type === 'rir') return 'rir';
@@ -305,6 +327,91 @@ export function expandProgramContent(
               });
             }
           }
+        }
+      }
+    }
+  }
+
+  // AM workout_templates (weeks 1-12 only — Week 0 is baseline testing, not
+  // a training week; see src/features/schedule for how the app treats it).
+  // Tuesday additionally gets workout_exercises + prescribed_sets from its
+  // structured movements[] list.
+  const blockByWeek = new Map<number, (typeof content.blocks)[number] | null>();
+  for (let weekNumber = 1; weekNumber <= content.meta.durationWeeks; weekNumber += 1) {
+    blockByWeek.set(weekNumber, content.blocks.find((b) => b.weeks.includes(weekNumber)) ?? null);
+  }
+
+  for (let weekNumber = 1; weekNumber <= content.meta.durationWeeks; weekNumber += 1) {
+    const block = blockByWeek.get(weekNumber) ?? null;
+    if (!block) continue;
+
+    for (const dayOfWeekStr of Object.keys(AM_DAY_MAP)) {
+      const dayOfWeek = Number(dayOfWeekStr);
+      const { sessionType, ref } = AM_DAY_MAP[dayOfWeek]!;
+      const dayId = dayIdByWeekAndDow.get(`${weekNumber}:${dayOfWeek}`);
+      if (!dayId) continue;
+
+      const templateDay = content.weeklyTemplate[dayOfWeek]!;
+      const workoutTemplateId = id('workout_template', dayId, 'am');
+      workoutTemplates.push({
+        id: workoutTemplateId,
+        program_day_id: dayId,
+        session_slot: 'am',
+        session_type: sessionType,
+        title: templateDay.am.label,
+        main_lift: null,
+        est_minutes_low: templateDay.am.minutes?.[0] ?? null,
+        est_minutes_high: templateDay.am.minutes?.[1] ?? null,
+        is_contrast: false,
+      });
+
+      if (ref !== 'tuesdayCoreBalanceBrake') continue;
+
+      let sortIndex = 0;
+      for (const movement of content.tuesdayAmCoreBalanceBrake.movements) {
+        const exTemplateId = exerciseTemplateId(movement.name);
+        if (!exerciseTemplates.some((e) => e.id === exTemplateId)) {
+          exerciseTemplates.push({
+            id: exTemplateId,
+            program_version_id: programVersionId,
+            name: movement.name,
+            quality_cap: false,
+            bilateral: movement.eachSide ?? false,
+          });
+        }
+
+        const workoutExerciseId = id('workout_exercise', workoutTemplateId, movement.order);
+        // Only emit the exercise + its prescribed_sets row once per program
+        // day (weeks share the same movements[]; the block-specific reps
+        // text is what varies week to week, captured below).
+        if (!workoutExercises.some((e) => e.id === workoutExerciseId)) {
+          workoutExercises.push({
+            id: workoutExerciseId,
+            workout_template_id: workoutTemplateId,
+            exercise_template_id: exTemplateId,
+            cluster_id: movement.order.charAt(0),
+            cluster_label: null,
+            slot_order: movement.order,
+            rounds: 1,
+            rest_label: null,
+            each_side: movement.eachSide ?? false,
+            is_combo: false,
+            notes: null,
+            sort_index: sortIndex,
+          });
+        }
+        sortIndex += 1;
+
+        const repsDisplay = movement.byBlock[String(block.id)];
+        if (repsDisplay) {
+          prescribedSets.push({
+            id: id('prescribed_set', workoutExerciseId, weekNumber),
+            workout_exercise_id: workoutExerciseId,
+            week_number: weekNumber,
+            load_type: 'bodyweight',
+            load_value: null,
+            reps_display: repsDisplay,
+          });
         }
       }
     }

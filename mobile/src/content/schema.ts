@@ -383,6 +383,7 @@ export type ProgramBlock = z.infer<typeof blockSchema>;
 export type StrengthDayBlock = z.infer<typeof strengthDayBlockSchema>;
 export type StrengthCluster = z.infer<typeof strengthClusterSchema>;
 export type ClusterExercise = z.infer<typeof clusterExerciseSchema>;
+export type ExerciseWeekPrescription = z.infer<typeof exerciseWeekPrescriptionSchema>;
 export type TestingMarker = z.infer<typeof testingMarkerSchema>;
 export type WeeklySpeedPlanEntry = z.infer<typeof weeklySpeedPlanEntrySchema>;
 export type Substitution = z.infer<typeof substitutionSchema>;
