@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "Coach Conde: The Long Game",
+    "slug": "coach-conde-long-game",
+    "scheme": "coachconde",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#0B1220",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.coachconde.longgame"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0B1220",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.coachconde.longgame"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      "expo-secure-store",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0B1220",
+          "image": "./assets/icon.png",
+          "imageWidth": 140
+        }
+      ],
+      "@react-native-community/datetimepicker"
+    ],
+    "extra": {
+      "router": {}
+    }
+  }
+}
