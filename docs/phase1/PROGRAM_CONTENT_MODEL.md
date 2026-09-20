@@ -46,7 +46,7 @@ This is the Phase 1 "structured program-content model" deliverable — a version
   testing: {
     longevityTen: [ {num,name,protocol,unit,direction,baseline,solid,strong,thresholdOp,...} ],  // markers 1-10
     athleticFive: [ {num,name,protocol,unit,direction,baseline,solid,strong,thresholdOp,...} ],  // markers 11-15
-    events: { week0: {...}, week6: {...}, week12: {...} },     // which markers, which days, see audit
+    events: { week0: {...}, week6: {...}, week12: {...} },     // which markers, which days — see below
     maxRecalculation: {...}                                     // Week 8 re-estimate guidance
   }
 
@@ -57,6 +57,39 @@ This is the Phase 1 "structured program-content model" deliverable — a version
   recoveryPrinciples: [ string ]
 }
 ```
+
+## `testing.events` shape (Week 0 / Week 6 / Week 12 scope — resolved)
+
+```
+events: {
+  week0: {
+    label, markers: [1..15],           // Week 0 is a COMPLETE 15-marker baseline
+    scheduleSpecifiedInPdf: false,
+    schedulingRules: {
+      restingHeartRate,                 // #1 protocol: 3 mornings, averaged — spans ≥3 days
+      athleticFive,                     // #11-15 protocol: separate fresh day, full warm-up
+      sprintDeferral                    // #11 only: defer to Week 6 if athlete hasn't sprinted in years
+    },
+    suggestedSchedule: {
+      isFlexible: true,                 // explicitly NOT a PDF prescription — app default only
+      note,
+      days: [ {suggestedDay, what, markers?} ]  // modeled on Week 12's 3-day format
+    }
+  },
+  week6: {
+    label, day: "Wednesday (the off day)",
+    markers: [1, 4, 5, 9, 12, 15],       // exactly the 6 the PDF specifies — PARTIAL, never treated as full
+    conditionalMarkers: [ {num: 11, condition} ],  // sprint added only if deferred at Week 0
+    note
+  },
+  week12: {
+    label, markers: [1..15],             // full 15-marker final test, 3-day taper/test week
+    schedule: [ {day, what, markers?} ]
+  }
+}
+```
+
+`week0.markers` and `week12.markers` both list all 15 numbers — both are complete tests. `week6.markers` lists only 6 — this is intentional per the source PDF, not a placeholder to fill in later. Progress/Testing screens must build their Week-0-vs-6-vs-12 comparison logic against these arrays rather than assuming parity across all three events.
 
 ## `strengthDays.<A|B|C|D>.<block>.clusters[]` shape
 

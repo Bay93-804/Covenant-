@@ -6203,9 +6203,60 @@
           14,
           15
         ],
-        "note": "Baseline test for all 15 markers. Get medically cleared first, particularly before the 1.5-mile test and before any maximal sprint, if largely inactive, carrying cardiovascular risk factors, or not having sprinted in years. If you have not run fast since your twenties, DO NOT test marker #11 (10-yard sprint) at Week 0 — defer it to Week 6.",
+        "note": "Complete baseline test for all 15 markers, finished before Week 1 begins. Get medically cleared first, particularly before the 1.5-mile test and before any maximal sprint, if largely inactive, carrying cardiovascular risk factors, or not having sprinted in years.",
         "scheduleSpecifiedInPdf": false,
-        "assumedSchedule": "Not explicitly laid out day-by-day in the source PDF (unlike Week 6 and Week 12). App default: mirror the Week 12 3-day test structure (Day 1 = health markers, Day 2 = Athletic Five on a fresh day, Day 3 = trap-bar E1RM + push-ups + side plank + optional 1.5-mile) — flagged as an assumption pending coach confirmation. See EXTRACTION_AUDIT.md."
+        "schedulingRules": {
+          "restingHeartRate": "Marker #1 protocol requires morning-before-rising readings averaged over 3 days (per the Longevity Ten protocol) — Week 0 testing necessarily spans at least 3 calendar days for this marker alone.",
+          "athleticFive": "Markers #11-15 must be tested together on a separate, fresh day, after a full warm-up and build-ups. Never at the end of another session and never on tired legs (per the Athletic Five protocol).",
+          "sprintDeferral": "If the athlete has not run fast since their twenties, DO NOT test marker #11 (10-yard sprint) at Week 0 — defer it to Week 6, once four weeks of hills/sled work (Block 1) have prepared the tissue. Markers #12-15 are still tested at Week 0 as normal; only #11 is deferred."
+        },
+        "suggestedSchedule": {
+          "isFlexible": true,
+          "note": "The source PDF does not prescribe exact Week 0 weekdays (unlike Week 6 and Week 12, which do). This is an app-suggested default only, modeled on the Week 12 3-day test-week format — athletes/coaches may reorder or spread it across more days, as long as the resting-heart-rate 3-morning window and the Athletic-Five fresh-day rule above are respected.",
+          "days": [
+            {
+              "suggestedDay": "Morning 1 of 3",
+              "what": "Begin resting heart rate collection (#1). Optionally pair with the other quick Longevity Ten markers: grip strength (#3), single-leg balance eyes closed (#4), sit-to-rise (#5), deep squat hold (#6), shoulder flexion at the wall (#10).",
+              "markers": [
+                1,
+                3,
+                4,
+                5,
+                6,
+                10
+              ]
+            },
+            {
+              "suggestedDay": "Morning 2 of 3",
+              "what": "Resting heart rate, reading 2 of 3."
+            },
+            {
+              "suggestedDay": "Morning 3 of 3",
+              "what": "Resting heart rate, reading 3 of 3 — baseline RHR is now the 3-morning average."
+            },
+            {
+              "suggestedDay": "Athletic Five day (separate, fresh, full warm-up)",
+              "what": "10-yard sprint (#11, unless deferred — see sprintDeferral above), standing broad jump (#12), countermovement jump (#13), 5-10-5 (#14), 10-to-5 deceleration deficit (#15). Full recovery between everything. Nothing else that day.",
+              "markers": [
+                11,
+                12,
+                13,
+                14,
+                15
+              ]
+            },
+            {
+              "suggestedDay": "Strength/other day",
+              "what": "Trap-bar deadlift E1RM (#7, heavy set of 5 at RIR1 x1.15), push-ups to technical failure (#8), side plank (#9). The 1.5-mile run (#2) can be placed here or on its own day.",
+              "markers": [
+                7,
+                8,
+                9,
+                2
+              ]
+            }
+          ]
+        }
       },
       "week6": {
         "label": "Week 6 Mid-Program Retest",
@@ -6221,10 +6272,10 @@
         "conditionalMarkers": [
           {
             "num": 11,
-            "condition": "Only if the 10-yard sprint was skipped at Week 0 due to long sprint inactivity. Four weeks of hills/sled work have prepared the tissue."
+            "condition": "Add the 10-yard sprint ONLY when it was deferred at Week 0 (see week0.schedulingRules.sprintDeferral). Four weeks of hills/sled work have by now prepared the tissue for it."
           }
         ],
-        "note": "PARTIAL retest — only 6 of the 15 markers (resting heart rate, single-leg balance eyes closed, sit-to-rise, side plank, standing broad jump, 10-to-5 deceleration deficit). This is intentional per the PDF; do not present it to the user as a full 15-marker retest."
+        "note": "PARTIAL retest — exactly the six markers specified in the PDF: resting heart rate (#1), single-leg balance eyes closed (#4), sit-to-rise (#5), side plank (#9), standing broad jump (#12), and the 10-to-5 deceleration deficit (#15), plus the conditional 10-yard sprint (#11) above. This is intentional per the PDF. Do NOT treat Week 6 as a complete 15-marker retest, and do not present it to the user as one."
       },
       "week12": {
         "label": "Week 12 Final Test — full taper and test week",

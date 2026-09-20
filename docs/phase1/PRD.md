@@ -55,8 +55,12 @@ One athlete per install initially (the signed-in Supabase user). Schema is norma
 
 `program_content` is stored as versioned, importable JSON (`data/program/coach-conde-long-game-athletic-v1.json`), not hardcoded into screens, so a future "Edition 2.0" or a different Coach Conde program can be authored and swapped without an app rebuild. The importer (Phase 2) reads this file into `program_weeks` / `program_days` / `workout_templates` / `exercise_templates` / `prescribed_sets`.
 
-## 8. Open items requiring your decision before/at Phase 2
+## 8. Resolved decisions and remaining open items
 
-See `EXTRACTION_AUDIT.md` for the full list; the two that affect data model shape most:
-- **Week 0 day-by-day test schedule** is not specified in the PDF (unlike Week 6 and Week 12). Default proposed: mirror Week 12's 3-day structure. Needs your confirmation.
-- **Week 6 retest is intentionally partial** (6 of 15 markers). The original prompt asked to "compare Week 0, Week 6, and Week 12 results" — the Progress/Testing screens will show full 15-marker comparison only for Week 0 vs Week 12, and a 6-marker comparison that also includes Week 6. Confirm this is the intended UX.
+Two decisions below were open questions in an earlier draft of this PRD and have since been confirmed by the product owner; the rest still need confirmation before Phase 2 locks them in (full list in `EXTRACTION_AUDIT.md`).
+
+**Resolved — Week 0 baseline testing.** Week 0 is the complete baseline for all 15 markers, finished before Week 1 begins. Resting heart rate (#1) is collected across three mornings and averaged; the Athletic Five (#11-15) is tested together on a separate, fresh day after a full warm-up; the 10-yard sprint (#11) is deferred to Week 6 if the athlete hasn't run fast since their twenties (markers #12-15 are still tested at Week 0 regardless). The app may recommend a three-session schedule modeled on Week 12's format, but presents it as a **flexible suggested schedule**, never a fixed prescription — the PDF doesn't specify exact Week 0 weekdays. See `testing.events.week0.suggestedSchedule` (`isFlexible: true`) in the content model.
+
+**Resolved — Week 6 retest scope.** Week 6 is a partial retest of exactly six markers: resting heart rate (#1), single-leg balance eyes closed (#4), sit-to-rise (#5), side plank (#9), standing broad jump (#12), and the 10-to-5 deceleration deficit (#15) — plus the 10-yard sprint (#11) only when it was deferred at Week 0. It is never presented as a full 15-marker retest. The Progress/Testing screens show a full 15-marker Week 0 vs Week 12 comparison, and a separate 6-or-7-marker comparison that includes Week 6.
+
+**Still open:** the remaining smaller items in `EXTRACTION_AUDIT.md` (combo/contrast exercise-cell presentation, substitution-to-exercise mapping, Week 8 max re-estimation UX, program-start-date weekday constraint, etc.).

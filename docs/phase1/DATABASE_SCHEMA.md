@@ -348,6 +348,22 @@ create index on safety_adjustments (user_id, created_at);
 -- =========================================================
 -- TESTING (Week 0 / Week 6 / Week 12)
 -- =========================================================
+-- One testing_session per event (week0/week6/week12), even though Week 0 and Week 12
+-- are multi-day test events by protocol (Week 0: >=3 mornings for resting HR alone,
+-- plus a separate fresh Athletic Five day; Week 12: a 3-day Wed/Thu/Sat test week —
+-- see program_content's testing.events.week0/week12 and EXTRACTION_AUDIT.md #1/#2).
+-- scheduled_date is a target/window-start date, not a single testing day; each
+-- individual marker's actual day is captured on its own testing_results.recorded_at,
+-- so multi-day completion is tracked at the result level, not the session level.
+-- Week 0's day-by-day grouping is an app-suggested, explicitly flexible schedule
+-- (content_json.testing.events.week0.suggestedSchedule, isFlexible=true) — the schema
+-- does not hard-code specific weekdays for it. Week 6 intentionally carries only 6 of
+-- the 15 markers (see testing_marker_defs / testing.events.week6.markers in content
+-- JSON) plus a conditional 10-yard-sprint marker when deferred at Week 0 — this table
+-- has no marker-count constraint, so a partial Week 6 and full Week 0/12 sessions are
+-- both valid rows; enforcement of "which markers belong to which event" is a content-
+-- and application-layer rule (testing_marker_defs joined with each event's marker
+-- list), not a DB constraint.
 create table testing_sessions (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,

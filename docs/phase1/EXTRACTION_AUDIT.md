@@ -3,23 +3,27 @@
 
 **Method:** Every one of the 17 pages was read twice — once as rendered page images, once via `pdftotext -layout` against the PDF's actual text layer — and cross-checked value by value. All strength-day tables (4 days × 3 blocks × 3 clusters × ~4 exercises × 4 weeks), the two testing tables (15 markers), the weekly speed/plyo/running table (12 rows), the AM block templates, and all rule/protocol tables matched between the two extraction methods with no discrepancies found. The resulting structured file is `data/program/coach-conde-long-game-athletic-v1.json`.
 
-Below is everything that is **not** a literal transcription — i.e., anywhere the app needs to make a judgment call, fill a gap the PDF leaves open, or resolve an apparent tension. Each item needs your confirmation before Phase 2 locks it into the data model or business logic.
+Below is everything that is **not** a literal transcription — i.e., anywhere the app needs to make a judgment call, fill a gap the PDF leaves open, or resolve an apparent tension. Items 1 and 2 (Week 0 scheduling, Week 6 retest scope) have been resolved by the product owner and are recorded below as decisions, not open questions. The remaining items still need confirmation before Phase 2 locks them into the data model or business logic.
 
 ---
 
-## 1. Week 0 baseline-test day-by-day schedule is not specified
+## 1. Week 0 baseline-test day-by-day schedule — RESOLVED
 
-The PDF gives a full Monday–Sunday breakdown for **Week 12** (test days Wed/Thu/Sat) and a single-day breakdown for **Week 6** (Wednesday, 6 markers). It never gives an equivalent schedule for **Week 0** — only "Fifteen markers. Tested Week 0, Week 6 and Week 12" (cover) and the medical-clearance/sprint-deferral callout (p.4).
+**Decision (confirmed by product owner):** Week 0 is the complete baseline for all 15 markers, finished before Week 1 begins. Two protocol rules from elsewhere in the PDF constrain its shape even though the PDF gives no exact weekdays for Week 0 itself:
 
-**Proposed default:** mirror the Week 12 structure — Day 1: the 6 Longevity Ten "quick" markers (RHR, grip, balance-eyes-closed, sit-to-rise, deep squat hold, shoulder flexion); Day 2: Athletic Five, fresh, full warm-up, nothing else that day; Day 3: trap-bar E1RM, push-ups, side plank, optional 1.5-mile run. This is encoded in `data/program/coach-conde-long-game-athletic-v1.json` under `testing.events.week0` with `scheduleSpecifiedInPdf: false` so it's traceable as an assumption, not a fact.
+- Resting heart rate (#1) is collected across **three mornings** and averaged (its own stated protocol), so Week 0 necessarily spans at least 3 calendar days.
+- The Athletic Five (#11-15) must occur on a **separate, fresh day**, after a complete warm-up — never at the end of another session, never on tired legs (its own stated protocol).
+- The 10-yard sprint deferral rule is preserved: if the athlete has not run fast since their twenties, #11 is skipped at Week 0 and tested at Week 6 instead, once Block 1's hills/sled work has prepared the tissue. Markers #12-15 are still tested normally at Week 0 — only #11 is conditionally deferred.
 
-**Needs your confirmation:** does Week 0 happen before "Week 1" starts (i.e., its own untrained days), or does it borrow Week 1's off-days (Wed/Fri/Sun)? The PDF's "12 weeks" framing suggests Week 0 is a distinct pre-week, not counted in the 12 — the app should model it that way (program start date = first day of Week 0, Week 1 Monday begins after Week 0 testing completes), but this is an inference, not a stated rule.
+The app may **recommend** a three-session structure modeled on Week 12's format (health markers + RHR window / Athletic Five fresh day / strength-related markers), but this is presented to the user as a **flexible suggested schedule**, not a fixed prescription, because the PDF does not specify exact Week 0 weekdays. Encoded in `data/program/coach-conde-long-game-athletic-v1.json` under `testing.events.week0`: `schedulingRules` (the two hard protocol constraints + sprint deferral) and `suggestedSchedule` (`isFlexible: true`, explicitly labeled as an app default, not a PDF rule).
 
-## 2. Week 6 retest is intentionally partial — only 6 of 15 markers
+Still an open inference (not re-litigated by this resolution, flagging for awareness only): whether program start date = first day of Week 0 (Week 0 as its own pre-week, Week 1 Monday begins after testing completes) — this remains the app's working assumption and needs no further action unless you want it changed.
 
-Explicitly stated (p.12): resting heart rate, single-leg balance eyes closed, sit-to-rise, side plank, standing broad jump, and the 10-to-5 deceleration deficit — plus, conditionally, the 10-yard sprint if it was deferred at Week 0.
+## 2. Week 6 retest is intentionally partial — RESOLVED
 
-The original task description says "Compare Week 0, Week 6, and Week 12 results" for all fifteen markers. **This is a real tension**, not an extraction failure — the source program simply does not retest all 15 markers at Week 6. The app should surface a 6-marker (or 7, if the sprint was deferred) comparison at Week 6, and a full 15-marker comparison only between Week 0 and Week 12. Flagging so the Progress/Testing UI doesn't imply data that doesn't exist. Encoded as `testing.events.week6.markers` (6 items) vs `week0`/`week12` (15 items each) in the content JSON.
+**Decision (confirmed by product owner):** Week 6 is a partial retest containing **exactly** the six markers the PDF specifies (p.12): resting heart rate (#1), single-leg balance eyes closed (#4), sit-to-rise (#5), side plank (#9), standing broad jump (#12), and the 10-to-5 deceleration deficit (#15). The 10-yard sprint (#11) is added **only** when it was deferred at Week 0 per item 1 above. Week 6 is never treated or presented as a complete 15-marker retest.
+
+The Progress/Testing UI must reflect this honestly: a 6-marker (or 7, if the sprint was deferred) comparison at Week 6, and a full 15-marker comparison only between Week 0 and Week 12. Encoded as `testing.events.week6.markers` (6 items, exact PDF list) + `conditionalMarkers` (the deferred-sprint case) vs. `week0`/`week12` (15 items each) in the content JSON. This resolves the tension noted against the original task description ("compare Week 0, Week 6, and Week 12" is honored as designed — full comparison at 0/12, partial at 6 — rather than fabricating Week 6 data the program doesn't collect).
 
 ## 3. Week 8 "re-estimate maxes" has no stated test protocol
 
