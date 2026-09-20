@@ -4,7 +4,10 @@ import { ActivityIndicator, View } from 'react-native';
 import { AppText, Badge, Button, Card, Divider, Screen } from '../../../src/design-system';
 import { useAuth } from '../../../src/lib/auth/AuthContext';
 import { useConfirmSafetyAdjustment } from '../../../src/features/readiness/useReadinessGate';
-import { listSafetyAdjustments } from '../../../src/features/workout/workoutRepository';
+import {
+  getReadinessEntry,
+  listSafetyAdjustments,
+} from '../../../src/features/workout/workoutRepository';
 import { useQuery } from '@tanstack/react-query';
 
 /**
@@ -20,9 +23,14 @@ export default function SafetyAdjustmentScreen() {
   const { data: adjustments, isLoading } = useQuery({
     queryKey: ['safety-adjustments-for-date', user?.id, params.date],
     queryFn: async () => {
+      // Correlate by the readiness entry for this date, not by comparing
+      // an adjustment's created_at (a real timestamp) to the target date
+      // string — those can legitimately differ (e.g. a late-night entry,
+      // or here where the readiness date isn't literally "today").
+      const readinessEntry = await getReadinessEntry(user!.id, params.date!);
       const all = await listSafetyAdjustments(user!.id);
       return all
-        .filter((a) => a.created_at.slice(0, 10) === params.date)
+        .filter((a) => a.readiness_entry_id != null && a.readiness_entry_id === readinessEntry?.id)
         .sort((a, b) => (a.created_at < b.created_at ? -1 : 1));
     },
     enabled: Boolean(user && params.date),

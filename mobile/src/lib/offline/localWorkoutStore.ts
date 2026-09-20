@@ -49,6 +49,29 @@ function storageKey(userId: string, collection: CollectionName): string {
   return `${NAMESPACE}:${collection}:${userId}`;
 }
 
+/**
+ * Per-(user, collection) write lock. `upsert`/`markSynced` are read-modify-
+ * write over the whole collection array, so two concurrent calls for the
+ * same collection (e.g. `Promise.all` creating several safety_adjustments
+ * from one readiness submission) can otherwise both read the pre-write
+ * array and then each write back their own copy — the second write clobbers
+ * the first, silently losing a row. Every mutation for a given key is
+ * queued onto the same promise chain so they always run one at a time.
+ */
+const writeLocks = new Map<string, Promise<unknown>>();
+
+function withWriteLock<T>(key: string, fn: () => Promise<T>): Promise<T> {
+  const previous = writeLocks.get(key) ?? Promise.resolve();
+  const next = previous.then(fn, fn);
+  // Swallow the result/rejection for chaining purposes only — callers still
+  // get the real result/error via the returned `next` promise.
+  writeLocks.set(
+    key,
+    next.catch(() => undefined),
+  );
+  return next;
+}
+
 async function readRaw<T extends { id: string }>(
   userId: string,
   collection: CollectionName,
@@ -107,31 +130,31 @@ export async function queryAll<T extends { id: string }>(
  * queues it for a background push in Supabase mode; demo mode ignores the
  * flag entirely since there's nowhere to sync to.
  */
-export async function upsert<T extends { id: string }>(
+export function upsert<T extends { id: string }>(
   userId: string,
   collection: CollectionName,
   row: T,
   pendingSync = true,
 ): Promise<T> {
-  const rows = await readRaw<T>(userId, collection);
-  const idx = rows.findIndex((r) => r.id === row.id);
-  const withMeta: WithSyncMeta<T> = { ...row, _pendingSync: pendingSync };
-  if (idx >= 0) rows[idx] = withMeta;
-  else rows.push(withMeta);
-  await writeRaw(userId, collection, rows);
-  return row;
+  return withWriteLock(storageKey(userId, collection), async () => {
+    const rows = await readRaw<T>(userId, collection);
+    const idx = rows.findIndex((r) => r.id === row.id);
+    const withMeta: WithSyncMeta<T> = { ...row, _pendingSync: pendingSync };
+    if (idx >= 0) rows[idx] = withMeta;
+    else rows.push(withMeta);
+    await writeRaw(userId, collection, rows);
+    return row;
+  });
 }
 
-export async function markSynced(
-  userId: string,
-  collection: CollectionName,
-  id: string,
-): Promise<void> {
-  const rows = await readRaw(userId, collection);
-  const row = rows.find((r) => r.id === id);
-  if (!row) return;
-  row._pendingSync = false;
-  await writeRaw(userId, collection, rows);
+export function markSynced(userId: string, collection: CollectionName, id: string): Promise<void> {
+  return withWriteLock(storageKey(userId, collection), async () => {
+    const rows = await readRaw(userId, collection);
+    const row = rows.find((r) => r.id === id);
+    if (!row) return;
+    row._pendingSync = false;
+    await writeRaw(userId, collection, rows);
+  });
 }
 
 export async function listPending<T extends { id: string }>(

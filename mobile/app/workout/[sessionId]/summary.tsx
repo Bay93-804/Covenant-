@@ -138,7 +138,7 @@ export default function WorkoutSummaryScreen() {
         </Card>
       ) : null}
 
-      <Button onPress={() => router.dismissAll()}>Back to Today</Button>
+      <Button onPress={() => router.replace('/(tabs)/today')}>Back to Today</Button>
     </Screen>
   );
 }

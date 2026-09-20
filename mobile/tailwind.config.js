@@ -2,6 +2,16 @@
 module.exports = {
   content: ['./app/**/*.{js,jsx,ts,tsx}', './src/**/*.{js,jsx,ts,tsx}'],
   presets: [require('nativewind/preset')],
+  // The Coach Conde design system is a single fixed dark theme (Midnight
+  // Navy/Burnished Gold) — it never follows the OS light/dark preference.
+  // Leaving this at NativeWind's default ('media') makes its web runtime
+  // attach a `prefers-color-scheme` listener that throws
+  // ("Cannot manually set color scheme, as dark mode is type 'media'")
+  // the moment anything touches color-scheme state, which crashes to
+  // React Native Web's dev error overlay. 'class' avoids that listener
+  // entirely, which is also the correct semantics here since the app
+  // never toggles scheme based on the OS.
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
