@@ -6,6 +6,7 @@ export * from './Card';
 export * from './Divider';
 export * from './Badge';
 export * from './TextField';
+export * from './DatePickerField';
 export * from './ChoiceGroup';
 export * from './Checkbox';
 export * from './ToggleRow';

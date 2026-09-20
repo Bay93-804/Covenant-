@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import { ChoiceGroup, TextField } from '../../src/design-system';
+import { ChoiceGroup, DatePickerField, TextField } from '../../src/design-system';
 import { OnboardingStepScreen } from '../../src/features/onboarding/OnboardingStepScreen';
 import { useOnboarding } from '../../src/features/onboarding/OnboardingContext';
 import {
@@ -20,9 +20,26 @@ const stepSchema = onboardingSchema.pick({
   injuryNotes: true,
 });
 
+// Mirrors the 13-year minimum age enforced by `dateOfBirthSchema` in
+// src/features/onboarding/schema.ts — these are just the picker's UI
+// bounds, the Zod schema remains the source of truth for validation.
+const MIN_AGE_YEARS = 13;
+const MAX_AGE_YEARS = 100;
+
 export default function ProfileSetupScreen() {
   const { data, update } = useOnboarding();
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const dobMaxDate = useMemo(() => {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() - MIN_AGE_YEARS);
+    return date;
+  }, []);
+  const dobMinDate = useMemo(() => {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() - MAX_AGE_YEARS);
+    return date;
+  }, []);
 
   function handleNext() {
     const result = stepSchema.safeParse(data);
@@ -61,14 +78,14 @@ export default function ProfileSetupScreen() {
         error={errors.displayName}
         autoCapitalize="words"
       />
-      <TextField
+      <DatePickerField
         label="Date of birth"
-        value={data.dateOfBirth}
-        onChangeText={(v) => update({ dateOfBirth: v })}
+        value={data.dateOfBirth ?? ''}
+        onChange={(v) => update({ dateOfBirth: v })}
         error={errors.dateOfBirth}
-        placeholder="YYYY-MM-DD"
         hint="Optional."
-        keyboardType="numbers-and-punctuation"
+        minimumDate={dobMinDate}
+        maximumDate={dobMaxDate}
       />
 
       <ChoiceGroup

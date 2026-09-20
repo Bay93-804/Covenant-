@@ -1,36 +1,33 @@
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { Pressable, View } from 'react-native';
 
-import { AppText, Card } from '../../src/design-system';
+import { AppText, DatePickerField } from '../../src/design-system';
 import { OnboardingStepScreen } from '../../src/features/onboarding/OnboardingStepScreen';
 import { useOnboarding } from '../../src/features/onboarding/OnboardingContext';
 import { programStartDateSchema } from '../../src/features/onboarding/schema';
 
-function nextNMondays(n: number): string[] {
-  const dates: string[] = [];
-  const cursor = new Date();
-  cursor.setHours(0, 0, 0, 0);
-  // Advance to the next Monday (or today, if today is already Monday).
-  const diffToMonday = (8 - cursor.getDay()) % 7;
-  cursor.setDate(cursor.getDate() + diffToMonday);
-
-  for (let i = 0; i < n; i += 1) {
-    dates.push(cursor.toISOString().slice(0, 10));
-    cursor.setDate(cursor.getDate() + 7);
-  }
-  return dates;
-}
-
-function formatLabel(iso: string): string {
-  const date = new Date(`${iso}T00:00:00`);
-  return date.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
-}
+const MAX_MONTHS_OUT = 12;
 
 export default function ProgramStartDateScreen() {
   const { data, update } = useOnboarding();
   const [error, setError] = useState<string | null>(null);
-  const mondayOptions = useMemo(() => nextNMondays(6), []);
+
+  const today = useMemo(() => {
+    const date = new Date();
+    date.setHours(0, 0, 0, 0);
+    return date;
+  }, []);
+
+  const maxDate = useMemo(() => {
+    const date = new Date(today);
+    date.setMonth(date.getMonth() + MAX_MONTHS_OUT);
+    return date;
+  }, [today]);
+
+  function handleChange(iso: string) {
+    update({ programStartDate: iso });
+    setError(null);
+  }
 
   function handleNext() {
     const result = programStartDateSchema.safeParse(data.programStartDate);
@@ -49,39 +46,22 @@ export default function ProgramStartDateScreen() {
       subtitle="Week 1 always begins on a Monday. Week 0 baseline testing happens in the days before this date."
       onNext={handleNext}
     >
-      <View className="gap-3">
-        {mondayOptions.map((iso) => {
-          const selected = data.programStartDate === iso;
-          return (
-            <Pressable
-              key={iso}
-              accessibilityRole="radio"
-              accessibilityState={{ selected }}
-              onPress={() => update({ programStartDate: iso })}
-            >
-              <Card emphasized={selected} className="flex-row items-center justify-between">
-                <AppText variant="body" color="primary" weight="600">
-                  {formatLabel(iso)}
-                </AppText>
-                {selected ? (
-                  <AppText variant="body" color="accent">
-                    ✓
-                  </AppText>
-                ) : null}
-              </Card>
-            </Pressable>
-          );
-        })}
-      </View>
+      <DatePickerField
+        label="Program start date"
+        required
+        value={data.programStartDate}
+        onChange={handleChange}
+        minimumDate={today}
+        maximumDate={maxDate}
+        error={error ?? undefined}
+        hint="Pick any date — it must land on a Monday."
+      />
 
-      {error ? (
-        <AppText variant="bodySm" color="danger" style={{ marginTop: 12 }}>
-          {error}
-        </AppText>
-      ) : null}
-      <AppText variant="caption" color="muted" style={{ marginTop: 16 }}>
+      <AppText variant="caption" color="muted" style={{ marginTop: 4 }}>
         See docs/phase1/EXTRACTION_AUDIT.md #10 — the source program doesn&apos;t specify a start
-        weekday, so we constrain it to Mondays for schedule clarity.
+        weekday, so we constrain it to Mondays for schedule clarity. The native picker doesn&apos;t
+        support restricting selectable weekdays, so pick a date and we&apos;ll confirm it&apos;s a
+        Monday before continuing.
       </AppText>
     </OnboardingStepScreen>
   );
