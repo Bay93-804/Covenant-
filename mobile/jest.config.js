@@ -6,4 +6,5 @@ module.exports = {
   ],
   collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/*.d.ts'],
   testPathIgnorePatterns: ['/node_modules/', '/.expo/'],
+  setupFiles: ['<rootDir>/jest.setup.js'],
 };

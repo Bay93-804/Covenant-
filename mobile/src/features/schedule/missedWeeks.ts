@@ -29,10 +29,11 @@ export function detectMissedWeeks(
 
   for (let week = 1; week <= 12; week++) {
     const dates = datesForWeek(input, week);
-    const weekEnd = dates[dates.length - 1];
+    const weekStart = dates[0]!;
+    const weekEnd = dates[dates.length - 1]!;
     if (weekEnd >= todayIso) break; // week not fully elapsed yet
 
-    const scheduleDays = buildScheduleRange(input, dates[0], weekEnd);
+    const scheduleDays = buildScheduleRange(input, weekStart, weekEnd);
     const trainingDates = scheduleDays.filter((d) => !d.am.isRestDay || !d.pm.isRestDay);
     if (trainingDates.length === 0) continue;
 
@@ -43,7 +44,7 @@ export function detectMissedWeeks(
   const shouldRecommendRestart = missedWeekNumbers.length >= 2;
   let restartBlockStartWeek: number | null = null;
   if (shouldRecommendRestart) {
-    const currentWeek = resolveCurrentBlockStart(missedWeekNumbers[missedWeekNumbers.length - 1]);
+    const currentWeek = resolveCurrentBlockStart(missedWeekNumbers[missedWeekNumbers.length - 1]!);
     restartBlockStartWeek = currentWeek;
   }
 

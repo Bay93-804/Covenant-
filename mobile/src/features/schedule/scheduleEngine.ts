@@ -17,7 +17,6 @@
  * row — see docs/phase1/DATABASE_SCHEMA.md principle #2.
  */
 import {
-  getStrengthDayForWeek,
   getWeeklySpeedPlanForWeek,
   getWeeklyTemplateDay,
   resolveWeekContext,

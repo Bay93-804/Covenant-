@@ -98,7 +98,9 @@ describe('evaluateReadiness', () => {
   });
 
   it('joint pain stops the affected training and recommends professional evaluation, never a workaround', () => {
-    const result = evaluateReadiness(baseInput({ jointPainFlag: true, jointPainLocation: 'left knee' }));
+    const result = evaluateReadiness(
+      baseInput({ jointPainFlag: true, jointPainLocation: 'left knee' }),
+    );
     const trigger = result.triggers.find((t) => t.code === 'JOINT_PAIN_MOVEMENT_CHANGE');
     expect(trigger?.recommendEvaluation).toBe(true);
     expect(result.adjustments.stopAffectedTraining).toBe(true);

@@ -12,7 +12,7 @@ describe('evaluatePickupSportAdjustments', () => {
     expect(result.gateBlocked).toBe(true);
     expect(result.gateReason).toMatch(/finished Block 1/);
     expect(result.recommendations).toHaveLength(1);
-    expect(result.recommendations[0].code).toBe('BLOCK1_GATE_REQUIRED');
+    expect(result.recommendations[0]?.code).toBe('BLOCK1_GATE_REQUIRED');
   });
 
   it('does not gate a long-absent player who has already completed Block 1', () => {

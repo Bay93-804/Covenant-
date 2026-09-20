@@ -14,9 +14,14 @@ export type IsoDate = string; // 'YYYY-MM-DD'
 
 const MS_PER_DAY = 86_400_000;
 
+function parseIso(iso: IsoDate): [number, number, number] {
+  const parts = iso.split('-').map(Number);
+  return [parts[0] ?? 0, parts[1] ?? 1, parts[2] ?? 1];
+}
+
 /** Parses a `YYYY-MM-DD` string into a UTC-midnight epoch-ms value, safe for day-diffing. */
 function toEpochDay(iso: IsoDate): number {
-  const [y, m, d] = iso.split('-').map(Number);
+  const [y, m, d] = parseIso(iso);
   return Date.UTC(y, m - 1, d) / MS_PER_DAY;
 }
 
@@ -33,7 +38,7 @@ export function diffDays(fromIso: IsoDate, toIso: IsoDate): number {
 
 /** 0=Monday .. 6=Sunday, matching `program_days.day_of_week` in the DB schema. */
 export function isoWeekdayIndex(iso: IsoDate): number {
-  const [y, m, d] = iso.split('-').map(Number);
+  const [y, m, d] = parseIso(iso);
   const jsDay = new Date(Date.UTC(y, m - 1, d)).getUTCDay(); // 0=Sun..6=Sat
   return (jsDay + 6) % 7;
 }

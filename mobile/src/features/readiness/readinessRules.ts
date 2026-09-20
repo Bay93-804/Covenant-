@@ -173,7 +173,8 @@ export function evaluateReadiness(
     triggers.push({
       code: 'HAMSTRING_GRABBY',
       reason: 'Hamstring felt grabby during build-ups.',
-      recommendation: 'Stop sprinting, perform the easy run instead, and return to hills for one week.',
+      recommendation:
+        'Stop sprinting, perform the easy run instead, and return to hills for one week.',
     });
     adjustments.doNotSprint = true;
     adjustments.substituteSprintsWithEasyRun = true;
@@ -199,7 +200,10 @@ export function evaluateReadiness(
 }
 
 function shiftIso(iso: IsoDate, deltaDays: number): IsoDate {
-  const [y, m, d] = iso.split('-').map(Number);
+  const parts = iso.split('-').map(Number);
+  const y = parts[0] ?? 0;
+  const m = parts[1] ?? 1;
+  const d = parts[2] ?? 1;
   const date = new Date(Date.UTC(y, m - 1, d));
   date.setUTCDate(date.getUTCDate() + deltaDays);
   return date.toISOString().slice(0, 10);
@@ -255,9 +259,11 @@ export function applyAdjustmentsToSpeedSession(
   flags: SessionAdjustmentFlags,
 ): AdjustedSpeedSession {
   const notes: string[] = [];
-  if (flags.doNotSprint) notes.push('Sprint work removed for today — proceed with the easy run only.');
+  if (flags.doNotSprint)
+    notes.push('Sprint work removed for today — proceed with the easy run only.');
   if (flags.blockPlyometrics) notes.push('Plyometrics removed for today.');
-  if (flags.substituteSprintsWithEasyRun) notes.push('Return to hills (not flat sprints) for one week.');
+  if (flags.substituteSprintsWithEasyRun)
+    notes.push('Return to hills (not flat sprints) for one week.');
 
   return {
     original: speedPlan,
@@ -269,6 +275,9 @@ export function applyAdjustmentsToSpeedSession(
 }
 
 /** Human-readable summary lines for the "safety adjustment confirmation" screen. */
-export function describeTrigger(trigger: SafetyTrigger): { reason: string; recommendation: string } {
+export function describeTrigger(trigger: SafetyTrigger): {
+  reason: string;
+  recommendation: string;
+} {
   return { reason: trigger.reason, recommendation: trigger.recommendation };
 }

@@ -5,7 +5,12 @@ import {
   resolveDateContext,
   type EnrollmentScheduleInput,
 } from '../src/features/schedule/scheduleEngine';
-import { addDays, diffDays, isoDateInTimeZone, isoWeekdayIndex } from '../src/features/schedule/dateUtils';
+import {
+  addDays,
+  diffDays,
+  isoDateInTimeZone,
+  isoWeekdayIndex,
+} from '../src/features/schedule/dateUtils';
 
 const baseInput: EnrollmentScheduleInput = {
   startDate: '2026-01-05', // a Monday
@@ -62,7 +67,9 @@ describe('resolveDateContext', () => {
     // Pause for 7 full days starting the Monday of week 2 (2026-01-12).
     const input: EnrollmentScheduleInput = {
       ...baseInput,
-      pauseEvents: [{ pausedAt: '2026-01-12T00:00:00.000Z', resumedAt: '2026-01-19T00:00:00.000Z' }],
+      pauseEvents: [
+        { pausedAt: '2026-01-12T00:00:00.000Z', resumedAt: '2026-01-19T00:00:00.000Z' },
+      ],
     };
     // Without the pause, 2026-01-26 would be week 4; with 7 paused days it should still be week 3.
     const result = resolveDateContext(input, '2026-01-26');
@@ -121,14 +128,16 @@ describe('datesForWeek / dateForWeekStart', () => {
   it('returns 7 consecutive dates starting on the week Monday', () => {
     const dates = datesForWeek(baseInput, 3);
     expect(dates).toHaveLength(7);
-    expect(isoWeekdayIndex(dates[0])).toBe(0);
+    expect(isoWeekdayIndex(dates[0]!)).toBe(0);
     expect(dates[0]).toBe(dateForWeekStart(baseInput, 3));
   });
 
   it('shifts subsequent weeks forward by paused time', () => {
     const input: EnrollmentScheduleInput = {
       ...baseInput,
-      pauseEvents: [{ pausedAt: '2026-01-12T00:00:00.000Z', resumedAt: '2026-01-19T00:00:00.000Z' }],
+      pauseEvents: [
+        { pausedAt: '2026-01-12T00:00:00.000Z', resumedAt: '2026-01-19T00:00:00.000Z' },
+      ],
     };
     const withoutPause = dateForWeekStart(baseInput, 4);
     const withPause = dateForWeekStart(input, 4);

@@ -129,9 +129,12 @@ describe('deterministic seed expansion', () => {
     );
   });
 
-  it('expands to 48 workout_templates (4 strength days × 3 blocks × 4 weeks)', () => {
+  it('expands to 48 PM strength workout_templates (4 strength days × 3 blocks × 4 weeks) plus 48 AM workout_templates (4 AM session types × 12 weeks, added in Phase 3 so workout_sessions.workout_template_id always has a real row to reference)', () => {
     const expanded = expandProgramContent(content, programVersionId);
-    expect(expanded.workoutTemplates).toHaveLength(48);
+    const pm = expanded.workoutTemplates.filter((t) => t.session_slot === 'pm');
+    const am = expanded.workoutTemplates.filter((t) => t.session_slot === 'am');
+    expect(pm).toHaveLength(48);
+    expect(am).toHaveLength(48);
   });
 
   it('produces exactly one testing_marker_def per marker number 1-15', () => {

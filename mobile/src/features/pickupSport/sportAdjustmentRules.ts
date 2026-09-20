@@ -7,10 +7,7 @@
 import { isoWeekdayIndex, type IsoDate } from '../schedule/dateUtils';
 
 export type SportAdjustmentCode =
-  | 'REPLACE_THU_AGILITY'
-  | 'REDUCE_MON_SPEED'
-  | 'MOVE_STRENGTH_D'
-  | 'BLOCK1_GATE_REQUIRED';
+  'REPLACE_THU_AGILITY' | 'REDUCE_MON_SPEED' | 'MOVE_STRENGTH_D' | 'BLOCK1_GATE_REQUIRED';
 
 export interface SportAdjustmentRecommendation {
   code: SportAdjustmentCode;
@@ -40,8 +37,7 @@ export interface SportAdjustmentEvaluation {
 export const PREGAME_WARMUP_DESCRIPTION =
   'Full RAMP warm-up plus build-ups: 2x30 yd at 70%, 2x30 at 85%, 2x20 yd at 90%, and five drop-and-sticks. Ten minutes.';
 
-export const POST_GAME_NOTE =
-  'Walk it out, hydrate, sleep. The next session drops one RIR column.';
+export const POST_GAME_NOTE = 'Walk it out, hydrate, sleep. The next session drops one RIR column.';
 
 const SATURDAY_INDEX = 5; // 0=Mon..6=Sun
 
@@ -51,7 +47,13 @@ export function evaluatePickupSportAdjustments(input: SportLogInput): SportAdjus
       gateBlocked: true,
       gateReason:
         'Do not go back to a competitive game until you have finished Block 1. Four weeks of landings, hills and sled work first.',
-      recommendations: [{ code: 'BLOCK1_GATE_REQUIRED', description: 'Finish Block 1 before competitive play.', requiresUserChoice: false }],
+      recommendations: [
+        {
+          code: 'BLOCK1_GATE_REQUIRED',
+          description: 'Finish Block 1 before competitive play.',
+          requiresUserChoice: false,
+        },
+      ],
       pregameWarmup: PREGAME_WARMUP_DESCRIPTION,
       postGameNote: POST_GAME_NOTE,
     };
