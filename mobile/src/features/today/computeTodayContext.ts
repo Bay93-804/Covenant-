@@ -9,9 +9,11 @@ export interface TodayContext {
 }
 
 /**
- * Program start date is Week 1's Monday (see docs/phase1/EXTRACTION_AUDIT.md
- * #10 and the onboarding program-start-date screen, which enforces this).
- * Anything before it is the flexible Week 0 baseline-testing window.
+ * The Week 1 Start Date is Week 1's Monday (see docs/phase1/
+ * EXTRACTION_AUDIT.md #10, RESOLVED, and the onboarding program-start-date
+ * screen, which enforces this). Anything before it is the Week 0
+ * baseline-testing window, which begins immediately once onboarding
+ * finishes.
  */
 export function computeTodayContext(startDateIso: string, now: Date = new Date()): TodayContext {
   const start = new Date(`${startDateIso}T00:00:00`);

@@ -165,9 +165,13 @@ workout is future work.
 
 ## Known limitations (honest, not hidden)
 
-- Date pickers (date of birth, program start date) are implemented as validated buttons/text
-  inputs rather than a native calendar widget, to avoid pulling in another native dependency in
-  this phase.
+- Date of birth and the Week 1 Start Date use the native OS date picker
+  (`@react-native-community/datetimepicker`) on iOS/Android; since that library has no web
+  implementation, the web build (used only as a bundling smoke test) falls back to a plain
+  validated text field instead.
+- Native date pickers can't restrict which weekdays are selectable, so the Week 1 Start Date field
+  accepts any date from the picker and relies on Zod (`week1StartDateSchema`) to reject a
+  non-Monday choice with an inline error, rather than graying out non-Mondays in the calendar UI.
 - The Today screen's "Start Session" and Testing's marker-entry rows are intentionally
   non-functional placeholders (see above) — the program _plan_ shown is real, the _logging_ isn't
   built yet.

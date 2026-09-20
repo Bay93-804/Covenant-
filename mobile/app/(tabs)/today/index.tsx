@@ -1,9 +1,56 @@
 import { Alert, View } from 'react-native';
 
 import { AppText, Badge, Button, Card, Divider, Screen } from '../../../src/design-system';
-import { getTodaySessionSummary } from '../../../src/content';
+import { getTestingEvent, getTodaySessionSummary } from '../../../src/content';
 import { computeTodayContext } from '../../../src/features/today/computeTodayContext';
 import { useEnrollmentStatus } from '../../../src/lib/onboarding/useEnrollmentStatus';
+
+function Week0Checklist({ week1StartDate }: { week1StartDate: string }) {
+  const week0 = getTestingEvent('week0');
+
+  return (
+    <Screen scroll>
+      <AppText variant="overline" color="accent" style={{ marginTop: 16 }}>
+        WEEK 0 · BASELINE TESTING CHECKLIST
+      </AppText>
+      <AppText variant="h1" color="primary" style={{ marginBottom: 12 }}>
+        Starts now
+      </AppText>
+      <AppText variant="body" color="secondary" style={{ marginBottom: 20 }}>
+        Week 1 begins {week1StartDate}. Everything below happens before then — head to the Testing
+        tab to log results as you complete each item.
+      </AppText>
+
+      <Card className="mb-4">
+        <AppText variant="caption" color="secondary" style={{ marginBottom: 10 }}>
+          REQUIRED BEFORE WEEK 1
+        </AppText>
+        <AppText variant="bodySm" color="primary" style={{ marginBottom: 10 }}>
+          • {week0.schedulingRules.restingHeartRate}
+        </AppText>
+        <AppText variant="bodySm" color="primary" style={{ marginBottom: 10 }}>
+          • {week0.schedulingRules.athleticFive}
+        </AppText>
+        <AppText variant="bodySm" color="primary">
+          • The remaining baseline markers ({week0.markers.length} total across all three
+          Longevity/Athletic Five categories).
+        </AppText>
+      </Card>
+
+      <Card>
+        <AppText variant="caption" color="secondary" style={{ marginBottom: 10 }}>
+          SUGGESTED SCHEDULE (FLEXIBLE)
+        </AppText>
+        {week0.suggestedSchedule.days.map((day, i) => (
+          <AppText key={i} variant="bodySm" color="primary" style={{ marginBottom: 6 }}>
+            • {day.suggestedDay ? `${day.suggestedDay}: ` : ''}
+            {day.what}
+          </AppText>
+        ))}
+      </Card>
+    </Screen>
+  );
+}
 
 function SessionCard({
   slotLabel,
@@ -64,20 +111,7 @@ export default function TodayScreen() {
   const context = computeTodayContext(enrollment.startDate);
 
   if (context.isBeforeProgramStart) {
-    return (
-      <Screen scroll>
-        <AppText variant="overline" color="accent" style={{ marginTop: 16 }}>
-          WEEK 0 · BASELINE
-        </AppText>
-        <AppText variant="h1" color="primary" style={{ marginBottom: 12 }}>
-          Testing week
-        </AppText>
-        <AppText variant="body" color="secondary" style={{ marginBottom: 24 }}>
-          Your program starts {enrollment.startDate}. Complete your Week 0 baseline testing before
-          then — head to the Testing tab to get started.
-        </AppText>
-      </Screen>
-    );
+    return <Week0Checklist week1StartDate={enrollment.startDate} />;
   }
 
   if (context.isProgramComplete) {

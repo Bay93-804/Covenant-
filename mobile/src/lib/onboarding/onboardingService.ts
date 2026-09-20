@@ -29,7 +29,7 @@ export async function completeOnboarding(userId: string, data: OnboardingData): 
 
     await createProgramEnrollment({
       user_id: userId,
-      start_date: data.programStartDate,
+      start_date: data.week1StartDate,
     });
 
     await upsertNotificationPreferences({
@@ -66,7 +66,7 @@ export async function completeOnboarding(userId: string, data: OnboardingData): 
   });
 
   await createDemoEnrollment(userId, {
-    start_date: data.programStartDate,
+    start_date: data.week1StartDate,
     defer_week0_sprint_test: data.deferWeek0SprintTest,
   });
 

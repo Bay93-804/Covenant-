@@ -3,7 +3,7 @@
 
 **Method:** Every one of the 17 pages was read twice — once as rendered page images, once via `pdftotext -layout` against the PDF's actual text layer — and cross-checked value by value. All strength-day tables (4 days × 3 blocks × 3 clusters × ~4 exercises × 4 weeks), the two testing tables (15 markers), the weekly speed/plyo/running table (12 rows), the AM block templates, and all rule/protocol tables matched between the two extraction methods with no discrepancies found. The resulting structured file is `data/program/coach-conde-long-game-athletic-v1.json`.
 
-Below is everything that is **not** a literal transcription — i.e., anywhere the app needs to make a judgment call, fill a gap the PDF leaves open, or resolve an apparent tension. Items 1 and 2 (Week 0 scheduling, Week 6 retest scope) have been resolved by the product owner and are recorded below as decisions, not open questions. The remaining items still need confirmation before Phase 2 locks them into the data model or business logic.
+Below is everything that is **not** a literal transcription — i.e., anywhere the app needs to make a judgment call, fill a gap the PDF leaves open, or resolve an apparent tension. Items 1, 2, and 10 (Week 0 scheduling, Week 6 retest scope, and the Week 1 Start Date/Week 0 lead-time scheduling decision) have been resolved by the product owner and are recorded below as decisions, not open questions. The remaining items still need confirmation before Phase 2 locks them into the data model or business logic.
 
 ---
 
@@ -56,9 +56,11 @@ Marker #13's protocol explicitly requires the athlete to lock in either "hands o
 
 Wednesday and Friday AM are optional, not prescribed with sets/reps — this is correct as extracted (not a gap), but noting it so the Today screen's "rest day" guidance is built as *optional suggestions* (walk, or standalone mobility flow), not a schedulable/loggable workout template in the same sense as the four training days.
 
-## 10. No day-of-week is given for Week 0 relative to program start date
+## 10. No day-of-week is given for Week 0 relative to program start date — RESOLVED
 
-The user picks "a program start date" (PRD requirement). Whether that start date should land on a Monday (so Week 1 begins cleanly) or can be any weekday (with Week 0 testing absorbing the partial week) is an app UX decision the PDF doesn't address. Recommend constraining the start-date picker to Mondays for schedule clarity — **flagging for your decision**, not assuming it silently.
+The user picks "a program start date" (PRD requirement). Whether that start date should land on a Monday (so Week 1 begins cleanly) or can be any weekday (with Week 0 testing absorbing the partial week) is an app UX decision the PDF doesn't address. Recommend constraining the start-date picker to Mondays for schedule clarity — flagging for your decision, not assuming it silently.
+
+**Decision (confirmed by product owner):** This is an app scheduling/UX decision, not a program-content change — `data/program/coach-conde-long-game-athletic-v1.json` is unaffected. The onboarding field is named **"Week 1 Start Date."** Week 1 must begin on a Monday (enforced by `week1StartDateSchema` in `src/features/onboarding/schema.ts`); Week 0 baseline testing begins immediately once onboarding finishes, as a checklist covering the remaining days before that date (see the Today tab's Week 0 checklist). The field defaults to the first Monday at least 7 days out, so the athlete has time to complete Week 0's three-morning resting-heart-rate window, the separate fresh Athletic Five day, and the remaining baseline markers first — but the athlete may still choose an earlier upcoming Monday, in which case the app shows a clear warning about fitting Week 0 in rather than blocking the choice. Any later Monday is accepted with no upper bound beyond a generous UI picker window. All date math (which day is "today," which day is "Monday") uses the athlete's own device-local timezone, never UTC, so the calculation never shifts by a day for someone far from UTC. See `src/features/onboarding/weekOneStartDate.ts` for the implementation.
 
 ---
 

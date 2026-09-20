@@ -1,10 +1,12 @@
 /**
  * Zod validation for every onboarding field required by Phase 2 scope:
- * name, DOB, units, program start date, equipment, training experience,
+ * name, DOB, units, Week 1 Start Date, equipment, training experience,
  * injury/movement warnings, recent-sprint history, Week 0 sprint-test
  * deferral, estimated lift maxes, and notification preferences.
  */
 import { z } from 'zod';
+
+import { getDefaultWeek1StartDate, toIsoDateLocal } from './weekOneStartDate';
 
 export const equipmentOptions = [
   { value: 'trap_bar', label: 'Trap bar' },
@@ -48,26 +50,30 @@ export const dateOfBirthSchema = z
   .or(z.literal(''));
 
 /**
- * Program start date: required, today or later, and constrained to Mondays
- * — see docs/phase1/EXTRACTION_AUDIT.md #10, which flags this as an app UX
- * decision the source PDF leaves open and recommends Monday-only starts "for
- * schedule clarity." Week 0 baseline testing happens in the days before this
- * date; this date itself is Week 1's Monday.
+ * Week 1 Start Date: required, today or later, and constrained to Mondays
+ * — see docs/phase1/EXTRACTION_AUDIT.md #10 (RESOLVED), an app scheduling/
+ * UX decision the source PDF leaves open, not a program-content change.
+ * Week 0 baseline testing happens in the days before this date; this date
+ * itself is Week 1's Monday. The athlete may pick any upcoming Monday
+ * (including one sooner than the recommended default) — this schema only
+ * enforces "a real date, in the future, that's a Monday"; the recommended
+ * ≥7-day lead time is a soft default + warning, not a hard minimum (see
+ * src/features/onboarding/weekOneStartDate.ts).
  */
-export const programStartDateSchema = z
+export const week1StartDateSchema = z
   .string()
-  .min(1, 'Choose a start date.')
+  .min(1, 'Choose a Week 1 Start Date.')
   .refine((v) => !Number.isNaN(Date.parse(v)), 'Enter a valid date.')
   .refine((v) => {
     const date = new Date(`${v}T00:00:00`);
     return date.getDay() === 1; // Monday
-  }, 'Program start date must be a Monday — Week 1 always begins on Monday.')
+  }, 'Week 1 Start Date must be a Monday — Week 1 always begins on Monday.')
   .refine((v) => {
     const date = new Date(`${v}T00:00:00`);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return date.getTime() >= today.getTime();
-  }, "Start date can't be in the past.");
+  }, "Week 1 Start Date can't be in the past.");
 
 export const liftKeySchema = z.enum(['trap_bar_deadlift', 'back_squat', 'bench_press']);
 
@@ -107,8 +113,8 @@ export const onboardingSchema = z.object({
     message: 'You must acknowledge this before continuing.',
   }),
 
-  // program-start-date
-  programStartDate: programStartDateSchema,
+  // program-start-date (field: "Week 1 Start Date")
+  week1StartDate: week1StartDateSchema,
 
   // week0-testing-intro
   hasSprintedRecently: z.boolean(),
@@ -123,29 +129,37 @@ export const onboardingSchema = z.object({
 
 export type OnboardingData = z.infer<typeof onboardingSchema>;
 
-export const defaultOnboardingData: OnboardingData = {
-  displayName: '',
-  dateOfBirth: '',
-  unitsWeight: 'lb',
-  unitsDistance: 'mi',
-  trainingExperience: 'returning',
-  equipmentAvailable: [],
-  injuryNotes: '',
-  medicalClearanceAcknowledged: false as unknown as true,
-  programStartDate: '',
-  hasSprintedRecently: true,
-  deferWeek0SprintTest: false,
-  estimatedMaxes: [
-    { liftKey: 'trap_bar_deadlift', estimated1RM: undefined },
-    { liftKey: 'back_squat', estimated1RM: undefined },
-    { liftKey: 'bench_press', estimated1RM: undefined },
-  ],
-  notificationPreferences: {
-    amReminderEnabled: true,
-    amReminderTime: '06:30',
-    pmReminderEnabled: true,
-    pmReminderTime: '17:30',
-    readinessReminderEnabled: true,
-    testingReminderEnabled: true,
-  },
-};
+/**
+ * Builds fresh onboarding defaults, including today-relative fields (the
+ * Week 1 Start Date default — see weekOneStartDate.ts). A plain constant
+ * object would freeze that date at module-import time instead of at the
+ * moment onboarding actually starts, so this is a factory, not a constant.
+ */
+export function createDefaultOnboardingData(now: Date = new Date()): OnboardingData {
+  return {
+    displayName: '',
+    dateOfBirth: '',
+    unitsWeight: 'lb',
+    unitsDistance: 'mi',
+    trainingExperience: 'returning',
+    equipmentAvailable: [],
+    injuryNotes: '',
+    medicalClearanceAcknowledged: false as unknown as true,
+    week1StartDate: toIsoDateLocal(getDefaultWeek1StartDate(now)),
+    hasSprintedRecently: true,
+    deferWeek0SprintTest: false,
+    estimatedMaxes: [
+      { liftKey: 'trap_bar_deadlift', estimated1RM: undefined },
+      { liftKey: 'back_squat', estimated1RM: undefined },
+      { liftKey: 'bench_press', estimated1RM: undefined },
+    ],
+    notificationPreferences: {
+      amReminderEnabled: true,
+      amReminderTime: '06:30',
+      pmReminderEnabled: true,
+      pmReminderTime: '17:30',
+      readinessReminderEnabled: true,
+      testingReminderEnabled: true,
+    },
+  };
+}

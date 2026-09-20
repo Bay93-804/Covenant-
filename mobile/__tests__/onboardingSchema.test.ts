@@ -1,24 +1,29 @@
 import {
-  defaultOnboardingData,
+  createDefaultOnboardingData,
   onboardingSchema,
-  programStartDateSchema,
+  week1StartDateSchema,
 } from '../src/features/onboarding/schema';
+import {
+  getDefaultWeek1StartDate,
+  getEarliestSelectableMonday,
+  isEarlierThanRecommended,
+  MIN_RECOMMENDED_LEAD_DAYS,
+  nextMondayOnOrAfter,
+  toIsoDateLocal,
+} from '../src/features/onboarding/weekOneStartDate';
 
+// Local-time (never toISOString/UTC) Monday helper for building test fixtures.
 function nextMonday(): string {
-  const date = new Date();
-  date.setHours(0, 0, 0, 0);
-  const diff = (8 - date.getDay()) % 7;
-  date.setDate(date.getDate() + diff);
-  return date.toISOString().slice(0, 10);
+  return toIsoDateLocal(nextMondayOnOrAfter(new Date()));
 }
 
 function validOnboardingData() {
   return {
-    ...defaultOnboardingData,
+    ...createDefaultOnboardingData(),
     displayName: 'Alex Athlete',
     equipmentAvailable: ['bodyweight_only'],
     medicalClearanceAcknowledged: true as const,
-    programStartDate: nextMonday(),
+    week1StartDate: nextMonday(),
   };
 }
 
@@ -51,7 +56,7 @@ describe('onboarding schema', () => {
     tooYoung.setFullYear(tooYoung.getFullYear() - 5);
     const result = onboardingSchema.safeParse({
       ...validOnboardingData(),
-      dateOfBirth: tooYoung.toISOString().slice(0, 10),
+      dateOfBirth: toIsoDateLocal(tooYoung),
     });
     expect(result.success).toBe(false);
   });
@@ -65,7 +70,7 @@ describe('onboarding schema', () => {
     const result = onboardingSchema.safeParse({
       ...validOnboardingData(),
       notificationPreferences: {
-        ...defaultOnboardingData.notificationPreferences,
+        ...createDefaultOnboardingData().notificationPreferences,
         amReminderTime: '6:30am',
       },
     });
@@ -81,27 +86,91 @@ describe('onboarding schema', () => {
   });
 });
 
-describe('program start date schema (Week 1 must start on a Monday)', () => {
+describe('createDefaultOnboardingData', () => {
+  it('defaults Week 1 Start Date to a Monday at least MIN_RECOMMENDED_LEAD_DAYS out', () => {
+    const data = createDefaultOnboardingData();
+    const result = week1StartDateSchema.safeParse(data.week1StartDate);
+    expect(result.success).toBe(true);
+    expect(data.week1StartDate).toBe(toIsoDateLocal(getDefaultWeek1StartDate()));
+    expect(isEarlierThanRecommended(data.week1StartDate)).toBe(false);
+  });
+});
+
+describe('Week 1 Start Date schema (must start on a Monday) — EXTRACTION_AUDIT.md #10', () => {
   it('accepts the next upcoming Monday', () => {
-    expect(programStartDateSchema.safeParse(nextMonday()).success).toBe(true);
+    expect(week1StartDateSchema.safeParse(nextMonday()).success).toBe(true);
+  });
+
+  it('accepts the recommended (≥7-day-out) default', () => {
+    const recommended = toIsoDateLocal(getDefaultWeek1StartDate());
+    expect(week1StartDateSchema.safeParse(recommended).success).toBe(true);
+  });
+
+  it('accepts an earlier upcoming Monday than the recommended default', () => {
+    const earliest = toIsoDateLocal(getEarliestSelectableMonday());
+    expect(week1StartDateSchema.safeParse(earliest).success).toBe(true);
   });
 
   it('rejects a non-Monday date', () => {
     const monday = new Date(`${nextMonday()}T00:00:00`);
     const tuesday = new Date(monday);
     tuesday.setDate(monday.getDate() + 1);
-    const result = programStartDateSchema.safeParse(tuesday.toISOString().slice(0, 10));
+    const result = week1StartDateSchema.safeParse(toIsoDateLocal(tuesday));
     expect(result.success).toBe(false);
   });
 
   it('rejects a date in the past', () => {
     const pastMonday = new Date(`${nextMonday()}T00:00:00`);
     pastMonday.setDate(pastMonday.getDate() - 7);
-    const result = programStartDateSchema.safeParse(pastMonday.toISOString().slice(0, 10));
+    const result = week1StartDateSchema.safeParse(toIsoDateLocal(pastMonday));
     expect(result.success).toBe(false);
   });
 
   it('rejects an empty value', () => {
-    expect(programStartDateSchema.safeParse('').success).toBe(false);
+    expect(week1StartDateSchema.safeParse('').success).toBe(false);
+  });
+});
+
+describe('weekOneStartDate helpers (local-timezone Monday math)', () => {
+  it('nextMondayOnOrAfter returns the same date when already a Monday', () => {
+    // 2026-09-21 is a Monday.
+    const monday = new Date(2026, 8, 21);
+    expect(toIsoDateLocal(nextMondayOnOrAfter(monday))).toBe('2026-09-21');
+  });
+
+  it('nextMondayOnOrAfter advances a non-Monday to the following Monday', () => {
+    // 2026-09-23 is a Wednesday -> next Monday is 2026-09-28.
+    const wednesday = new Date(2026, 8, 23);
+    expect(toIsoDateLocal(nextMondayOnOrAfter(wednesday))).toBe('2026-09-28');
+  });
+
+  it('toIsoDateLocal formats using local date parts, not UTC (no day-shift near midnight)', () => {
+    const date = new Date(2026, 0, 5, 23, 30); // Jan 5, 2026, 11:30pm local
+    expect(toIsoDateLocal(date)).toBe('2026-01-05');
+  });
+
+  it('getDefaultWeek1StartDate is a Monday at least MIN_RECOMMENDED_LEAD_DAYS days from "now"', () => {
+    const now = new Date(2026, 8, 23); // Wednesday, Sept 23, 2026
+    const result = getDefaultWeek1StartDate(now);
+    expect(result.getDay()).toBe(1); // Monday
+    const diffDays = Math.round((result.getTime() - now.getTime()) / 86_400_000);
+    expect(diffDays).toBeGreaterThanOrEqual(MIN_RECOMMENDED_LEAD_DAYS);
+    expect(diffDays).toBeLessThan(MIN_RECOMMENDED_LEAD_DAYS + 7);
+  });
+
+  it('getEarliestSelectableMonday can be sooner than the recommended default', () => {
+    const now = new Date(2026, 8, 23); // Wednesday
+    const earliest = getEarliestSelectableMonday(now);
+    const recommended = getDefaultWeek1StartDate(now);
+    expect(earliest.getDay()).toBe(1);
+    expect(earliest.getTime()).toBeLessThan(recommended.getTime());
+  });
+
+  it('isEarlierThanRecommended flags an earlier Monday and clears the recommended one', () => {
+    const now = new Date(2026, 8, 23);
+    const earliest = toIsoDateLocal(getEarliestSelectableMonday(now));
+    const recommended = toIsoDateLocal(getDefaultWeek1StartDate(now));
+    expect(isEarlierThanRecommended(earliest, now)).toBe(true);
+    expect(isEarlierThanRecommended(recommended, now)).toBe(false);
   });
 });

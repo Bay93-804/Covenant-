@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, useState, type PropsWithChildren } from 'react';
 
-import { defaultOnboardingData, type OnboardingData } from './schema';
+import { createDefaultOnboardingData, type OnboardingData } from './schema';
 
 interface OnboardingContextValue {
   data: OnboardingData;
@@ -12,13 +12,15 @@ const OnboardingContext = createContext<OnboardingContextValue | null>(null);
 
 /** Holds in-progress onboarding answers across the multi-step route stack until final submission. */
 export function OnboardingProvider({ children }: PropsWithChildren) {
-  const [data, setData] = useState<OnboardingData>(defaultOnboardingData);
+  // Lazy initializer: computes today-relative defaults (Week 1 Start Date)
+  // at the moment onboarding actually starts, not at module-import time.
+  const [data, setData] = useState<OnboardingData>(() => createDefaultOnboardingData());
 
   const value = useMemo<OnboardingContextValue>(
     () => ({
       data,
       update: (patch) => setData((prev) => ({ ...prev, ...patch })),
-      reset: () => setData(defaultOnboardingData),
+      reset: () => setData(createDefaultOnboardingData()),
     }),
     [data],
   );
