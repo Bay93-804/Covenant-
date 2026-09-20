@@ -1,0 +1,70 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ['./app/**/*.{js,jsx,ts,tsx}', './src/**/*.{js,jsx,ts,tsx}'],
+  presets: [require('nativewind/preset')],
+  theme: {
+    extend: {
+      colors: {
+        // Coach Conde design system — see src/design-system/tokens.ts (source of truth).
+        navy: {
+          DEFAULT: '#0B1220',
+          50: '#F2F4F8',
+          100: '#DEE3ED',
+          200: '#B9C4D9',
+          300: '#8C9DBC',
+          400: '#5C7096',
+          500: '#3A4C6B',
+          600: '#26344D',
+          700: '#182238',
+          800: '#0F1729',
+          900: '#0B1220',
+          950: '#060A12',
+        },
+        gold: {
+          DEFAULT: '#C9A227',
+          50: '#FBF6E7',
+          100: '#F5E9C2',
+          200: '#EBD489',
+          300: '#DFBE55',
+          400: '#D3AC3C',
+          500: '#C9A227',
+          600: '#A6821F',
+          700: '#7D6318',
+          800: '#544210',
+          900: '#332809',
+        },
+        bone: {
+          DEFAULT: '#F4EFE6',
+          50: '#FFFFFF',
+          100: '#FBF9F5',
+          200: '#F4EFE6',
+          300: '#E8DFD0',
+          400: '#D6C7AC',
+        },
+        silver: {
+          DEFAULT: '#9AA5B1',
+          50: '#F1F3F5',
+          100: '#DFE3E8',
+          200: '#C3CBD3',
+          300: '#9AA5B1',
+          400: '#78838F',
+          500: '#5B6570',
+        },
+        danger: '#C4553F',
+        success: '#6E8F5C',
+      },
+      fontFamily: {
+        display: ['System'],
+        body: ['System'],
+      },
+      borderRadius: {
+        xs: '4px',
+        sm: '8px',
+        md: '12px',
+        lg: '16px',
+        xl: '24px',
+      },
+    },
+  },
+  plugins: [],
+};
