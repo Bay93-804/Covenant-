@@ -114,8 +114,16 @@ export function computeRhrProgress(readings: RhrReading[]): RhrMorningProgress {
 }
 
 export interface EstablishedRhr {
-  /** Arithmetic mean of the first three recorded mornings, to one decimal place. */
+  /**
+   * Full-precision arithmetic mean of the first three recorded mornings —
+   * use this for every internal comparison, classification, and readiness
+   * rule (see `src/features/readiness/readinessRules.ts`'s
+   * `RHR_ELEVATION_THRESHOLD_BPM` check). Never pre-rounded, so repeated
+   * comparisons against it never accumulate rounding error.
+   */
   bpm: number;
+  /** `bpm` rounded to one decimal place — display only. Never use this value for a comparison or a stored baseline. */
+  bpmDisplay: number;
   morningsUsed: string[];
 }
 
@@ -129,5 +137,9 @@ export function computeEstablishedRhr(readings: RhrReading[]): EstablishedRhr | 
   if (sorted.length < RHR_MORNINGS_REQUIRED) return null;
   const usable = sorted.slice(0, RHR_MORNINGS_REQUIRED);
   const mean = usable.reduce((sum, r) => sum + r.bpm, 0) / usable.length;
-  return { bpm: Math.round(mean * 10) / 10, morningsUsed: usable.map((r) => r.morningDate) };
+  return {
+    bpm: mean,
+    bpmDisplay: Math.round(mean * 10) / 10,
+    morningsUsed: usable.map((r) => r.morningDate),
+  };
 }

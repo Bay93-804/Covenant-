@@ -37,10 +37,10 @@ const MARKER_INPUT_KIND: Record<number, MarkerInputKind> = {
   1: 'rhr_three_morning',
   2: 'mmss',
   3: 'numeric',
-  // Marker #4's protocol text says "best of 2" per side even though the
-  // structured content model has no `attempts` field for it (see
-  // docs/phase1/EXTRACTION_AUDIT.md-style gap, flagged in the Phase 4
-  // completion report) — the protocol string is honored.
+  // Marker #4's structured definition now carries attempts:2/bestAttempt:true
+  // (see docs/phase1/EXTRACTION_AUDIT.md item 11 — corrected as an
+  // extraction-model omission, not a program-content change), matching the
+  // same shape as markers #11-14.
   4: 'bilateral_attempts_time',
   5: 'numeric',
   6: 'time_flexible',

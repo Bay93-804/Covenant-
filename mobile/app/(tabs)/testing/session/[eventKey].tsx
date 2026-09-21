@@ -112,7 +112,9 @@ export default function TestingSessionScreen() {
           </AppText>
           <AppText variant="body" color="primary" style={{ marginBottom: 6 }}>
             {data.rhrProgress.completed} of {data.rhrProgress.required} mornings logged
-            {data.establishedRhr ? ` · established baseline ${data.establishedRhr.bpm} bpm` : ''}
+            {data.establishedRhr
+              ? ` · established baseline ${data.establishedRhr.bpmDisplay} bpm`
+              : ''}
           </AppText>
           <Button
             variant="secondary"

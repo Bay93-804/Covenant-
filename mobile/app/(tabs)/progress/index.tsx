@@ -93,7 +93,12 @@ function TestingSection() {
   const { data, isLoading } = useTestingComparison();
   if (isLoading || !data) return null;
 
-  const notable = data.filter((c) => c.changeToWeek12 || c.week0?.isDeferred).slice(0, 3);
+  const notable = data
+    .filter(
+      (c) =>
+        c.changeToWeek12 || c.changeToWeek12Left || c.changeToWeek12Right || c.week0?.isDeferred,
+    )
+    .slice(0, 3);
   const anyResults = data.some((c) => c.week0?.hasResult || c.week12?.hasResult);
 
   return (
@@ -109,33 +114,77 @@ function TestingSection() {
           Complete Week 0 baseline testing in the Testing tab to start tracking this.
         </AppText>
       ) : (
-        notable.map((c) => (
-          <View key={c.markerNumber} className="flex-row items-center justify-between mb-2">
-            <AppText variant="bodySm" color="primary">
-              #{c.markerNumber} {c.marker.name}
-            </AppText>
-            {c.changeToWeek12 ? (
-              <Badge
-                label={
-                  c.changeToWeek12.direction === 'improved'
-                    ? 'Improved'
-                    : c.changeToWeek12.direction === 'declined'
-                      ? 'Declined'
-                      : 'Unchanged'
-                }
-                tone={
-                  c.changeToWeek12.direction === 'improved'
-                    ? 'success'
-                    : c.changeToWeek12.direction === 'declined'
-                      ? 'danger'
-                      : 'neutral'
-                }
-              />
-            ) : (
+        notable.map((c) => {
+          const change = c.changeToWeek12;
+          if (change) {
+            return (
+              <View key={c.markerNumber} className="flex-row items-center justify-between mb-2">
+                <AppText variant="bodySm" color="primary">
+                  #{c.markerNumber} {c.marker.name}
+                </AppText>
+                <Badge
+                  label={
+                    change.direction === 'improved'
+                      ? 'Improved'
+                      : change.direction === 'declined'
+                        ? 'Declined'
+                        : 'Unchanged'
+                  }
+                  tone={
+                    change.direction === 'improved'
+                      ? 'success'
+                      : change.direction === 'declined'
+                        ? 'danger'
+                        : 'neutral'
+                  }
+                />
+              </View>
+            );
+          }
+          if (c.changeToWeek12Left || c.changeToWeek12Right) {
+            return (
+              <View key={c.markerNumber} className="mb-2">
+                <AppText variant="bodySm" color="primary" style={{ marginBottom: 2 }}>
+                  #{c.markerNumber} {c.marker.name} (no combined score — per side)
+                </AppText>
+                <View className="flex-row gap-2">
+                  {c.changeToWeek12Left ? (
+                    <Badge
+                      label={`L: ${c.changeToWeek12Left.direction}`}
+                      tone={
+                        c.changeToWeek12Left.direction === 'improved'
+                          ? 'success'
+                          : c.changeToWeek12Left.direction === 'declined'
+                            ? 'danger'
+                            : 'neutral'
+                      }
+                    />
+                  ) : null}
+                  {c.changeToWeek12Right ? (
+                    <Badge
+                      label={`R: ${c.changeToWeek12Right.direction}`}
+                      tone={
+                        c.changeToWeek12Right.direction === 'improved'
+                          ? 'success'
+                          : c.changeToWeek12Right.direction === 'declined'
+                            ? 'danger'
+                            : 'neutral'
+                      }
+                    />
+                  ) : null}
+                </View>
+              </View>
+            );
+          }
+          return (
+            <View key={c.markerNumber} className="flex-row items-center justify-between mb-2">
+              <AppText variant="bodySm" color="primary">
+                #{c.markerNumber} {c.marker.name}
+              </AppText>
               <Badge label="Deferred → Wk 6" tone="gold" />
-            )}
-          </View>
-        ))
+            </View>
+          );
+        })
       )}
       <Button variant="secondary" onPress={() => router.push('/(tabs)/testing/compare')}>
         Full testing comparison

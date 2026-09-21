@@ -91,6 +91,16 @@ events: {
 
 `week0.markers` and `week12.markers` both list all 15 numbers — both are complete tests. `week6.markers` lists only 6 — this is intentional per the source PDF, not a placeholder to fill in later. Progress/Testing screens must build their Week-0-vs-6-vs-12 comparison logic against these arrays rather than assuming parity across all three events.
 
+### Attempts and bilateral markers
+
+`attempts` + `bestAttempt: true` appear on every marker whose protocol prescribes multiple tries
+scored by the best one: #4 (single-leg balance, "best of 2" — added in the Phase 4 extraction
+correction, see `EXTRACTION_AUDIT.md` item 11), #11-14 (each already stated explicitly in the
+source table). `bilateral: true` appears on #4 and #9; neither marker's protocol (nor anything else
+in the source PDF) states how to combine an independently-measured left and right into one
+classified/compared result, so the app never invents one — see `EXTRACTION_AUDIT.md` item 12. Each
+side is classified and compared independently instead.
+
 ## `strengthDays.<A|B|C|D>.<block>.clusters[]` shape
 
 Each cluster (`A`, `B`, `C`) carries `id`, `label`, `rounds`, `restNote`, `qualityCap`, `contrast`, and an `exercises[]` array. Each exercise:

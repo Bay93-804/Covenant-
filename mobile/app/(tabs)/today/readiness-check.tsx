@@ -13,20 +13,33 @@ import {
 } from '../../../src/design-system';
 import { useSubmitReadiness } from '../../../src/features/readiness/useReadinessGate';
 import { useEstablishedRestingHeartRate } from '../../../src/features/testing/useTesting';
+import { useEnrollmentSchedule } from '../../../src/features/program/useEnrollmentSchedule';
+import { buildScheduledDay } from '../../../src/features/schedule/scheduleEngine';
 
 export default function ReadinessCheckScreen() {
-  const params = useLocalSearchParams<{ date: string; slot: string }>();
+  const params = useLocalSearchParams<{ date: string; slot: 'am' | 'pm' }>();
   const date = params.date!;
   const submitReadiness = useSubmitReadiness();
   const { data: establishedRhr } = useEstablishedRestingHeartRate();
+  const { data: scheduleContext } = useEnrollmentSchedule();
 
   const [sleepHours, setSleepHours] = useState('');
   const [restingHr, setRestingHr] = useState('');
   const [baselineRestingHr, setBaselineRestingHr] = useState('');
   const [baselineTouched, setBaselineTouched] = useState(false);
 
+  // Shown to the user rounded to 1 decimal (display convention); the value
+  // actually submitted for the readiness comparison stays full-precision
+  // whenever the athlete hasn't overridden the auto-filled baseline — see
+  // `submittedBaseline` below and rhrWorkflow.ts's `EstablishedRhr` docs.
   const effectiveBaseline =
-    !baselineTouched && establishedRhr ? String(establishedRhr.bpm) : baselineRestingHr;
+    !baselineTouched && establishedRhr ? String(establishedRhr.bpmDisplay) : baselineRestingHr;
+  const submittedBaseline =
+    !baselineTouched && establishedRhr
+      ? establishedRhr.bpm
+      : baselineRestingHr
+        ? Number(baselineRestingHr)
+        : null;
   const [calfAchillesFlag, setCalfAchillesFlag] = useState(false);
   const [hamstringGrabbyFlag, setHamstringGrabbyFlag] = useState(false);
   const [jointPainFlag, setJointPainFlag] = useState(false);
@@ -34,12 +47,27 @@ export default function ReadinessCheckScreen() {
   const [readinessScore, setReadinessScore] = useState<number | null>(null);
   const [notes, setNotes] = useState('');
 
+  const slot = params.slot === 'pm' ? 'pm' : 'am';
+  const originalSlotSnapshot = scheduleContext
+    ? (() => {
+        const scheduledDay = buildScheduledDay(scheduleContext.scheduleInput, date);
+        const slotSession = slot === 'am' ? scheduledDay.am : scheduledDay.pm;
+        return {
+          date,
+          slot,
+          sessionType: slotSession.sessionType,
+          title: slotSession.title,
+        };
+      })()
+    : null;
+
   const handleSubmit = async () => {
     const result = await submitReadiness.mutateAsync({
       entryDate: date,
       sleepHours: sleepHours ? Number(sleepHours) : null,
       restingHr: restingHr ? Number(restingHr) : null,
-      baselineRestingHr: effectiveBaseline ? Number(effectiveBaseline) : null,
+      baselineRestingHr: submittedBaseline,
+      originalSlotSnapshot,
       calfAchillesFlag,
       hamstringGrabbyFlag,
       jointPainFlag,

@@ -50,7 +50,8 @@ export default function ReadinessHistoryScreen() {
               Adjustment: {a.recommended_adjustment}
             </AppText>
             <AppText variant="caption" color="muted">
-              {a.created_at.slice(0, 10)}
+              Triggered {a.created_at.slice(0, 10)}
+              {a.confirmed_at ? ` · confirmed ${a.confirmed_at.slice(0, 10)}` : ''}
             </AppText>
           </Card>
         ))
@@ -82,10 +83,17 @@ export default function ReadinessHistoryScreen() {
                 {s.applied_adjustment_note}
               </AppText>
             ) : null}
-            <Badge
-              label={s.user_confirmed ? 'Confirmed' : 'Pending confirmation'}
-              tone={s.user_confirmed ? 'success' : 'neutral'}
-            />
+            <View className="flex-row items-center justify-between mt-2">
+              <Badge
+                label={s.user_confirmed ? 'Confirmed' : 'Pending confirmation'}
+                tone={s.user_confirmed ? 'success' : 'neutral'}
+              />
+              {s.confirmed_at ? (
+                <AppText variant="caption" color="muted">
+                  {s.confirmed_at.slice(0, 10)}
+                </AppText>
+              ) : null}
+            </View>
           </Card>
         ))
       )}

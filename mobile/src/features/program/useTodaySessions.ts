@@ -20,14 +20,19 @@ import {
   getReadinessEntry,
   getSession,
   listReadinessHistory,
+  listSafetyAdjustments,
   listSessionsInRange,
+  listSportSessions,
 } from '../workout/workoutRepository';
+import { isSessionAdjusted } from '../workout/sessionAdjustment';
 import type { ReadinessEntry, WorkoutSession } from '../workout/types';
 
 export interface TodaySessionsResult {
   scheduledDay: ScheduledDay;
   amWorkoutSession: WorkoutSession | null;
   pmWorkoutSession: WorkoutSession | null;
+  amAdjusted: boolean;
+  pmAdjusted: boolean;
   readinessEntry: ReadinessEntry | null;
   readinessEvaluation: ReadinessEvaluation | null;
   missedWeeks: MissedWeeksResult;
@@ -86,17 +91,31 @@ async function fetchTodaySessions(
     scheduleInput.startDate,
     todayIsoDate,
   );
+  // 'adjusted' is a legacy status value the app never writes (see
+  // src/features/workout/sessionAdjustment.ts) — a trained session's status
+  // is always 'completed' whether or not it was also adjusted.
   const completedDates = new Set(
-    sessionsInRange
-      .filter((s) => s.status === 'completed' || s.status === 'adjusted')
-      .map((s) => s.scheduled_date),
+    sessionsInRange.filter((s) => s.status === 'completed').map((s) => s.scheduled_date),
   );
   const missedWeeks = detectMissedWeeks(scheduleInput, todayIsoDate, completedDates);
+
+  const [safetyAdjustments, sportSessions] = await Promise.all([
+    listSafetyAdjustments(userId),
+    listSportSessions(userId),
+  ]);
+  const amAdjusted = amWorkoutSession
+    ? isSessionAdjusted(amWorkoutSession, safetyAdjustments, sportSessions)
+    : false;
+  const pmAdjusted = pmWorkoutSession
+    ? isSessionAdjusted(pmWorkoutSession, safetyAdjustments, sportSessions)
+    : false;
 
   return {
     scheduledDay,
     amWorkoutSession,
     pmWorkoutSession,
+    amAdjusted,
+    pmAdjusted,
     readinessEntry,
     readinessEvaluation,
     missedWeeks,

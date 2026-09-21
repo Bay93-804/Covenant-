@@ -39,10 +39,22 @@ export interface ProgramAdherenceSummary {
   overallAdherencePct: number;
 }
 
+/**
+ * `completedCount` and `adjustedCount` are non-overlapping subsets of
+ * "trained" sessions (completed-not-adjusted vs. completed-and-adjusted),
+ * computed from `adjustedSessionIds` (see
+ * src/features/workout/sessionAdjustment.ts's `computeAdjustedSessionIds`)
+ * rather than `workout_sessions.status`, which never actually becomes
+ * 'adjusted' and would erase the adjustment fact for a completed session if
+ * it did overload the column that way — a session is either counted here or
+ * there, never both, but `completionPct`/`overallAdherencePct` still treat
+ * both as "trained".
+ */
 export function computeProgramAdherence(
   input: EnrollmentScheduleInput,
   todayIso: IsoDate,
   sessions: WorkoutSession[],
+  adjustedSessionIds: ReadonlySet<string> = new Set(),
 ): ProgramAdherenceSummary {
   const sessionByDateSlot = new Map<string, WorkoutSession>();
   for (const s of sessions) sessionByDateSlot.set(`${s.scheduled_date}:${s.session_slot}`, s);
@@ -72,9 +84,10 @@ export function computeProgramAdherence(
           if (slot.isRestDay) continue;
           scheduledSessionCount += 1;
           const session = sessionByDateSlot.get(`${day.date}:${slot.slot}`);
-          if (session?.status === 'completed') completedCount += 1;
-          else if (session?.status === 'adjusted') adjustedCount += 1;
-          else if (day.date < todayIso) missedCount += 1;
+          if (session?.status === 'completed') {
+            if (adjustedSessionIds.has(session.id)) adjustedCount += 1;
+            else completedCount += 1;
+          } else if (day.date < todayIso) missedCount += 1;
         }
       }
     }

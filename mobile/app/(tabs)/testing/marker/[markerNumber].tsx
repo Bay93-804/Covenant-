@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 
 import {
@@ -28,6 +28,7 @@ import type { MarkerSummary } from '../../../../src/features/testing/testingResu
 import type { TestingResult } from '../../../../src/features/testing/types';
 import type { TestingEventKey } from '../../../../src/features/testing/testingSchedule';
 import {
+  useMarkerHistory,
   useMaximalEffortSafetyGate,
   useRecordSprintDeferral,
   useSaveBodyweight,
@@ -50,6 +51,34 @@ function ResultBanner({ summary }: { summary: MarkerSummary }) {
         <AppText variant="h3" color="primary">
           Deferred
         </AppText>
+      ) : summary.bilateral ? (
+        <>
+          <AppText variant="h3" color="primary">
+            {summary.displayValue}
+          </AppText>
+          <View style={{ marginTop: 6 }}>
+            {summary.bilateral.leftClassification ? (
+              <AppText variant="bodySm" color="accent">
+                Left: {tierLabel(summary.bilateral.leftClassification)}
+              </AppText>
+            ) : null}
+            {summary.bilateral.rightClassification ? (
+              <AppText variant="bodySm" color="accent">
+                Right: {tierLabel(summary.bilateral.rightClassification)}
+              </AppText>
+            ) : null}
+            {summary.bilateral.difference != null ? (
+              <AppText variant="bodySm" color="secondary" style={{ marginTop: 4 }}>
+                Difference between sides: {summary.bilateral.difference}
+                {summary.marker.unit === 's' ? 's' : ''}
+              </AppText>
+            ) : null}
+          </View>
+          <AppText variant="caption" color="muted" style={{ marginTop: 8 }}>
+            No combined score — the source program gives one scale but no rule for combining left
+            and right.
+          </AppText>
+        </>
       ) : (
         <>
           <AppText variant="h3" color="primary">
@@ -613,6 +642,11 @@ function FeetInchesAttempt({
   );
 }
 
+const CMJ_METHOD_LABEL: Record<string, string> = {
+  hands_on_hips: 'Hands on hips',
+  arm_swing: 'Arm swing',
+};
+
 function CmjEntry({ summary, onSave }: { summary: MarkerSummary; onSave: AttemptSaveFn }) {
   const methodRow = summary.attempts.find(
     (a) => a.value_text === 'hands_on_hips' || a.value_text === 'arm_swing',
@@ -620,6 +654,23 @@ function CmjEntry({ summary, onSave }: { summary: MarkerSummary; onSave: Attempt
   const [method, setMethod] = useState<'hands_on_hips' | 'arm_swing' | undefined>(
     (methodRow?.value_text as 'hands_on_hips' | 'arm_swing' | undefined) ?? undefined,
   );
+
+  // The method locked in at the athlete's very first recorded CMJ test,
+  // across every event (Week 0/6/12) — see docs/phase1/EXTRACTION_AUDIT.md
+  // item 8. A mismatch is a warning, never a hard block: the athlete can
+  // still save a different method, but the Week 0/6/12 comparison marks
+  // that pairing noncomparable rather than fabricating a verdict across two
+  // different protocols.
+  const { data: history } = useMarkerHistory(13);
+  const lockedMethod = useMemo(() => {
+    if (!history || history.length === 0) return null;
+    const sorted = [...history].sort((a, b) => (a.recorded_at < b.recorded_at ? -1 : 1));
+    const first = sorted.find(
+      (r) => r.value_text === 'hands_on_hips' || r.value_text === 'arm_swing',
+    );
+    return (first?.value_text as 'hands_on_hips' | 'arm_swing' | undefined) ?? null;
+  }, [history]);
+  const methodMismatch = Boolean(lockedMethod && method && lockedMethod !== method);
 
   return (
     <Card className="mb-4">
@@ -633,6 +684,17 @@ function CmjEntry({ summary, onSave }: { summary: MarkerSummary; onSave: Attempt
           { value: 'arm_swing', label: 'Arm swing' },
         ]}
       />
+      {methodMismatch ? (
+        <Card className="mb-4" emphasized>
+          <Badge label="Method mismatch" tone="danger" />
+          <AppText variant="bodySm" color="secondary" style={{ marginTop: 8 }}>
+            Your first recorded test used &quot;{CMJ_METHOD_LABEL[lockedMethod!]}.&quot; This is a
+            warning, not a block — you can still save this result, but it will be marked
+            noncomparable against that baseline in the Week 0/6/12 comparison rather than shown as
+            improved or declined.
+          </AppText>
+        </Card>
+      ) : null}
       <AppText variant="caption" color="secondary" style={{ marginBottom: 10 }}>
         3 ATTEMPTS · HIGHEST JUMP WINS
       </AppText>
@@ -658,10 +720,13 @@ function CmjEntry({ summary, onSave }: { summary: MarkerSummary; onSave: Attempt
 }
 
 function ProAgilityEntry({ summary, onSave }: { summary: MarkerSummary; onSave: AttemptSaveFn }) {
+  const attemptCount = summary.marker.attempts ?? 2;
+  const attemptNumbers = Array.from({ length: attemptCount }, (_, i) => i + 1);
+
   return (
     <Card className="mb-4">
       <AppText variant="caption" color="secondary" style={{ marginBottom: 10 }}>
-        2 ATTEMPTS EACH DIRECTION · FASTEST TIME WINS
+        {attemptCount} ATTEMPTS EACH DIRECTION · FASTEST TIME WINS
       </AppText>
       {(['left', 'right'] as const).map((side) => (
         <View key={side} style={{ marginBottom: 12 }}>
@@ -672,7 +737,7 @@ function ProAgilityEntry({ summary, onSave }: { summary: MarkerSummary; onSave: 
           >
             {side}-start
           </AppText>
-          {[1, 2].map((n) => {
+          {attemptNumbers.map((n) => {
             const existing = findAttempt(summary.attempts, n, side);
             return (
               <View key={n} className="mb-2">
@@ -782,10 +847,15 @@ function BilateralAttemptsTimeEntry({
   summary: MarkerSummary;
   onSave: AttemptSaveFn;
 }) {
+  // Read the attempt count from the marker's own structured definition
+  // (see docs/phase1/EXTRACTION_AUDIT.md item 11) rather than hardcoding it.
+  const attemptCount = summary.marker.attempts ?? 2;
+  const attemptNumbers = Array.from({ length: attemptCount }, (_, i) => i + 1);
+
   return (
     <Card className="mb-4">
       <AppText variant="caption" color="secondary" style={{ marginBottom: 10 }}>
-        BEST OF 2 PER SIDE
+        BEST OF {attemptCount} PER SIDE
       </AppText>
       {(['left', 'right'] as const).map((side) => (
         <View key={side} style={{ marginBottom: 12 }}>
@@ -796,7 +866,7 @@ function BilateralAttemptsTimeEntry({
           >
             {side}
           </AppText>
-          {[1, 2].map((n) => {
+          {attemptNumbers.map((n) => {
             const existing = findAttempt(summary.attempts, n, side);
             return (
               <View key={n} className="mb-2">

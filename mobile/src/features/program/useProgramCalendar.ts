@@ -16,12 +16,17 @@ import {
   type EnrollmentScheduleInput,
   type ScheduledDay,
 } from '../schedule/scheduleEngine';
-import { listSessionsInRange } from '../workout/workoutRepository';
+import {
+  listSafetyAdjustments,
+  listSessionsInRange,
+  listSportSessions,
+} from '../workout/workoutRepository';
+import { computeAdjustedSessionIds } from '../workout/sessionAdjustment';
 import type { WorkoutSession } from '../workout/types';
 import { useEnrollmentSchedule } from './useEnrollmentSchedule';
 
 export type DayCalendarState =
-  'completed' | 'in_progress' | 'adjusted' | 'missed' | 'upcoming' | 'today' | 'rest';
+  'completed' | 'in_progress' | 'missed' | 'upcoming' | 'today' | 'rest';
 
 export interface DayCalendarEntry {
   scheduledDay: ScheduledDay;
@@ -29,6 +34,9 @@ export interface DayCalendarEntry {
   pmSession: WorkoutSession | null;
   amState: DayCalendarState;
   pmState: DayCalendarState;
+  /** True when `amSession`/`pmSession` was safety- or pickup-sport-adjusted — independent of `amState`/`pmState`, so a day can be shown as both completed and adjusted at once (see sessionAdjustment.ts). */
+  amAdjusted: boolean;
+  pmAdjusted: boolean;
 }
 
 export interface WeekCalendarSummary {
@@ -47,7 +55,6 @@ function resolveState(
 ): DayCalendarState {
   if (scheduled.isRestDay) return 'rest';
   if (session?.status === 'completed') return 'completed';
-  if (session?.status === 'adjusted') return 'adjusted';
   if (session?.status === 'in_progress') return 'in_progress';
   if (date === today) return 'today';
   if (date < today) return 'missed';
@@ -62,7 +69,12 @@ async function fetchProgramCalendar(
 ): Promise<WeekCalendarSummary[]> {
   const rangeStart = scheduleInput.startDate;
   const rangeEnd = addDays(scheduleInput.startDate, 7 * 14); // Week 0 through Week 12 inclusive, generous bound for pause offsets
-  const sessions = await listSessionsInRange(userId, enrollmentId, rangeStart, rangeEnd);
+  const [sessions, safetyAdjustments, sportSessions] = await Promise.all([
+    listSessionsInRange(userId, enrollmentId, rangeStart, rangeEnd),
+    listSafetyAdjustments(userId),
+    listSportSessions(userId),
+  ]);
+  const adjustedSessionIds = computeAdjustedSessionIds(sessions, safetyAdjustments, sportSessions);
 
   const sessionByKey = new Map<string, WorkoutSession>();
   for (const s of sessions) sessionByKey.set(`${s.scheduled_date}:${s.session_slot}`, s);
@@ -81,6 +93,8 @@ async function fetchProgramCalendar(
         pmSession,
         amState: resolveState(scheduledDay.am, amSession, scheduledDay.date, today),
         pmState: resolveState(scheduledDay.pm, pmSession, scheduledDay.date, today),
+        amAdjusted: amSession != null && adjustedSessionIds.has(amSession.id),
+        pmAdjusted: pmSession != null && adjustedSessionIds.has(pmSession.id),
       };
     });
 
@@ -89,7 +103,7 @@ async function fetchProgramCalendar(
       weekNumber,
       days,
       totalTrainingSlots: slotStates.length,
-      completedSlots: slotStates.filter((s) => s === 'completed' || s === 'adjusted').length,
+      completedSlots: slotStates.filter((s) => s === 'completed').length,
       missedSlots: slotStates.filter((s) => s === 'missed').length,
     });
   }

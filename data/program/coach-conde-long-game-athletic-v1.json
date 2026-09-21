@@ -6038,7 +6038,9 @@
         "strong": 30,
         "strongPlus": true,
         "thresholdOp": "over",
-        "bilateral": true
+        "bilateral": true,
+        "attempts": 2,
+        "bestAttempt": true
       },
       {
         "num": 5,

@@ -102,6 +102,15 @@ export async function getOrCreateSession(input: CreateSessionInput): Promise<Wor
       ? strengthWorkoutTemplateId(input.strengthLetter as StrengthDayLetter, input.weekNumber)
       : amWorkoutTemplateId(dayOfWeek, input.weekNumber);
 
+  // The Today flow always runs the readiness check (which creates this row,
+  // keyed deterministically on user+date) before it ever calls
+  // getOrCreateSession for a readiness-gated slot, so this entry — when one
+  // exists for the day — is the one that gated this session. Linking it
+  // here is what lets a later safety-adjustment confirmation be traced back
+  // to this specific session (see sessionAdjustment.ts), independent of
+  // `status`.
+  const readinessEntry = await getReadinessEntry(input.userId, input.scheduledDate);
+
   const row: WorkoutSession = {
     id: input.id,
     client_uuid: input.id,
@@ -112,7 +121,7 @@ export async function getOrCreateSession(input: CreateSessionInput): Promise<Wor
     scheduled_date: input.scheduledDate,
     session_slot: input.sessionSlot,
     status: 'scheduled',
-    readiness_entry_id: null,
+    readiness_entry_id: readinessEntry?.id ?? null,
     started_at: null,
     completed_at: null,
     duration_actual_seconds: null,
@@ -386,7 +395,10 @@ export async function createSportSession(input: CreateSportSessionInput): Promis
     pregame_warmup_completed: false,
     applied_adjustment_code: input.appliedAdjustmentCode ?? null,
     applied_adjustment_note: input.appliedAdjustmentNote ?? null,
-    user_confirmed: false,
+    user_confirmed: input.userConfirmed ?? false,
+    confirmed_at: input.userConfirmed ? nowIso() : null,
+    original_prescription_snapshot: input.originalPrescriptionSnapshot ?? null,
+    adjusted_prescription_snapshot: input.adjustedPrescriptionSnapshot ?? null,
     affected_workout_session_id: input.affectedWorkoutSessionId ?? null,
     notes: input.notes ?? null,
     created_at: nowIso(),
@@ -399,7 +411,7 @@ export async function createSportSession(input: CreateSportSessionInput): Promis
 export async function confirmSportSession(userId: string, id: string): Promise<SportSession> {
   const existing = await findById<SportSession>(userId, Collections.sportSessions, id);
   if (!existing) throw new Error(`No sport session ${id}`);
-  const next: SportSession = { ...existing, user_confirmed: true };
+  const next: SportSession = { ...existing, user_confirmed: true, confirmed_at: nowIso() };
   await upsert(userId, Collections.sportSessions, next);
   maybeSync(userId);
   return next;

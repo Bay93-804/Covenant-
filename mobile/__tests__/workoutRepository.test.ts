@@ -1,12 +1,17 @@
 import {
   completeSession,
+  confirmSafetyAdjustment,
+  confirmSportSession,
+  createReadinessEntry,
+  createSafetyAdjustment,
+  createSportSession,
   getOrCreateSession,
   getSession,
-  createReadinessEntry,
   listCompletedSetsForSession,
   listReadinessHistory,
   upsertCompletedSet,
 } from '../src/features/workout/workoutRepository';
+import { isSessionAdjusted } from '../src/features/workout/sessionAdjustment';
 import { strengthWorkoutExerciseId } from '../src/content/contentIds';
 import { generateId } from '../src/lib/offline/localWorkoutStore';
 
@@ -207,5 +212,99 @@ describe('workoutRepository: readiness entries', () => {
     const history = await listReadinessHistory(userId, '2026-03-10', '2026-03-10');
     expect(history).toHaveLength(1);
     expect(history[0]?.sleep_hours).toBe(5.5);
+  });
+});
+
+describe('workoutRepository: adjusted-workout persistence (Phase 3 defect fix)', () => {
+  it("getOrCreateSession links the day's existing readiness entry, so a later confirmed adjustment can be traced back to this session", async () => {
+    const entryDate = '2026-04-01';
+    const readinessEntry = await createReadinessEntry({
+      id: '',
+      userId,
+      entryDate,
+      sleepHours: 5,
+      restingHr: 68,
+      baselineRestingHr: 50,
+      calfAchillesFlag: false,
+      hamstringGrabbyFlag: false,
+      jointPainFlag: false,
+      readinessScore: 2,
+    });
+
+    const session = await getOrCreateSession({
+      id: generateId(),
+      enrollmentId,
+      userId,
+      scheduledDate: entryDate,
+      sessionSlot: 'am',
+      sessionType: 'am_speed',
+      weekNumber: 3,
+      dayOfWeek: 0,
+    });
+    expect(session.readiness_entry_id).toBe(readinessEntry.id);
+
+    const adjustment = await createSafetyAdjustment({
+      id: '',
+      userId,
+      readinessEntryId: readinessEntry.id,
+      triggerCode: 'RHR_ELEVATED',
+      reason: 'Resting heart rate elevated 3 mornings running.',
+      recommendedAdjustment: 'Zone 2 only today.',
+      originalPrescriptionSnapshot: { sessionType: 'am_speed' },
+      adjustedPrescriptionSnapshot: { triggerCode: 'RHR_ELEVATED' },
+    });
+    expect(isSessionAdjusted(session, [adjustment])).toBe(false); // not confirmed yet
+
+    const confirmed = await confirmSafetyAdjustment(userId, adjustment.id);
+    expect(confirmed.user_confirmed).toBe(true);
+    expect(confirmed.confirmed_at).not.toBeNull();
+    expect(isSessionAdjusted(session, [confirmed])).toBe(true);
+
+    // Completing the session afterward must not erase the adjustment fact —
+    // completion state and adjustment history are independent.
+    const completed = await completeSession(userId, session.id, {
+      durationActualSeconds: 1800,
+      completionPct: 100,
+    });
+    expect(completed.status).toBe('completed');
+    expect(isSessionAdjusted(completed, [confirmed])).toBe(true);
+  });
+
+  it('confirming a sport-session adjustment persists confirmed_at and the prescription snapshots', async () => {
+    const created = await createSportSession({
+      id: '',
+      userId,
+      playedOn: '2026-04-05',
+      sport: 'Basketball',
+      gamesThisWeek: 1,
+      appliedAdjustmentCode: 'REPLACE_THU_AGILITY',
+      appliedAdjustmentNote: 'Replaces Thursday AM agility.',
+      originalPrescriptionSnapshot: { am: { sessionType: 'am_agility' } },
+      adjustedPrescriptionSnapshot: { recommendations: [{ code: 'REPLACE_THU_AGILITY' }] },
+    });
+    // Not yet confirmed by default — a preview must not silently count as applied.
+    expect(created.user_confirmed).toBe(false);
+    expect(created.confirmed_at).toBeNull();
+
+    const confirmed = await confirmSportSession(userId, created.id);
+    expect(confirmed.user_confirmed).toBe(true);
+    expect(confirmed.confirmed_at).not.toBeNull();
+    expect(confirmed.original_prescription_snapshot).toEqual({ am: { sessionType: 'am_agility' } });
+    expect(confirmed.adjusted_prescription_snapshot).toEqual({
+      recommendations: [{ code: 'REPLACE_THU_AGILITY' }],
+    });
+  });
+
+  it('createSportSession can be created already-confirmed for a single-step "confirm adjustment" UI action', async () => {
+    const created = await createSportSession({
+      id: '',
+      userId,
+      playedOn: '2026-04-06',
+      sport: 'Soccer',
+      gamesThisWeek: 2,
+      userConfirmed: true,
+    });
+    expect(created.user_confirmed).toBe(true);
+    expect(created.confirmed_at).not.toBeNull();
   });
 });

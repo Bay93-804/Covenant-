@@ -17,8 +17,9 @@ export interface MissedWeeksResult {
 
 /**
  * @param completedOrScheduledDates Calendar dates (`YYYY-MM-DD`) on which the
- *   athlete has at least one `workout_sessions` row with status
- *   'completed' or 'adjusted' (adjusted-but-done still counts as trained).
+ *   athlete has at least one `workout_sessions` row with status 'completed'
+ *   (adjusted-but-done sessions are still 'completed' and still count as
+ *   trained — see src/features/workout/sessionAdjustment.ts).
  */
 export function detectMissedWeeks(
   input: EnrollmentScheduleInput,

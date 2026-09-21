@@ -11,6 +11,7 @@ import { useEnrollmentSchedule } from '../program/useEnrollmentSchedule';
 import { buildScheduledDay, type EnrollmentScheduleInput } from '../schedule/scheduleEngine';
 import { buildSessionPlayerPlan } from '../workout/sessionPlanBuilder';
 import type { ReadinessEntry, SafetyAdjustment, SportSession } from '../workout/types';
+import { computeAdjustedSessionIds } from '../workout/sessionAdjustment';
 import {
   listCompletedSetsForSession,
   listPauseEvents,
@@ -44,13 +45,13 @@ async function fetchProgramAdherence(
   scheduleInput: EnrollmentScheduleInput,
   todayIso: string,
 ): Promise<ProgramAdherenceSummary> {
-  const sessions = await listSessionsInRange(
-    userId,
-    enrollmentId,
-    scheduleInput.startDate,
-    todayIso,
-  );
-  return computeProgramAdherence(scheduleInput, todayIso, sessions);
+  const [sessions, safetyAdjustments, sportSessions] = await Promise.all([
+    listSessionsInRange(userId, enrollmentId, scheduleInput.startDate, todayIso),
+    listSafetyAdjustments(userId),
+    listSportSessions(userId),
+  ]);
+  const adjustedSessionIds = computeAdjustedSessionIds(sessions, safetyAdjustments, sportSessions);
+  return computeProgramAdherence(scheduleInput, todayIso, sessions, adjustedSessionIds);
 }
 
 export function useProgramAdherence() {
@@ -90,9 +91,10 @@ async function fetchExerciseHistory(
     scheduleInput.startDate,
     todayIso,
   );
-  const loggedSessions = sessions.filter(
-    (s) => s.status === 'completed' || s.status === 'adjusted',
-  );
+  // 'adjusted' is a legacy status value the app never writes (see
+  // sessionAdjustment.ts) — a trained session's status is always 'completed'
+  // whether or not it was also adjusted.
+  const loggedSessions = sessions.filter((s) => s.status === 'completed');
 
   const named: NamedCompletedSet[] = [];
   for (const session of loggedSessions) {

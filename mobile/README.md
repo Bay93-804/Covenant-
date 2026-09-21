@@ -157,8 +157,9 @@ src/
 │   ├── onboarding/                Unified onboarding submission + enrollment-status query
 │   └── profile/                   Profile summary query + bodyweightService.ts (Phase 4, for marker #7)
 │
-supabase/migrations/           Numbered SQL migrations (schema, indexes, FKs, RLS) — none added in Phase 4;
-│                               testing_sessions/testing_results already existed from Phase 2
+supabase/migrations/           Numbered SQL migrations (schema, indexes, FKs, RLS) — testing_sessions/
+│                               testing_results already existed from Phase 2; one migration added in
+│                               Phase 4's correction round (adjusted-workout persistence, see below)
 scripts/                       validate-program.ts · seed-print.ts · seed-supabase.ts
 __tests__/                     Jest unit/integration tests (program content, onboarding, workout, testing, progress)
 e2e/                           Playwright mobile-web end-to-end specs (routing.spec.ts, full-flow.spec.ts, helpers.ts)
@@ -262,8 +263,13 @@ schema, previously unused) is now written the first time the athlete enters mark
 
 ### Migrations and dependencies added
 
-- **SQL migrations:** none. `testing_sessions`/`testing_results`/`exercise_maxes`/
-  `profiles.bodyweight_lb` were already in place from Phase 2's migrations.
+- **SQL migrations:** the initial Phase 4 build needed none — `testing_sessions`/`testing_results`/
+  `exercise_maxes`/`profiles.bodyweight_lb` were already in place from Phase 2's migrations. The
+  correction round added one:
+  `supabase/migrations/20250601000010_adjustment_audit_trail.sql` (indexes on
+  `workout_sessions.readiness_entry_id`/`safety_adjustments.readiness_entry_id`, plus
+  `sport_sessions.confirmed_at`/`original_prescription_snapshot`/`adjusted_prescription_snapshot`
+  columns) — fixing the Phase 3 adjusted-workout-persistence defect described above.
 - **npm dependencies:** none added to the app itself — the charts (`src/design-system/charts/`) are
   built on `react-native-svg` (already a Phase 2 dependency) plus plain `View`s, and `@playwright/test`
   (already a Phase 3 devDependency, just never actually configured — see below) now has a real
@@ -339,27 +345,35 @@ npx expo export --platform android
   affects two pre-existing Phase 3 flows on web specifically — `workout/[sessionId]/player.tsx`'s
   "Abandon workout?" and "Skip rest?" confirmations — which this phase did not touch, since they're
   outside Phase 4's scope; they still work correctly on iOS/Android (`Alert.alert` is real there).
-- **Marker #4's "best of 2" attempts aren't in the structured content model.** The single-leg
-  balance (eyes closed) marker's protocol text says "best of 2" but, unlike markers #11–14, the
-  JSON's marker definition has no `attempts` field for it. The testing entry screen honors the
-  protocol text (2 attempts per side) rather than the structured field, which is a gap in the
-  source content model, not a Phase 4 invention — flagged for confirmation.
-- **Side-plank and balance classification uses the weaker side.** Markers #4 and #9 give one
-  baseline/solid/strong scale, not a per-side one, so classifying the _pair_ of left/right results
-  requires a judgment call. This phase uses the lower (weaker) side's value, on the reasoning that a
-  single-scale standard is most honestly met when _both_ sides clear it — this is an inference, not
-  a PDF rule, and is called out here for confirmation rather than resolved silently.
-- **The 3-morning RHR average is stored unrounded** (displayed to one decimal place) since the PDF
-  states the protocol ("3 days averaged") but not a rounding convention; this mirrors how the
-  existing e1RM formula's "round to nearest 5" convention is explicit in the PDF while RHR's isn't.
-- **`workout_sessions.status` never actually becomes `'adjusted'`.** The enum value and the Program
-  calendar's "adjusted" badge already existed in Phase 3, but nothing ever set a session to that
-  status — `completeSession` always writes `'completed'` regardless of same-day safety adjustments.
-  Phase 4's Progress/history screens work around this by reading `safety_adjustments` rows directly
-  (each one already carries the trigger, reason, and recommended change) rather than relying on
-  session status, so "original vs. adjusted" is still honestly answerable — but the badge itself is
-  effectively dead code today. Not fixed here since changing `completeSession`'s write behavior is
-  outside this phase's stated scope; flagged for a decision.
+- **RESOLVED — Marker #4's "best of 2" attempts.** The single-leg balance (eyes closed) marker's
+  protocol text says "best of 2" but, unlike markers #11–14, the JSON's marker definition originally
+  had no `attempts` field for it. This has been corrected as an extraction-model omission, not a
+  program-content change: the JSON now carries `attempts: 2, bestAttempt: true` on marker #4 like
+  markers #11–14 already had, so the app reads structured metadata instead of interpreting protocol
+  prose at runtime. See `docs/phase1/EXTRACTION_AUDIT.md` item 11.
+- **RESOLVED — Side-plank and balance no longer use a weaker-side classification.** Markers #4 and
+  #9 give one baseline/solid/strong scale, not a per-side one, but no PDF rule says how to combine
+  left/right into that one scale. The app previously inferred "classify against the weaker side";
+  that inference has been removed. Left and right are now preserved and classified independently,
+  the factual side-to-side difference is shown, and no combined classification or Week 0→6/12
+  change is ever produced for these markers — comparison screens show "no rule for combining left
+  and right" instead. See `docs/phase1/EXTRACTION_AUDIT.md` item 12.
+- **RESOLVED — 3-morning RHR precision/display convention.** All three raw morning readings are
+  stored; the established baseline is the arithmetic mean at full floating-point precision
+  (`EstablishedRhr.bpm`), and that unrounded value is what every internal comparison and readiness
+  rule uses. A separate `bpmDisplay` field (the mean rounded to one decimal place) is display-only
+  and is never used for a calculation. See `src/features/testing/rhrWorkflow.ts`.
+- **RESOLVED — `workout_sessions.status` never actually becomes `'adjusted'`.** The enum value and
+  the Program calendar's "adjusted" badge already existed in Phase 3, but nothing ever set a session
+  to that status — `completeSession` always writes `'completed'` regardless of same-day safety
+  adjustments, so a completed-and-adjusted session's adjustment history was unrecoverable from
+  status alone. Fixed properly rather than worked around: `src/features/workout/sessionAdjustment.ts`
+  derives "was this session adjusted" by joining `workout_sessions.readiness_entry_id` (now
+  populated at session-creation time) to confirmed `safety_adjustments`/`sport_sessions` rows,
+  independent of `status` — so a session can be identified as both completed and adjusted at once.
+  `safety_adjustments`' and `sport_sessions`' original/adjusted prescription snapshots and
+  confirmation timestamps are now actually populated (previously always `null`/`false`). See
+  `docs/phase4/IMPLEMENTATION_NOTES.md`'s "Correction round" section for the full change list.
 - **Onboarding's sprint-deferral answer doesn't pre-fill the Testing tab.** `week0-testing-intro`
   asks the same "have you sprinted recently" question and stores `deferWeek0SprintTest`, but the
   actual deferral record (reason + date, in `testing_results`) is only ever created by the explicit

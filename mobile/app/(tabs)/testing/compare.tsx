@@ -21,10 +21,23 @@ function directionLabel(direction: 'improved' | 'declined' | 'unchanged' | undef
 }
 
 function ComparisonRow({ comparison }: { comparison: MarkerComparison }) {
-  const { marker, week0, week6, week12, changeToWeek12, changeToWeek6, baselineEvent } = comparison;
+  const {
+    marker,
+    week0,
+    week6,
+    week12,
+    changeToWeek12,
+    changeToWeek6,
+    changeToWeek12Left,
+    changeToWeek12Right,
+    baselineEvent,
+    noncomparableReason,
+  } = comparison;
   const hasAnything =
     week0?.hasResult || week6?.hasResult || week12?.hasResult || week0?.isDeferred;
   if (!hasAnything) return null;
+
+  const hasPerSideChange = changeToWeek12Left != null || changeToWeek12Right != null;
 
   return (
     <Pressable
@@ -57,7 +70,22 @@ function ComparisonRow({ comparison }: { comparison: MarkerComparison }) {
           </AppText>
         ) : null}
         <View className="flex-row items-center gap-2 flex-wrap">
-          {changeToWeek12 ? (
+          {hasPerSideChange ? (
+            <>
+              {changeToWeek12Left ? (
+                <Badge
+                  label={`Left: ${directionLabel(changeToWeek12Left.direction)}`}
+                  tone={directionTone(changeToWeek12Left.direction)}
+                />
+              ) : null}
+              {changeToWeek12Right ? (
+                <Badge
+                  label={`Right: ${directionLabel(changeToWeek12Right.direction)}`}
+                  tone={directionTone(changeToWeek12Right.direction)}
+                />
+              ) : null}
+            </>
+          ) : changeToWeek12 ? (
             <Badge
               label={`${directionLabel(changeToWeek12.direction)} · ${changeToWeek12.absoluteChange > 0 ? '+' : ''}${changeToWeek12.absoluteChange.toFixed(1)}${changeToWeek12.percentChange != null ? ` (${changeToWeek12.percentChange > 0 ? '+' : ''}${changeToWeek12.percentChange.toFixed(0)}%)` : ''}`}
               tone={directionTone(changeToWeek12.direction)}
@@ -69,6 +97,11 @@ function ComparisonRow({ comparison }: { comparison: MarkerComparison }) {
             <Badge label={tierLabel(week12.classification)} tone="gold" />
           ) : null}
         </View>
+        {noncomparableReason ? (
+          <AppText variant="caption" color="muted" style={{ marginTop: 6 }}>
+            {noncomparableReason}
+          </AppText>
+        ) : null}
         {changeToWeek6 ? (
           <AppText variant="caption" color="muted" style={{ marginTop: 6 }}>
             Week 0 → Week 6: {changeToWeek6.absoluteChange > 0 ? '+' : ''}

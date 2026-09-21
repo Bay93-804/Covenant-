@@ -108,7 +108,7 @@ export default function RhrScreen() {
         })}
         {data.establishedRhr ? (
           <AppText variant="body" color="accent" style={{ marginTop: 10 }}>
-            Established baseline: {data.establishedRhr.bpm} bpm
+            Established baseline: {data.establishedRhr.bpmDisplay} bpm
           </AppText>
         ) : null}
       </Card>

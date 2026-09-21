@@ -84,7 +84,38 @@ describe('rhrWorkflow: three-morning baseline', () => {
     readings = await listRhrReadings(userId, session.id);
     const established = computeEstablishedRhr(readings);
     expect(established?.bpm).toBeCloseTo(60); // (60+62+58)/3
+    expect(established?.bpmDisplay).toBe(60);
     expect(established?.morningsUsed).toEqual(['2026-02-11', '2026-02-12', '2026-02-13']);
+  });
+
+  it('keeps full-precision bpm distinct from the 1-decimal display value: internal comparisons must use bpm, never bpmDisplay', async () => {
+    const session = await freshSession('week12');
+    await recordRhrReading({
+      userId,
+      testingSessionId: session.id,
+      morningDate: '2026-05-01',
+      bpm: 60,
+    });
+    await recordRhrReading({
+      userId,
+      testingSessionId: session.id,
+      morningDate: '2026-05-02',
+      bpm: 61,
+    });
+    await recordRhrReading({
+      userId,
+      testingSessionId: session.id,
+      morningDate: '2026-05-03',
+      bpm: 63,
+    });
+
+    const readings = await listRhrReadings(userId, session.id);
+    const established = computeEstablishedRhr(readings);
+    // (60+61+63)/3 = 61.333... — never pre-rounded internally.
+    expect(established?.bpm).toBeCloseTo(61.3333333, 5);
+    expect(established?.bpm).not.toBe(61.3);
+    // Display is rounded to exactly one decimal place.
+    expect(established?.bpmDisplay).toBe(61.3);
   });
 
   it('prevents the same morning from being unintentionally entered twice', async () => {

@@ -24,8 +24,7 @@ function session(
     status,
     readiness_entry_id: null,
     started_at: null,
-    completed_at:
-      status === 'completed' || status === 'adjusted' ? `${scheduledDate}T12:00:00Z` : null,
+    completed_at: status === 'completed' ? `${scheduledDate}T12:00:00Z` : null,
     duration_actual_seconds: null,
     completion_pct: null,
     abandoned: false,
@@ -42,7 +41,7 @@ describe('computeProgramAdherence', () => {
       session('2026-01-05', 'am', 'completed'),
       session('2026-01-05', 'pm', 'completed'),
       session('2026-01-06', 'am', 'completed'),
-      session('2026-01-06', 'pm', 'adjusted'),
+      session('2026-01-06', 'pm', 'completed'), // trained-and-adjusted, per adjustedSessionIds below
       session('2026-01-10', 'am', 'completed'),
       session('2026-01-10', 'pm', 'completed'),
       // Thursday 2026-01-08 AM/PM intentionally not logged -> counted missed.
@@ -53,7 +52,8 @@ describe('computeProgramAdherence', () => {
     ];
 
     const todayIso = '2026-01-13'; // Tuesday of week 2 — week 2's Tue/Thu/Sat haven't happened yet.
-    const result = computeProgramAdherence(baseInput, todayIso, sessions);
+    const adjustedSessionIds = new Set(['2026-01-06-pm']);
+    const result = computeProgramAdherence(baseInput, todayIso, sessions, adjustedSessionIds);
 
     const week1 = result.weeks.find((w) => w.weekNumber === 1)!;
     expect(week1.hasStarted).toBe(true);

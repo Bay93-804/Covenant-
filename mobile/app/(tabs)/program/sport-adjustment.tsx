@@ -70,6 +70,10 @@ export default function SportAdjustmentScreen() {
     try {
       const code = evaluation.recommendations[0]?.code ?? null;
       const choice = code ? choiceSelections[code] : null;
+      // "Confirm adjustment" is itself the athlete's explicit confirmation —
+      // there's no separate confirm step later, so this must be recorded as
+      // confirmed now (userConfirmed: true), not left false forever (the
+      // Phase 3 defect this screen used to have).
       await createSportSession({
         id: '',
         userId: user!.id,
@@ -80,6 +84,21 @@ export default function SportAdjustmentScreen() {
         appliedAdjustmentNote: choice
           ? `${evaluation.recommendations[0]!.description} (chose: ${choice})`
           : (evaluation.recommendations[0]?.description ?? evaluation.gateReason),
+        userConfirmed: true,
+        originalPrescriptionSnapshot: {
+          date: scheduledDay.date,
+          am: { sessionType: scheduledDay.am.sessionType, title: scheduledDay.am.title },
+          pm: { sessionType: scheduledDay.pm.sessionType, title: scheduledDay.pm.title },
+        },
+        adjustedPrescriptionSnapshot: {
+          recommendations: evaluation.recommendations.map((rec) => ({
+            code: rec.code,
+            description: rec.description,
+            chosenValue: choiceSelections[rec.code] ?? null,
+          })),
+          pregameWarmup: evaluation.pregameWarmup,
+          postGameNote: evaluation.postGameNote,
+        },
       });
       setConfirmed(true);
     } finally {
