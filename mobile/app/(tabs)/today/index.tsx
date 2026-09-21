@@ -81,8 +81,6 @@ function statusLabel(status: WorkoutSession['status'] | null): {
       return { label: 'In progress', tone: 'gold' };
     case 'skipped':
       return { label: 'Skipped', tone: 'danger' };
-    case 'adjusted':
-      return { label: 'Adjusted', tone: 'gold' };
     default:
       return { label: 'Not started', tone: 'neutral' };
   }
@@ -92,6 +90,7 @@ function SessionCard({
   slotLabel,
   session,
   workoutSession,
+  adjusted,
   onAction,
   actionLabel,
   actionLoading,
@@ -99,6 +98,7 @@ function SessionCard({
   slotLabel: string;
   session: ScheduledSession;
   workoutSession: WorkoutSession | null;
+  adjusted: boolean;
   onAction: (() => void) | null;
   actionLabel: string;
   actionLoading: boolean;
@@ -139,7 +139,10 @@ function SessionCard({
         {session.title}
       </AppText>
       <View className="flex-row items-center justify-between mb-3">
-        <Badge label={status.label} tone={status.tone} />
+        <View className="flex-row items-center gap-2">
+          <Badge label={status.label} tone={status.tone} />
+          {adjusted ? <Badge label="Adjusted" tone="gold" /> : null}
+        </View>
         {workoutSession?.completion_pct != null ? (
           <AppText variant="caption" color="muted">
             {Math.round(workoutSession.completion_pct)}% complete
@@ -215,6 +218,8 @@ export default function TodayScreen() {
     scheduledDay,
     amWorkoutSession,
     pmWorkoutSession,
+    amAdjusted,
+    pmAdjusted,
     readinessEntry,
     readinessEvaluation,
     missedWeeks,
@@ -361,6 +366,7 @@ export default function TodayScreen() {
         slotLabel="AM"
         session={scheduledDay.am}
         workoutSession={amWorkoutSession}
+        adjusted={amAdjusted}
         actionLabel={
           amWorkoutSession?.status === 'completed'
             ? 'Review'
@@ -377,6 +383,7 @@ export default function TodayScreen() {
         slotLabel="PM"
         session={scheduledDay.pm}
         workoutSession={pmWorkoutSession}
+        adjusted={pmAdjusted}
         actionLabel={
           pmWorkoutSession?.status === 'completed'
             ? 'Review'

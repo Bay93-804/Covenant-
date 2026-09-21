@@ -13,8 +13,6 @@ function stateBadge(
   switch (state) {
     case 'completed':
       return { label: 'Completed', tone: 'success' };
-    case 'adjusted':
-      return { label: 'Adjusted', tone: 'gold' };
     case 'in_progress':
       return { label: 'In progress', tone: 'gold' };
     case 'missed':
@@ -86,13 +84,19 @@ export default function WeekDetailScreen() {
                 <AppText variant="bodySm" color="secondary" style={{ flex: 1 }}>
                   AM · {day.scheduledDay.am.title}
                 </AppText>
-                {amBadge ? <Badge label={amBadge.label} tone={amBadge.tone} /> : null}
+                <View className="flex-row items-center gap-2">
+                  {amBadge ? <Badge label={amBadge.label} tone={amBadge.tone} /> : null}
+                  {day.amAdjusted ? <Badge label="Adjusted" tone="gold" /> : null}
+                </View>
               </View>
               <View className="flex-row items-center justify-between">
                 <AppText variant="bodySm" color="secondary" style={{ flex: 1 }}>
                   PM · {day.scheduledDay.pm.title}
                 </AppText>
-                {pmBadge ? <Badge label={pmBadge.label} tone={pmBadge.tone} /> : null}
+                <View className="flex-row items-center gap-2">
+                  {pmBadge ? <Badge label={pmBadge.label} tone={pmBadge.tone} /> : null}
+                  {day.pmAdjusted ? <Badge label="Adjusted" tone="gold" /> : null}
+                </View>
               </View>
             </Card>
           </Pressable>

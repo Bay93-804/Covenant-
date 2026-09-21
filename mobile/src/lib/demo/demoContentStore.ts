@@ -22,6 +22,7 @@ export interface DemoProfile {
   equipment_available: string[];
   injury_notes: string | null;
   has_sprinted_recently: boolean | null;
+  bodyweight_lb: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -75,6 +76,7 @@ export async function upsertDemoProfile(
     equipment_available: [],
     injury_notes: null,
     has_sprinted_recently: null,
+    bodyweight_lb: null,
     created_at: existing?.created_at ?? now,
     updated_at: now,
     ...existing,

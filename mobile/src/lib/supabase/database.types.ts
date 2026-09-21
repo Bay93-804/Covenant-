@@ -23,6 +23,16 @@ export type SessionType =
   | 'pm_rest';
 export type LoadType =
   'percentage' | 'rir' | 'quality_cap' | 'bodyweight' | 'time' | 'distance' | 'none';
+/**
+ * `'adjusted'` is a legacy enum value kept only for the existing Postgres
+ * `workout_status` type/any historical row — the app never writes it and
+ * never reads it as meaningful. A session's completion state
+ * ('scheduled'/'in_progress'/'completed'/'skipped') and whether it was
+ * safety/pickup-sport adjusted are independent facts; the latter is derived
+ * via `src/features/workout/sessionAdjustment.ts` (a join against confirmed
+ * `safety_adjustments`/`sport_sessions` rows), not this column, so a session
+ * can be identified as both completed and adjusted at once.
+ */
 export type WorkoutStatus = 'scheduled' | 'in_progress' | 'completed' | 'skipped' | 'adjusted';
 export type EnrollmentStatus = 'active' | 'paused' | 'completed' | 'restarted' | 'abandoned';
 export type TestingEventKey = 'week0' | 'week6' | 'week12' | 'ad_hoc';
@@ -432,6 +442,9 @@ export type SportSessionRow = {
   applied_adjustment_code: string | null;
   applied_adjustment_note: string | null;
   user_confirmed: boolean;
+  confirmed_at: string | null;
+  original_prescription_snapshot: unknown;
+  adjusted_prescription_snapshot: unknown;
   affected_workout_session_id: string | null;
   notes: string | null;
   created_at: string;

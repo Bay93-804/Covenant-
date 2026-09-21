@@ -34,6 +34,8 @@ export const Collections = {
   exerciseMaxes: 'exercise_maxes',
   personalRecords: 'personal_records',
   pauseEvents: 'pause_events',
+  testingSessions: 'testing_sessions',
+  testingResults: 'testing_results',
 } as const;
 export type CollectionName = (typeof Collections)[keyof typeof Collections];
 

@@ -106,6 +106,10 @@ export interface CreateSportSessionInput {
   appliedAdjustmentNote?: string | null;
   affectedWorkoutSessionId?: string | null;
   notes?: string | null;
+  originalPrescriptionSnapshot?: unknown;
+  adjustedPrescriptionSnapshot?: unknown;
+  /** True when the caller's UI action is itself the athlete's confirmation (e.g. a single "Confirm adjustment" button) — sets `user_confirmed`/`confirmed_at` at creation instead of requiring a separate confirmSportSession call. */
+  userConfirmed?: boolean;
 }
 
 export interface CreateJournalEntryInput {

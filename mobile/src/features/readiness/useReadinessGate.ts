@@ -31,6 +31,15 @@ export interface SubmitReadinessInput {
   readinessScore: number | null;
   notes?: string | null;
   workoutSessionId?: string | null;
+  /**
+   * A plain snapshot of the scheduled slot this check-in gates (session
+   * type + title), taken before any adjustment — becomes each triggered
+   * safety_adjustments row's `original_prescription_snapshot`. Optional
+   * because a readiness check can be submitted with no schedule context
+   * (e.g. a future ad-hoc entry point); when omitted, no session's original
+   * prescription can be reconstructed from this adjustment alone.
+   */
+  originalSlotSnapshot?: unknown;
 }
 
 const HISTORY_WINDOW_DAYS = 4; // today + 3 prior mornings covers both the RHR and 72h calf/Achilles rules
@@ -110,6 +119,11 @@ export function useSubmitReadiness() {
             triggerCode: trigger.code as SafetyTriggerCode,
             reason: trigger.reason,
             recommendedAdjustment: trigger.recommendation,
+            originalPrescriptionSnapshot: input.originalSlotSnapshot ?? null,
+            adjustedPrescriptionSnapshot: {
+              triggerCode: trigger.code,
+              recommendedAdjustment: trigger.recommendation,
+            },
           }),
         ),
       );

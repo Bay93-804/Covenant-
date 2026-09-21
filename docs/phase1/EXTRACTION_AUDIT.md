@@ -64,6 +64,40 @@ The user picks "a program start date" (PRD requirement). Whether that start date
 
 ---
 
+## 11. Marker #4 (single-leg balance, eyes closed) "best of 2" — RESOLVED
+
+**Gap:** the marker's `protocol` text ("Barefoot, hands on hips, best of 2") states a 2-attempt,
+best-of protocol, but unlike markers #11-14 (which each carry an explicit `attempts`/`bestAttempt`
+field), marker #4's structured definition had no `attempts` field — an extraction-model omission,
+not a program-content ambiguity. Phase 4 initially had the app infer the 2-attempt behavior from
+the prose at runtime, which is exactly the "don't interpret prose at runtime" anti-pattern this
+audit otherwise avoids.
+
+**Decision (confirmed by product owner):** corrected as an extraction fix, not a program change —
+`data/program/coach-conde-long-game-athletic-v1.json`'s marker #4 now carries `"attempts": 2,
+"bestAttempt": true`, matching the same structured shape as markers #11-14. The app now reads this
+field generically (`src/features/testing/markerFormats.ts`) instead of hardcoding "2 attempts" from
+the protocol string. The better of the two raw attempts (each side, since the marker is also
+`bilateral: true`) is selected per the marker's own `direction` (`higher_better`), exactly as
+`EXTRACTION_AUDIT.md` item 12 below describes for bilateral aggregation.
+
+## 12. Bilateral markers (#4, #9) have no combined left/right scoring rule — RESOLVED
+
+**Gap:** markers #4 (single-leg balance) and #9 (side plank) both carry one baseline/solid/strong
+scale and record left and right independently (`bilateral: true`; #9 additionally states "record
+the difference between sides"). Neither the marker definition nor any other part of the source PDF
+states how to combine two independently-measured sides into a single classified/compared result.
+
+**Decision (confirmed by product owner):** do not invent a combination rule. The app displays left
+and right independently, computes and displays the factual difference between them, and does **not**
+produce a single classification or Week 0→Week 12 change verdict for the marker as a whole — that
+comparison is explicitly shown as unavailable, since no source-backed aggregation exists. Each side
+*is* still classified independently against the marker's baseline/solid/strong scale (that's a
+same-scale-per-side comparison, not a combination), and each side *is* still compared Week 0→Week 12
+independently. See `src/features/testing/testingResultsAggregation.ts`.
+
+---
+
 ## Not a gap, just worth stating plainly
 
 Every numeric prescription in the four Strength Days (A/B/C/D) across all three blocks, every AM template (Monday Speed & Plyo, Tuesday Core/Balance/Brake, Mobility Flow) across all three blocks, the full 12-row weekly speed/plyo/running table, both 10-marker/5-marker testing tables, the pickup-sport table, the six progression-rule bullets, the eight substitution rows, and the six back-off signal rows are **directly and completely transcribed** with no interpretation required. Those are the parts of "do not summarize or create generic placeholder workouts" that are simply done, verified twice, and ready for the Phase 2 seed-data importer to consume as-is from `data/program/coach-conde-long-game-athletic-v1.json`.

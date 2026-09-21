@@ -15,12 +15,14 @@ function SlotSection({
   slotLabel,
   session,
   workoutSession,
+  adjusted,
   isToday,
   isFuture,
 }: {
   slotLabel: string;
   session: ScheduledSession;
   workoutSession: WorkoutSession | null;
+  adjusted: boolean;
   isToday: boolean;
   isFuture: boolean;
 }) {
@@ -39,12 +41,15 @@ function SlotSection({
     <Card className="mb-4">
       <View className="flex-row items-center justify-between mb-2">
         <Badge label={slotLabel} tone="gold" />
-        {workoutSession ? (
-          <Badge
-            label={workoutSession.status.replace('_', ' ')}
-            tone={workoutSession.status === 'completed' ? 'success' : 'neutral'}
-          />
-        ) : null}
+        <View className="flex-row items-center gap-2">
+          {workoutSession ? (
+            <Badge
+              label={workoutSession.status.replace('_', ' ')}
+              tone={workoutSession.status === 'completed' ? 'success' : 'neutral'}
+            />
+          ) : null}
+          {adjusted ? <Badge label="Adjusted" tone="gold" /> : null}
+        </View>
       </View>
       <AppText variant="h3" color="primary" style={{ marginBottom: 12 }}>
         {session.title}
@@ -142,6 +147,7 @@ export default function DayDetailScreen() {
         slotLabel={`AM · ${stateLabel(day.amState)}`}
         session={day.scheduledDay.am}
         workoutSession={day.amSession}
+        adjusted={day.amAdjusted}
         isToday={isToday}
         isFuture={isFuture}
       />
@@ -149,6 +155,7 @@ export default function DayDetailScreen() {
         slotLabel={`PM · ${stateLabel(day.pmState)}`}
         session={day.scheduledDay.pm}
         workoutSession={day.pmSession}
+        adjusted={day.pmAdjusted}
         isToday={isToday}
         isFuture={isFuture}
       />
