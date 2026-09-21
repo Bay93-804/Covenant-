@@ -66,7 +66,8 @@
     "validate:program": "cross-env TS_NODE_PROJECT=tsconfig.scripts.json ts-node scripts/validate-program.ts",
     "seed:print": "cross-env TS_NODE_PROJECT=tsconfig.scripts.json ts-node scripts/seed-print.ts",
     "seed:supabase": "cross-env TS_NODE_PROJECT=tsconfig.scripts.json ts-node scripts/seed-supabase.ts",
-    "export:web": "expo export --platform web"
+    "export:web": "expo export --platform web",
+    "e2e": "playwright test"
   },
   "private": true
 }

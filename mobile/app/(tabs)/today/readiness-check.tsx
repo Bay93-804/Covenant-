@@ -12,15 +12,21 @@ import {
   TextField,
 } from '../../../src/design-system';
 import { useSubmitReadiness } from '../../../src/features/readiness/useReadinessGate';
+import { useEstablishedRestingHeartRate } from '../../../src/features/testing/useTesting';
 
 export default function ReadinessCheckScreen() {
   const params = useLocalSearchParams<{ date: string; slot: string }>();
   const date = params.date!;
   const submitReadiness = useSubmitReadiness();
+  const { data: establishedRhr } = useEstablishedRestingHeartRate();
 
   const [sleepHours, setSleepHours] = useState('');
   const [restingHr, setRestingHr] = useState('');
   const [baselineRestingHr, setBaselineRestingHr] = useState('');
+  const [baselineTouched, setBaselineTouched] = useState(false);
+
+  const effectiveBaseline =
+    !baselineTouched && establishedRhr ? String(establishedRhr.bpm) : baselineRestingHr;
   const [calfAchillesFlag, setCalfAchillesFlag] = useState(false);
   const [hamstringGrabbyFlag, setHamstringGrabbyFlag] = useState(false);
   const [jointPainFlag, setJointPainFlag] = useState(false);
@@ -33,7 +39,7 @@ export default function ReadinessCheckScreen() {
       entryDate: date,
       sleepHours: sleepHours ? Number(sleepHours) : null,
       restingHr: restingHr ? Number(restingHr) : null,
-      baselineRestingHr: baselineRestingHr ? Number(baselineRestingHr) : null,
+      baselineRestingHr: effectiveBaseline ? Number(effectiveBaseline) : null,
       calfAchillesFlag,
       hamstringGrabbyFlag,
       jointPainFlag,
@@ -74,19 +80,26 @@ export default function ReadinessCheckScreen() {
           placeholder="e.g. 7.5"
         />
         <TextField
-          label="Resting heart rate this morning (bpm)"
+          label="Resting heart rate this morning (bpm) — a single reading"
           keyboardType="number-pad"
           value={restingHr}
           onChangeText={setRestingHr}
           placeholder="e.g. 54"
         />
         <TextField
-          label="Your normal resting heart rate baseline (bpm)"
+          label="Your established resting heart rate baseline (bpm)"
           keyboardType="number-pad"
-          value={baselineRestingHr}
-          onChangeText={setBaselineRestingHr}
+          value={effectiveBaseline}
+          onChangeText={(text) => {
+            setBaselineTouched(true);
+            setBaselineRestingHr(text);
+          }}
           placeholder="e.g. 50"
-          hint="From your Week 0 baseline testing, averaged over 3 mornings."
+          hint={
+            establishedRhr
+              ? `Auto-filled from your established 3-morning average (${establishedRhr.sourceEvent}). This is not a single reading — it only updates when you re-run the 3-morning RHR test.`
+              : 'From your Week 0 baseline testing, averaged over 3 mornings. Log 3 morning readings in the Testing tab to establish this automatically.'
+          }
         />
       </Card>
 

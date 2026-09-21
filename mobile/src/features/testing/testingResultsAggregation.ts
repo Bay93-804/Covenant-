@@ -1,0 +1,292 @@
+/**
+ * Turns raw `testing_results` attempt rows into the single "selected/best
+ * result" per marker (explicit, never silently inferred beyond what each
+ * marker's own protocol specifies — see markerFormats.ts), and builds the
+ * Week 0 vs Week 6 vs Week 12 comparisons the Progress/Testing screens need.
+ *
+ * Every classification and comparison here is computed from data the athlete
+ * actually entered plus the program's own authoritative baseline/solid/
+ * strong thresholds — nothing is fabricated, and anything not comparable
+ * (missing, deferred, qualitative, or a broken bodyweight-normalization
+ * input) is surfaced as `null`/`isDeferred` rather than guessed.
+ */
+import { getTestingMarker } from '../../content/repository';
+import type { TestingMarker } from '../../content/schema';
+import {
+  classifyE1rmResult,
+  classifyNumericResult,
+  classifyQualitativeResult,
+  computeE1rmFromHeavy5,
+  describeNumericChange,
+  formatInchesAsFeetInches,
+  formatSecondsAsMmSs,
+  getMarkerInputKind,
+  type MarkerChange,
+  type MarkerTier,
+} from './markerFormats';
+import { isSprintDeferralRow } from './sprintDeferral';
+import type { TestingEventKey, TestingResult } from './types';
+
+export interface MarkerSummary {
+  markerNumber: number;
+  marker: TestingMarker;
+  hasResult: boolean;
+  isDeferred: boolean;
+  /** Raw attempt rows (deferral sentinel excluded) — never dropped, always available for the marker-history screen. */
+  attempts: TestingResult[];
+  /** Unit-normalized comparable number (seconds, inches, bpm, score, or e1RM weight) for classification/charts. Null when not comparable. */
+  comparableValue: number | null;
+  displayValue: string | null;
+  classification: MarkerTier | null;
+  notes: string | null;
+}
+
+export function formatComparableValue(marker: TestingMarker, value: number): string {
+  if (marker.unit === 'mm:ss') return formatSecondsAsMmSs(value);
+  if (marker.unit === 'ft-in') return formatInchesAsFeetInches(value);
+  if (marker.unit === 'time') return value >= 60 ? formatSecondsAsMmSs(value) : `${round1(value)}s`;
+  return `${round1(value)}`;
+}
+
+function round1(n: number): number {
+  return Math.round(n * 10) / 10;
+}
+
+function numericValues(rows: TestingResult[]): number[] {
+  return rows.map((r) => r.value_numeric).filter((v): v is number => v != null);
+}
+
+export function summarizeMarkerResults(
+  markerNumber: number,
+  attempts: TestingResult[],
+  options: { bodyweightLb?: number | null } = {},
+): MarkerSummary {
+  const marker = getTestingMarker(markerNumber);
+  if (!marker) throw new Error(`Unknown marker #${markerNumber}`);
+  const kind = getMarkerInputKind(markerNumber);
+
+  const deferralRow = attempts.find(isSprintDeferralRow) ?? null;
+  const realAttempts = attempts.filter((a) => !isSprintDeferralRow(a));
+  const isDeferred = Boolean(deferralRow) && realAttempts.every((a) => a.value_numeric == null);
+
+  let comparableValue: number | null = null;
+  let displayValue: string | null = null;
+
+  switch (kind) {
+    case 'mmss':
+    case 'numeric':
+    case 'time_flexible':
+    case 'rhr_three_morning': {
+      comparableValue = realAttempts[0]?.value_numeric ?? null;
+      break;
+    }
+    case 'qualitative': {
+      displayValue = realAttempts[0]?.value_text ?? null;
+      break;
+    }
+    case 'sprint_10yd':
+    case 'pro_agility': {
+      const values = numericValues(realAttempts);
+      comparableValue = values.length ? Math.min(...values) : null; // lower is better
+      break;
+    }
+    case 'broad_jump':
+    case 'cmj': {
+      const values = numericValues(realAttempts);
+      comparableValue = values.length ? Math.max(...values) : null; // higher is better
+      break;
+    }
+    case 'deceleration_deficit': {
+      const stop =
+        realAttempts.find((a) => a.notes?.includes('sprint_and_stop'))?.value_numeric ?? null;
+      const through =
+        realAttempts.find((a) => a.notes?.includes('sprint_through'))?.value_numeric ?? null;
+      comparableValue = stop != null && through != null ? round1(stop - through) : null;
+      break;
+    }
+    case 'bilateral_time': {
+      const left = realAttempts.find((a) => a.side === 'left')?.value_numeric ?? null;
+      const right = realAttempts.find((a) => a.side === 'right')?.value_numeric ?? null;
+      // Classification uses the weaker side (an app-level inference, since
+      // the PDF gives a single baseline/solid/strong scale, not a per-side
+      // one — flagged in docs/phase4/IMPLEMENTATION_NOTES.md).
+      comparableValue =
+        left != null && right != null ? Math.min(left, right) : (left ?? right ?? null);
+      break;
+    }
+    case 'bilateral_attempts_time': {
+      const leftBestVal = numericValues(realAttempts.filter((a) => a.side === 'left'));
+      const rightBestVal = numericValues(realAttempts.filter((a) => a.side === 'right'));
+      const leftBest = leftBestVal.length ? Math.max(...leftBestVal) : null;
+      const rightBest = rightBestVal.length ? Math.max(...rightBestVal) : null;
+      comparableValue =
+        leftBest != null && rightBest != null
+          ? Math.min(leftBest, rightBest)
+          : (leftBest ?? rightBest ?? null);
+      break;
+    }
+    case 'e1rm_heavy5': {
+      const heavy5 = realAttempts[0]?.value_numeric ?? null;
+      comparableValue = heavy5 != null ? computeE1rmFromHeavy5(heavy5) : null;
+      break;
+    }
+  }
+
+  let classification: MarkerTier | null = null;
+  if (kind === 'qualitative') {
+    classification = displayValue ? classifyQualitativeResult(marker, displayValue) : null;
+  } else if (kind === 'e1rm_heavy5') {
+    classification =
+      comparableValue != null
+        ? classifyE1rmResult(marker, comparableValue, options.bodyweightLb ?? null)
+        : null;
+  } else if (comparableValue != null) {
+    classification = classifyNumericResult(marker, comparableValue);
+  }
+
+  if (!displayValue && comparableValue != null) {
+    displayValue = formatComparableValue(marker, comparableValue);
+  }
+
+  const notes = realAttempts.map((a) => a.notes).find(Boolean) ?? null;
+
+  return {
+    markerNumber,
+    marker,
+    hasResult:
+      !isDeferred && realAttempts.some((a) => a.value_numeric != null || a.value_text != null),
+    isDeferred,
+    attempts: realAttempts,
+    comparableValue,
+    displayValue,
+    classification,
+    notes,
+  };
+}
+
+export function summarizeSessionResults(
+  markerNumbers: number[],
+  allResults: TestingResult[],
+  options: { bodyweightLb?: number | null } = {},
+): Map<number, MarkerSummary> {
+  const byMarker = new Map<number, TestingResult[]>();
+  for (const row of allResults) {
+    const list = byMarker.get(row.marker_number) ?? [];
+    list.push(row);
+    byMarker.set(row.marker_number, list);
+  }
+  const summaries = new Map<number, MarkerSummary>();
+  for (const num of markerNumbers) {
+    summaries.set(num, summarizeMarkerResults(num, byMarker.get(num) ?? [], options));
+  }
+  return summaries;
+}
+
+export type MarkerEntryState = 'not_started' | 'in_progress' | 'complete' | 'deferred';
+
+export function markerEntryState(summary: MarkerSummary): MarkerEntryState {
+  if (summary.isDeferred) return 'deferred';
+  if (summary.hasResult) return 'complete';
+  if (summary.attempts.length > 0) return 'in_progress';
+  return 'not_started';
+}
+
+export function isEventFullyComplete(
+  markerNumbers: number[],
+  summaries: Map<number, MarkerSummary>,
+): boolean {
+  return markerNumbers.every((num) => {
+    const state = summaries.get(num);
+    return state ? state.hasResult || state.isDeferred : false;
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Week 0 / Week 6 / Week 12 comparison
+// ---------------------------------------------------------------------------
+
+export interface MarkerComparison {
+  markerNumber: number;
+  marker: TestingMarker;
+  week0: MarkerSummary | null;
+  week6: MarkerSummary | null;
+  week12: MarkerSummary | null;
+  /** Which event actually supplied the earliest usable value for this marker — usually week0, but week6 for a deferred marker #11. */
+  baselineEvent: TestingEventKey | null;
+  changeToWeek12: MarkerChange | null;
+  changeToWeek6: MarkerChange | null;
+}
+
+export function buildTestingComparison(
+  markerResultsByEvent: Record<TestingEventKey, TestingResult[]>,
+  options: { bodyweightLb?: number | null } = {},
+): MarkerComparison[] {
+  const week0Summaries = summarizeSessionResults(range(1, 15), markerResultsByEvent.week0, options);
+  const week6Summaries = summarizeSessionResults(range(1, 15), markerResultsByEvent.week6, options);
+  const week12Summaries = summarizeSessionResults(
+    range(1, 15),
+    markerResultsByEvent.week12,
+    options,
+  );
+
+  const comparisons: MarkerComparison[] = [];
+  for (let num = 1; num <= 15; num++) {
+    const marker = getTestingMarker(num);
+    if (!marker) continue;
+    const week0 = week0Summaries.get(num) ?? null;
+    const week6 = week6Summaries.get(num) ?? null;
+    const week12 = week12Summaries.get(num) ?? null;
+
+    // Marker #11: if Week 0 was deferred, Week 6's value is the effective
+    // baseline (see docs/phase1/EXTRACTION_AUDIT.md #1 / testing.events —
+    // the program itself defers the baseline measurement, not just the app).
+    const week0IsUsableBaseline = week0?.comparableValue != null;
+    const baselineSummary = week0IsUsableBaseline
+      ? week0
+      : num === 11 && week6?.comparableValue != null
+        ? week6
+        : null;
+    const baselineEvent: TestingEventKey | null = week0IsUsableBaseline
+      ? 'week0'
+      : num === 11 && week6?.comparableValue != null
+        ? 'week6'
+        : null;
+
+    const changeToWeek12 =
+      baselineSummary?.comparableValue != null &&
+      week12?.comparableValue != null &&
+      kindIsNumericComparable(num)
+        ? describeNumericChange(marker, baselineSummary.comparableValue, week12.comparableValue)
+        : null;
+
+    const changeToWeek6 =
+      week0?.comparableValue != null &&
+      week6?.comparableValue != null &&
+      kindIsNumericComparable(num) &&
+      num !== 11
+        ? describeNumericChange(marker, week0.comparableValue, week6.comparableValue)
+        : null;
+
+    comparisons.push({
+      markerNumber: num,
+      marker,
+      week0,
+      week6,
+      week12,
+      baselineEvent,
+      changeToWeek12,
+      changeToWeek6,
+    });
+  }
+  return comparisons;
+}
+
+function kindIsNumericComparable(markerNumber: number): boolean {
+  return getMarkerInputKind(markerNumber) !== 'qualitative';
+}
+
+function range(from: number, to: number): number[] {
+  const out: number[] = [];
+  for (let i = from; i <= to; i++) out.push(i);
+  return out;
+}

@@ -31,7 +31,9 @@ type TableName =
   | 'journal_entries'
   | 'exercise_maxes'
   | 'personal_records'
-  | 'enrollment_pause_events';
+  | 'enrollment_pause_events'
+  | 'testing_sessions'
+  | 'testing_results';
 
 const COLLECTION_TO_TABLE: Record<CollectionName, TableName> = {
   [Collections.sessions]: 'workout_sessions',
@@ -43,6 +45,8 @@ const COLLECTION_TO_TABLE: Record<CollectionName, TableName> = {
   [Collections.exerciseMaxes]: 'exercise_maxes',
   [Collections.personalRecords]: 'personal_records',
   [Collections.pauseEvents]: 'enrollment_pause_events',
+  [Collections.testingSessions]: 'testing_sessions',
+  [Collections.testingResults]: 'testing_results',
 };
 
 let syncInFlight: Promise<void> | null = null;
