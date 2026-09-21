@@ -25,4 +25,27 @@ jest.mock('expo-crypto', () => ({
       return hex();
     });
   }),
+  getRandomBytes: jest.fn((byteCount) => {
+    const bytes = new Uint8Array(byteCount);
+    for (let i = 0; i < byteCount; i += 1) bytes[i] = Math.floor(Math.random() * 256);
+    return bytes;
+  }),
+  getRandomBytesAsync: jest.fn(async (byteCount) => {
+    const bytes = new Uint8Array(byteCount);
+    for (let i = 0; i < byteCount; i += 1) bytes[i] = Math.floor(Math.random() * 256);
+    return bytes;
+  }),
 }));
+
+jest.mock('expo-secure-store', () => {
+  const store = new Map();
+  return {
+    getItemAsync: jest.fn(async (key) => store.get(key) ?? null),
+    setItemAsync: jest.fn(async (key, value) => {
+      store.set(key, value);
+    }),
+    deleteItemAsync: jest.fn(async (key) => {
+      store.delete(key);
+    }),
+  };
+});
