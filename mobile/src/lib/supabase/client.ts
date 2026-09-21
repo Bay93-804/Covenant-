@@ -1,9 +1,9 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import 'react-native-url-polyfill/auto';
 
 import { env, isSupabaseConfigured } from '../env';
 import type { Database } from './database.types';
+import { secureSessionStorage } from './secureSessionStorage';
 
 /**
  * The single Supabase client for the app. Only created when
@@ -11,16 +11,17 @@ import type { Database } from './database.types';
  * through `src/lib/auth`, which already does) before touching this, since
  * it is `null` in local demo mode.
  *
- * Session persistence uses AsyncStorage (Supabase's own recommendation for
- * React Native): auth sessions/refresh tokens are larger than SecureStore's
- * per-item size limit comfortably allows for. SecureStore is reserved for
- * small, sensitive values — see src/lib/demo/storage.ts for where it's used
- * instead.
+ * Session persistence uses `secureSessionStorage` — AsyncStorage-backed
+ * (auth sessions/refresh tokens are larger than SecureStore's per-item size
+ * limit comfortably allows for, so the token itself can't live directly in
+ * SecureStore) but AES-encrypted with a key that *does* live in
+ * `expo-secure-store`, so nothing sensitive is ever written to disk in
+ * plaintext. See secureSessionStorage.ts for the full rationale.
  */
 export const supabase: SupabaseClient<Database> | null = isSupabaseConfigured
   ? createClient<Database>(env.SUPABASE_URL!, env.SUPABASE_ANON_KEY!, {
       auth: {
-        storage: AsyncStorage,
+        storage: secureSessionStorage,
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: false,
