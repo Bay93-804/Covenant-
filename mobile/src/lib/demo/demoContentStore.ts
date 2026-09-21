@@ -10,7 +10,7 @@ import * as Crypto from 'expo-crypto';
 
 import { programVersionIdForSlug } from '../../content/seed/deterministicId';
 import { DEFAULT_PROGRAM_VERSION_SLUG } from '../../content/source';
-import { demoStorageKeys, readJson, writeJson } from './storage';
+import { demoStorageKeys, readJson, removeKey, writeJson } from './storage';
 
 export interface DemoProfile {
   id: string;
@@ -156,4 +156,14 @@ export async function getDemoExerciseMaxes(userId: string): Promise<DemoExercise
 export async function addDemoExerciseMax(userId: string, entry: DemoExerciseMax): Promise<void> {
   const existing = await getDemoExerciseMaxes(userId);
   await writeJson(demoStorageKeys.exerciseMaxes(userId), [...existing, entry]);
+}
+
+/** Deletes one demo user's profile/enrollment/preferences/maxes — see deleteAccount.ts. */
+export async function deleteDemoUserData(userId: string): Promise<void> {
+  await Promise.all([
+    removeKey(demoStorageKeys.profile(userId)),
+    removeKey(demoStorageKeys.enrollment(userId)),
+    removeKey(demoStorageKeys.notificationPreferences(userId)),
+    removeKey(demoStorageKeys.exerciseMaxes(userId)),
+  ]);
 }
