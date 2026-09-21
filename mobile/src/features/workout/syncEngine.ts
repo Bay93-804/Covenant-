@@ -15,6 +15,7 @@
  * synced independently.
  */
 import { requireSupabase } from '../../lib/supabase/client';
+import { logger } from '../../lib/logger';
 import {
   Collections,
   listPending,
@@ -71,7 +72,7 @@ async function runQueuedSyncs(): Promise<void> {
       await syncPendingWorkoutData(userId).catch((error) => {
         // Never let a network/auth failure crash the app — it just stays
         // queued locally and is retried on the next write or app foreground.
-        console.warn(`[sync] failed for user ${userId}, will retry later:`, error);
+        logger.warn('sync', `failed for user ${userId}, will retry later`, error);
       });
     }
   }
@@ -96,7 +97,7 @@ export async function syncPendingWorkoutData(
         .upsert(row as never, { onConflict: 'id' });
       if (error) {
         failed += 1;
-        console.warn(`[sync] upsert failed for ${table}/${row.id}:`, error.message);
+        logger.warn('sync', `upsert failed for ${table}/${row.id}`, error.message);
         continue;
       }
       await markSynced(userId, collection, row.id);

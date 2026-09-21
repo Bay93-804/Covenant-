@@ -8,6 +8,8 @@ import * as Haptics from 'expo-haptics';
 import { createAudioPlayer, type AudioPlayer } from 'expo-audio';
 import { Platform } from 'react-native';
 
+import { logger } from '../logger';
+
 const timerCompleteSound = require('../../../assets/sounds/timer-complete.wav');
 const restTimerCompleteSound = require('../../../assets/sounds/rest-timer-complete.wav');
 
@@ -23,7 +25,7 @@ function getPlayer(kind: 'timer' | 'rest'): AudioPlayer | null {
     if (!restPlayer) restPlayer = createAudioPlayer(restTimerCompleteSound);
     return restPlayer;
   } catch (error) {
-    console.warn('[timers] could not create audio player:', error);
+    logger.warn('timers', 'could not create audio player', error);
     return null;
   }
 }
@@ -35,7 +37,7 @@ async function playSound(kind: 'timer' | 'rest'): Promise<void> {
     await player.seekTo(0);
     player.play();
   } catch (error) {
-    console.warn('[timers] sound feedback failed (non-fatal):', error);
+    logger.warn('timers', 'sound feedback failed (non-fatal)', error);
   }
 }
 
@@ -44,7 +46,7 @@ async function vibrate(): Promise<void> {
   try {
     await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
   } catch (error) {
-    console.warn('[timers] haptic feedback failed (non-fatal):', error);
+    logger.warn('timers', 'haptic feedback failed (non-fatal)', error);
   }
 }
 
@@ -63,6 +65,6 @@ export async function playLightTap(): Promise<void> {
   try {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   } catch (error) {
-    console.warn('[timers] light haptic tap failed (non-fatal):', error);
+    logger.warn('timers', 'light haptic tap failed (non-fatal)', error);
   }
 }

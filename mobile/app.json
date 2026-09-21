@@ -1,17 +1,25 @@
 {
   "expo": {
-    "name": "Coach Conde: The Long Game",
+    "name": "Coach Conde Long Game",
     "slug": "coach-conde-long-game",
     "scheme": "coachconde",
     "version": "1.0.0",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "backgroundColor": "#0B1220",
     "newArchEnabled": true,
+    "primaryColor": "#C9A227",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.coachconde.longgame"
+      "bundleIdentifier": "com.coachconde.longgame",
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -21,7 +29,8 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.coachconde.longgame"
+      "package": "com.coachconde.longgame",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png",
