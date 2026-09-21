@@ -6,6 +6,7 @@ import {
   useState,
   type PropsWithChildren,
 } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 import {
   demoRequestPasswordReset,
@@ -15,6 +16,7 @@ import {
   getDemoSession,
   onDemoAuthStateChange,
 } from '../demo/demoAuth';
+import { passwordResetRedirectUrl } from './authDeepLink';
 import { isSupabaseConfigured } from '../env';
 import { supabase } from '../supabase/client';
 
@@ -39,6 +41,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     let mounted = true;
@@ -100,6 +103,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
         await demoSignUp(email, password);
       },
       async signOut() {
+        // Clear every cached query first — query keys that aren't
+        // user-scoped (or a stale in-flight refetch for the outgoing user)
+        // must never be visible for even one frame to whichever account
+        // signs in next on this device.
+        queryClient.clear();
         if (isSupabaseConfigured && supabase) {
           const { error } = await supabase.auth.signOut();
           if (error) throw error;
@@ -109,14 +117,16 @@ export function AuthProvider({ children }: PropsWithChildren) {
       },
       async requestPasswordReset(email) {
         if (isSupabaseConfigured && supabase) {
-          const { error } = await supabase.auth.resetPasswordForEmail(email);
+          const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: passwordResetRedirectUrl(),
+          });
           if (error) throw error;
           return;
         }
         await demoRequestPasswordReset(email);
       },
     }),
-    [user, isLoading],
+    [user, isLoading, queryClient],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

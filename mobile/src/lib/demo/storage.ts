@@ -90,6 +90,28 @@ export async function removeKey(storageKey: string): Promise<void> {
   await AsyncStorage.removeItem(key(storageKey));
 }
 
+/**
+ * Wipes every demo-mode account, profile, enrollment, and preference on
+ * this device — not just one user's. Used by the "Reset local demo data"
+ * control (Profile tab, demo mode only) to give QA a clean device without
+ * reinstalling, and by account deletion as a fallback when only one demo
+ * account exists. `src/lib/offline/localWorkoutStore.ts`'s workout/testing
+ * data is namespaced separately (`coachconde.offline:*`) and is cleared by
+ * its own `clearAllForUser`/equivalent — this only touches `coachconde.demo:*`.
+ */
+export async function clearAllDemoStorage(): Promise<void> {
+  const allKeys = await AsyncStorage.getAllKeys();
+  const demoKeys = allKeys.filter((k) => k.startsWith(`${ASYNC_NAMESPACE}:`));
+  if (demoKeys.length > 0) {
+    await AsyncStorage.multiRemove(demoKeys);
+  }
+  if (isSecureStoreAvailable) {
+    await SecureStore.deleteItemAsync(SECURE_SESSION_KEY);
+  } else {
+    await AsyncStorage.removeItem(SECURE_SESSION_KEY);
+  }
+}
+
 export const demoStorageKeys = {
   accounts: 'accounts', // email -> { userId, passwordHash }
   profile: (userId: string) => `profile:${userId}`,

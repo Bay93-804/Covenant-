@@ -107,6 +107,29 @@ export async function demoRequestPasswordReset(email: string): Promise<void> {
   // No-op beyond validation: there's no email service in demo mode.
 }
 
+/**
+ * Removes one demo account's credentials so it can no longer sign in, and
+ * clears the current session if it belonged to that account. Does not touch
+ * that user's profile/enrollment/workout data — callers (see
+ * src/lib/accountDeletion/deleteAccount.ts) clear those separately so this
+ * module stays scoped to authentication only, matching demoContentStore.ts's
+ * separation of concerns.
+ */
+export async function demoDeleteAccount(userId: string): Promise<void> {
+  const accounts = await loadAccounts();
+  const normalizedEmail = Object.keys(accounts).find((email) => accounts[email]?.userId === userId);
+  if (normalizedEmail) {
+    delete accounts[normalizedEmail];
+    await saveAccounts(accounts);
+  }
+
+  const current = await readDemoSession();
+  if (current?.userId === userId) {
+    await writeDemoSession(null);
+    notify(null);
+  }
+}
+
 export async function getDemoSession(): Promise<DemoUser | null> {
   const pointer = await readDemoSession();
   if (!pointer) return null;

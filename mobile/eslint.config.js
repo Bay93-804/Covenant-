@@ -13,6 +13,9 @@ module.exports = defineConfig([
       'android/*',
       'ios/*',
       'supabase/migrations/*',
+      // Deno Edge Function — a separate runtime with its own module
+      // resolution (jsr:/npm: specifiers), not part of this TS project.
+      'supabase/functions/*',
       'node_modules/*',
       'coverage/*',
     ],

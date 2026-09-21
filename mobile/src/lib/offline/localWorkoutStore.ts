@@ -171,3 +171,18 @@ export async function hasPending(userId: string, collection: CollectionName): Pr
   const rows = await readRaw(userId, collection);
   return rows.some((r) => r._pendingSync);
 }
+
+/**
+ * Removes every locally-stored workout/testing collection for one user —
+ * used by account deletion (src/lib/accountDeletion/) after the cloud
+ * record is gone, so no trace of that athlete's data is left on the
+ * device. Never used for anything short of that: normal sign-out leaves
+ * this data in place so the same athlete signing back in on the same
+ * device still has it offline.
+ */
+export async function clearAllForUser(userId: string): Promise<void> {
+  const keys = Object.values(Collections).map((collection) =>
+    storageKey(userId, collection as CollectionName),
+  );
+  await AsyncStorage.multiRemove(keys);
+}

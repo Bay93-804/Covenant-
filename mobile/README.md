@@ -4,14 +4,17 @@ A single-athlete mobile app for following Coach Conde's 12-week "Long Game — A
 program: Week 0 baseline testing → 12 weeks of AM/PM sessions across three blocks (Absorb, Build,
 Express) → Week 6 mid-program retest → Week 12 final test.
 
-This repository has grown through four phases: **Phase 2** (application scaffold, design system,
+This repository has grown through five phases: **Phase 2** (application scaffold, design system,
 app shell, onboarding, Supabase foundation, the program-content layer), **Phase 3** (the schedule
-engine, Today screen, guided workout player, and offline-first workout tracking), and **Phase 4**
-(the full Week 0/6/12 testing system and the Progress dashboard — see below). See `../docs/phase1/`
+engine, Today screen, guided workout player, and offline-first workout tracking), **Phase 4**
+(the full Week 0/6/12 testing system and the Progress dashboard), and **Phase 5** (physical-device
+and TestFlight release readiness — see below). See `../docs/phase1/`
 for the approved product requirements, database design, screen map, and program-content model every
 phase implements against — those documents (and
 `../data/program/coach-conde-long-game-athletic-v1.json`) are the source of truth and were not
-re-extracted or reinterpreted at any phase.
+re-extracted or reinterpreted at any phase. **`../docs/phase5/RELEASE_GUIDE.md`** is the
+operational companion to this README — required accounts, EAS/Apple/Supabase setup, the physical-
+device QA checklist, and the release checklist.
 
 ## Stack
 
@@ -69,7 +72,14 @@ env var) by `scripts/seed-supabase.ts`, a trusted-environment CLI script, never 
 itself.
 
 Environment variables are validated with Zod in `src/lib/env.ts`. If they're absent or malformed,
-the app does **not** crash — it falls back to local demo mode automatically.
+the app does **not** crash — it falls back to local demo mode automatically, **except in a
+`production` build** (`EXPO_PUBLIC_APP_ENV=production`, set automatically by `eas.json`'s
+`production` profile — see `../docs/phase5/RELEASE_GUIDE.md`), which refuses to start and shows a
+plain "configuration error" screen instead. A real TestFlight/App Store build must never silently
+run in demo mode just because its backend configuration didn't make it into the build.
+
+`EXPO_PUBLIC_PRIVACY_URL` / `EXPO_PUBLIC_SUPPORT_URL` are optional and shown on the Profile
+screen — see `../docs/phase5/RELEASE_GUIDE.md`'s "Privacy & support requirements."
 
 ## Local demo mode
 
@@ -120,7 +130,7 @@ A new Supabase user automatically gets a bare `profiles` row via a database trig
 app/                          Expo Router routes (file-based)
 ├── _layout.tsx                Root layout: QueryClient, AuthProvider, splash-screen handling
 ├── index.tsx                  Redirect: signed-out → (auth), no enrollment → (onboarding), else → (tabs)
-├── (auth)/                    sign-in, sign-up, forgot-password
+├── (auth)/                    sign-in, sign-up, forgot-password, reset-password (deep-link target)
 ├── (onboarding)/               7-step onboarding flow (see below)
 ├── (tabs)/                    Today · Program · Progress · Testing · Profile
 │   ├── today/_layout.tsx        Stack wrapping today/index + readiness-check + safety-adjustment
@@ -150,16 +160,29 @@ src/
 │   └── progress/                 Phase 4 progress domain: adherence, exercise history + PB detection,
 │                                  readiness/adjustment trends, and useProgress.ts
 ├── lib/
-│   ├── env.ts                    Zod-validated environment variables
-│   ├── auth/AuthContext.tsx      Unified auth (Supabase or demo) — the only place that branches
-│   ├── supabase/                 Typed client, hand-written database types, mutations
+│   ├── env.ts                    Zod-validated environment variables + build-profile/production-refusal logic
+│   ├── logger.ts                  Release-safe logging (silent in release builds except `.error`)
+│   ├── ErrorBoundary.tsx          App-wide render-error boundary (Phase 5)
+│   ├── globalErrorHandlers.ts     Uncaught-exception + unhandled-promise-rejection logging (Phase 5)
+│   ├── auth/
+│   │   ├── AuthContext.tsx          Unified auth (Supabase or demo) — the only place that branches
+│   │   └── authDeepLink.ts          Password-reset deep-link handling (Phase 5)
+│   ├── supabase/
+│   │   ├── client.ts                 Typed client — session storage is AES-encrypted (Phase 5)
+│   │   ├── secureSessionStorage.ts   Encrypts the Supabase session before it touches AsyncStorage (Phase 5)
+│   │   ├── health.ts                 Production connectivity health check (Phase 5)
+│   │   ├── mutations.ts, database.types.ts
+│   ├── accountDeletion/deleteAccount.ts   Demo/Supabase account deletion orchestrator (Phase 5)
 │   ├── demo/                     Local mock auth + storage (fully isolated from supabase/)
 │   ├── onboarding/                Unified onboarding submission + enrollment-status query
 │   └── profile/                   Profile summary query + bodyweightService.ts (Phase 4, for marker #7)
+├── features/shared/ConnectivityBanner.tsx  Shown across (tabs) when Supabase is configured but unreachable (Phase 5)
 │
-supabase/migrations/           Numbered SQL migrations (schema, indexes, FKs, RLS) — testing_sessions/
-│                               testing_results already existed from Phase 2; one migration added in
-│                               Phase 4's correction round (adjusted-workout persistence, see below)
+supabase/
+├── migrations/                 Numbered SQL migrations (schema, indexes, FKs, RLS) — testing_sessions/
+│                                 testing_results already existed from Phase 2; migrations added in
+│                                 Phase 4's correction round and Phase 5 (see below)
+└── functions/delete-account/   Edge Function for account deletion — not deployed by default (Phase 5)
 scripts/                       validate-program.ts · seed-print.ts · seed-supabase.ts
 __tests__/                     Jest unit/integration tests (program content, onboarding, workout, testing, progress)
 e2e/                           Playwright mobile-web end-to-end specs (routing.spec.ts, full-flow.spec.ts, helpers.ts)
@@ -385,9 +408,50 @@ npx expo export --platform android
   app end to end on a Chromium mobile viewport; iOS/Android were verified via
   `expo export --platform ios|android` only (bundles cleanly, native rendering unverified).
 
-## What remains for Phase 5
+## Phase 5: physical-device & TestFlight release readiness
 
-Everything explicitly out of scope for Phase 4 per its brief, none of it started:
+Phase 5 is release engineering, not new features — it makes the Phase 2–4 app safely installable
+on a real iPhone and prepares (without executing) a TestFlight submission. Full detail, including
+the physical-device QA checklist and the exact remaining manual steps, lives in
+**`../docs/phase5/RELEASE_GUIDE.md`**. Summary of what changed:
+
+- **Release configuration:** `eas.json` (development/preview/production build profiles),
+  `app.json` updated (display name, `runtimeVersion` policy, iOS build number, Android version
+  code, `ITSAppUsesNonExemptEncryption`).
+- **Production refuses to silently run in demo mode.** `EXPO_PUBLIC_APP_ENV` (set per EAS profile)
+  drives `src/lib/env.ts`'s `isMisconfiguredProductionBuild` — a `production` build with no
+  Supabase config shows a plain configuration-error screen instead of quietly falling back to demo
+  mode, which only `development`/`preview` builds are allowed to do.
+- **Release-safe logging** (`src/lib/logger.ts`) — every `console.*` call in `src/` now goes
+  through it; non-error logs are silenced outside development.
+- **Crash hardening:** an app-wide render-error boundary (`src/lib/ErrorBoundary.tsx`) and global
+  uncaught-exception/unhandled-promise-rejection logging (`src/lib/globalErrorHandlers.ts`).
+- **Encrypted session storage:** the Supabase session (`src/lib/supabase/client.ts`) is now
+  AES-encrypted (`secureSessionStorage.ts`, key held in `expo-secure-store`) before it's written to
+  AsyncStorage — previously plaintext.
+- **Password-reset deep links now actually work on-device**: `src/lib/auth/authDeepLink.ts`
+  establishes the recovery session from the incoming `coachconde://` link and routes to a new
+  `app/(auth)/reset-password.tsx` screen.
+- **Production connectivity health check:** `src/lib/supabase/health.ts` +
+  `src/features/shared/ConnectivityBanner.tsx`, shown across the signed-in app when Supabase is
+  configured but unreachable.
+- **Account deletion:** `app/(tabs)/profile/delete-account.tsx` (password reauthentication + typed
+  confirmation), `src/lib/accountDeletion/deleteAccount.ts`, and a not-yet-deployed
+  `supabase/functions/delete-account/` Edge Function (the client never holds a service-role key).
+  Demo mode also gets a separate "Reset Local Demo Data" control (Profile tab).
+- **Sign-out clears the React Query cache** (`AuthContext.tsx`) so no query result from the
+  outgoing account is visible for even one frame to the next account on the same device.
+- **Supabase readiness verified**, without a live project: every migration applies cleanly, in
+  order, to a from-scratch Postgres database; every user-owned table has RLS enabled with the
+  expected policies; a live cross-user isolation test confirmed one athlete cannot read, modify, or
+  spoof-insert as another. See `../docs/phase5/RELEASE_GUIDE.md` §4 for the full method.
+- **What's still out of scope**, unchanged from Phase 4's list: coaching dashboards,
+  subscriptions/payments, social features, push-notification delivery, and (new to this phase)
+  actually running an EAS build, submitting to TestFlight, deploying the Edge Function, or creating
+  the live Supabase project — all reserved for Baylor's explicit authorization, per
+  `../docs/phase5/RELEASE_GUIDE.md` §13.
+
+## What remains for Phase 6+
 
 - Coaching dashboards (the schema has always reserved `program_enrollments.coach_id` and
   `profiles.role` for this — see `docs/phase1/DATABASE_SCHEMA.md`'s "Admin-readiness" section).
@@ -395,7 +459,9 @@ Everything explicitly out of scope for Phase 4 per its brief, none of it started
 - Social features.
 - Push-notification delivery (`notification_preferences` still only stores the athlete's chosen
   times; nothing schedules or sends anything).
-- Live deployment / App Store submission.
+- Actually creating the live Supabase project, running an EAS production build, and submitting to
+  TestFlight/the App Store — see `../docs/phase5/RELEASE_GUIDE.md` §13 for the exact remaining
+  manual steps, all of which need Baylor's own accounts/credentials/authorization.
 - The smaller follow-ups flagged above under "Known limitations" (Alert-on-web for the two
   pre-existing Phase 3 dialogs, `workout_sessions.status = 'adjusted'` never being written,
   onboarding→Testing sprint-deferral pre-fill) — each is a small, scoped fix a future phase can pick
