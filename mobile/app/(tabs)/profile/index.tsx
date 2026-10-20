@@ -7,6 +7,7 @@ import { getProgramContent } from '../../../src/content';
 import { useAuth } from '../../../src/lib/auth/AuthContext';
 import { clearAllDemoStorage } from '../../../src/lib/demo/storage';
 import { env } from '../../../src/lib/env';
+import { semanticColor } from '../../../src/design-system/tokens';
 import { useProfileSummary } from '../../../src/lib/profile/useProfileSummary';
 
 export default function ProfileScreen() {
@@ -77,10 +78,16 @@ export default function ProfileScreen() {
 
       <Card className="mb-4">
         <AppText variant="caption" color="secondary" style={{ marginBottom: 4 }}>
-          PROGRAM
+          PROGRAM SETTINGS
         </AppText>
-        <AppText variant="body" color="primary">
+        <AppText variant="body" color="primary" style={{ marginBottom: 12 }}>
           {content.meta.title} — Edition {content.meta.edition}
+        </AppText>
+        <Button variant="secondary" onPress={() => router.push('/(tabs)/profile/restart-program')}>
+          Restart Program
+        </Button>
+        <AppText variant="bodySm" color="muted" style={{ marginTop: 8 }}>
+          Archives your current run (history is kept) and starts again at Week 1, Day 1.
         </AppText>
       </Card>
 
@@ -132,11 +139,24 @@ export default function ProfileScreen() {
 
       <Divider className="mb-4" />
 
-      <View className="gap-3">
-        <Button variant="danger" onPress={handleSignOut}>
+      <View className="gap-3 mb-6">
+        <Button variant="secondary" onPress={handleSignOut}>
           Sign Out
         </Button>
-        <Button variant="ghost" onPress={() => router.push('/(tabs)/profile/delete-account')}>
+      </View>
+
+      <View
+        className="rounded-lg border p-4"
+        style={{ borderColor: semanticColor.danger }}
+        accessibilityLabel="Danger zone"
+      >
+        <AppText variant="overline" color="danger" style={{ marginBottom: 4 }}>
+          DANGER ZONE
+        </AppText>
+        <AppText variant="bodySm" color="secondary" style={{ marginBottom: 12 }}>
+          Permanently delete your account and all of your training data. This cannot be undone.
+        </AppText>
+        <Button variant="danger" onPress={() => router.push('/(tabs)/profile/delete-account')}>
           Delete Account
         </Button>
       </View>

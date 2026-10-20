@@ -241,6 +241,8 @@ export type ProgramEnrollmentRow = {
   restart_anchor_date: string | null;
   paused_at: string | null;
   restarted_from_enrollment_id: string | null;
+  /** When this run stopped being current (Restart Program). Null while active/paused. */
+  archived_at: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -545,7 +547,12 @@ export type Database = {
       >;
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      restart_program: {
+        Args: { p_current_enrollment_id: string; p_new_start_date: string };
+        Returns: ProgramEnrollmentRow;
+      };
+    };
     Enums: {
       block_name: BlockName;
       session_slot: SessionSlot;

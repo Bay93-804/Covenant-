@@ -1,31 +1,24 @@
 /**
- * Account deletion — the single entry point both the demo-mode and
- * Supabase-mode "Delete Account" flows call (see
- * app/(tabs)/profile/delete-account.tsx). Reauthentication happens in the
- * screen (the user re-enters their password immediately before calling
- * this), not here — this module assumes the caller has already confirmed
- * it's really the account owner asking.
+ * Account deletion — the single entry point the "Delete Account" screen
+ * (app/(tabs)/profile/delete-account.tsx) calls, for both backends.
  *
- * What "delete" means, by mode:
- *  - Demo mode: removes the local account credentials
- *    (src/lib/demo/demoAuth.ts), profile/enrollment/preferences/maxes
- *    (src/lib/demo/demoContentStore.ts), and every locally-stored
- *    workout/testing row for this user
- *    (src/lib/offline/localWorkoutStore.ts) — since demo mode has no
- *    server, this *is* the complete deletion.
- *  - Supabase mode: invokes the `delete-account` Edge Function (see
- *    supabase/functions/delete-account/), which deletes the user's
- *    `auth.users` row — every user-owned table cascades from that FK (see
- *    every `references auth.users(id) on delete cascade` in
- *    supabase/migrations/), so this one server-side delete is the complete
- *    cloud deletion. The client never holds a service-role key (see
- *    src/lib/env.ts) so it cannot perform this delete itself — the Edge
- *    Function is the only privileged path, and it is not deployed by
- *    default (see docs/phase5/RELEASE_GUIDE.md).
+ * `deleteAccountWithReauth` is the full flow:
+ *  1. Re-authenticate with the password the user just typed. A wrong
+ *     password stops here — nothing is deleted.
+ *  2. Delete the account:
+ *     - Supabase mode: the `delete-account` Edge Function, called with the
+ *       fresh access token from step 1. The function verifies that token,
+ *       requires the sign-in to be recent (its `amr` timestamp — so a stale
+ *       session can't skip step 1), deletes every user-owned row in one
+ *       transaction, then the auth user. The client never holds a
+ *       service-role key (see src/lib/env.ts).
+ *     - Demo mode: local credentials + profile/enrollment/preferences.
+ *  3. Only after the server confirms: sign out locally (no network call —
+ *     the server session no longer exists) and clear this user's offline
+ *     workout/testing store. The screen then clears the React Query cache.
  *
- * In both modes, this also clears local SecureStore/AsyncStorage for the
- * account and clears the React Query cache, so nothing about the deleted
- * account is visible on this device afterward.
+ * Double submission: concurrent calls share one in-flight promise, so a
+ * second tap can never start a second deletion.
  */
 import { demoDeleteAccount } from '../demo/demoAuth';
 import { deleteDemoUserData } from '../demo/demoContentStore';
@@ -33,49 +26,156 @@ import { isSupabaseConfigured } from '../env';
 import { clearAllForUser } from '../offline/localWorkoutStore';
 import { supabase } from '../supabase/client';
 
-export class AccountDeletionError extends Error {}
+export type AccountDeletionErrorCode =
+  'reauth_failed' | 'reauth_required' | 'session_expired' | 'not_deployed' | 'network' | 'server';
 
-async function deleteSupabaseAccount(userId: string): Promise<void> {
-  if (!supabase) throw new AccountDeletionError('Supabase is not configured.');
+export class AccountDeletionError extends Error {
+  constructor(
+    readonly code: AccountDeletionErrorCode,
+    message: string,
+  ) {
+    super(message);
+  }
+}
+
+interface FunctionErrorBody {
+  error?: string;
+  message?: string;
+}
+
+async function readFunctionErrorBody(error: unknown): Promise<FunctionErrorBody | null> {
+  // FunctionsHttpError carries the raw Response as `context`.
+  const context = (error as { context?: unknown } | null)?.context;
+  if (!context || typeof (context as Response).json !== 'function') return null;
+  try {
+    return (await (context as Response).clone().json()) as FunctionErrorBody;
+  } catch {
+    return null;
+  }
+}
+
+async function toDeletionError(error: unknown): Promise<AccountDeletionError> {
+  const name = (error as { name?: string } | null)?.name;
+  const status = (error as { context?: { status?: number } } | null)?.context?.status;
+
+  if (name === 'FunctionsFetchError' || name === 'FunctionsRelayError') {
+    return new AccountDeletionError(
+      'network',
+      'Couldn’t reach the server. Check your connection and try again — nothing was deleted.',
+    );
+  }
+
+  const body = await readFunctionErrorBody(error);
+  switch (body?.error) {
+    case 'reauthentication_required':
+      return new AccountDeletionError(
+        'reauth_required',
+        body.message ?? 'Re-enter your password and try again.',
+      );
+    case 'invalid_session':
+    case 'missing_authorization':
+      return new AccountDeletionError(
+        'session_expired',
+        'Your session has expired. Sign in again, then retry.',
+      );
+    case 'deletion_failed':
+      return new AccountDeletionError(
+        'server',
+        body.message ?? 'Deletion failed on the server. Please try again.',
+      );
+  }
+
+  if (status === 404) {
+    return new AccountDeletionError(
+      'not_deployed',
+      'Account deletion isn’t available on this server yet (the delete-account function is not deployed). Contact support.',
+    );
+  }
+  const detail = error instanceof Error ? error.message : String(error);
+  return new AccountDeletionError(
+    'server',
+    `Account deletion failed. Please try again. (${detail})`,
+  );
+}
+
+async function deleteSupabaseAccount(): Promise<void> {
+  if (!supabase) throw new AccountDeletionError('server', 'Supabase is not configured.');
 
   const {
     data: { session },
   } = await supabase.auth.getSession();
   if (!session) {
-    throw new AccountDeletionError('Your session has expired. Sign in again and retry.');
-  }
-
-  const { data, error } = await supabase.functions.invoke('delete-account', {
-    headers: { Authorization: `Bearer ${session.access_token}` },
-  });
-
-  if (error) {
     throw new AccountDeletionError(
-      'Account deletion is not available yet — the delete-account server function has not been ' +
-        'deployed for this project. See docs/phase5/RELEASE_GUIDE.md. ' +
-        `(${error.message})`,
+      'session_expired',
+      'Your session has expired. Sign in again, then retry.',
     );
   }
-  if (data && typeof data === 'object' && 'error' in data && data.error) {
-    throw new AccountDeletionError(String(data.error));
-  }
 
-  // The server-side delete already invalidated every session for this
-  // user; sign out locally too so client state (in-memory + AsyncStorage
-  // token cache) doesn't keep believing there's a live session.
-  await supabase.auth.signOut().catch(() => {});
+  let result: Awaited<ReturnType<typeof supabase.functions.invoke>>;
+  try {
+    result = await supabase.functions.invoke('delete-account', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    });
+  } catch (e) {
+    throw await toDeletionError(e);
+  }
+  if (result.error) throw await toDeletionError(result.error);
+
+  // The account (and with it every server session) is gone. A local-scope
+  // sign-out removes the stored session without a network call that would
+  // only fail against a deleted user.
+  await supabase.auth.signOut({ scope: 'local' }).catch(() => {});
 }
 
+/** Deletes the account for an already re-authenticated user and clears this device's copy of their data. */
 export async function deleteAccount(userId: string): Promise<void> {
   if (isSupabaseConfigured) {
-    await deleteSupabaseAccount(userId);
+    await deleteSupabaseAccount();
   } else {
     await demoDeleteAccount(userId);
     await deleteDemoUserData(userId);
   }
 
-  // Every mode's offline workout/testing store is cleared regardless —
-  // Supabase mode wrote there too (offline-first — see
-  // src/lib/offline/localWorkoutStore.ts's header comment).
+  // Offline workout/testing store — both modes write there (see
+  // src/lib/offline/localWorkoutStore.ts).
   await clearAllForUser(userId);
+}
+
+export interface DeleteAccountWithReauthInput {
+  userId: string;
+  email: string;
+  password: string;
+  /** Throws when the password is wrong (AuthContext.signIn). */
+  reauthenticate: (email: string, password: string) => Promise<void>;
+}
+
+let deletionInFlight: Promise<void> | null = null;
+
+export function deleteAccountWithReauth(input: DeleteAccountWithReauthInput): Promise<void> {
+  if (deletionInFlight) return deletionInFlight;
+
+  deletionInFlight = (async () => {
+    try {
+      await input.reauthenticate(input.email, input.password);
+    } catch (e) {
+      const name = (e as { name?: string } | null)?.name;
+      const message = e instanceof Error ? e.message : '';
+      if (name === 'AuthRetryableFetchError' || /network|fetch/i.test(message)) {
+        throw new AccountDeletionError(
+          'network',
+          'Couldn’t reach the server to verify your password. Check your connection — nothing was deleted.',
+        );
+      }
+      throw new AccountDeletionError(
+        'reauth_failed',
+        'That password is incorrect. Nothing was deleted.',
+      );
+    }
+    await deleteAccount(input.userId);
+  })().finally(() => {
+    deletionInFlight = null;
+  });
+
+  return deletionInFlight;
 }

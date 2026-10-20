@@ -116,6 +116,7 @@ export const demoStorageKeys = {
   accounts: 'accounts', // email -> { userId, passwordHash }
   profile: (userId: string) => `profile:${userId}`,
   enrollment: (userId: string) => `enrollment:${userId}`,
+  enrollmentHistory: (userId: string) => `enrollment-history:${userId}`,
   notificationPreferences: (userId: string) => `notification-prefs:${userId}`,
   exerciseMaxes: (userId: string) => `exercise-maxes:${userId}`,
 };

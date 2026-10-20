@@ -67,41 +67,155 @@ describe('deleteAccount — demo mode', () => {
   });
 });
 
-describe('deleteAccount — Supabase mode', () => {
-  it('surfaces a clear error when the delete-account function is not deployed', async () => {
+describe('deleteAccountWithReauth — Supabase mode', () => {
+  const userId = 'supabase-user-1';
+
+  function httpError(status: number, body: unknown) {
+    return {
+      name: 'FunctionsHttpError',
+      message: 'Edge Function returned a non-2xx status code',
+      context: new Response(JSON.stringify(body), { status }),
+    };
+  }
+
+  function load(invokeResult: unknown | (() => Promise<unknown>)) {
     process.env.EXPO_PUBLIC_SUPABASE_URL = 'https://example.supabase.co';
     process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY = 'a'.repeat(40);
 
-    const mockInvoke = jest.fn().mockResolvedValue({
-      data: null,
-      error: { message: 'Function not found' },
-    });
+    const mockInvoke = jest.fn(
+      typeof invokeResult === 'function'
+        ? (invokeResult as () => Promise<unknown>)
+        : async () => invokeResult,
+    );
+    const mockSignOut = jest.fn().mockResolvedValue({ error: null });
     const mockGetSession = jest.fn().mockResolvedValue({
-      data: { session: { access_token: 'token-123' } },
+      data: { session: { access_token: 'fresh-token' } },
     });
-
     jest.doMock('../src/lib/supabase/client', () => ({
       supabase: {
-        auth: { getSession: mockGetSession, signOut: jest.fn() },
+        auth: { getSession: mockGetSession, signOut: mockSignOut },
         functions: { invoke: mockInvoke },
       },
     }));
 
-    let deleteAccount: typeof import('../src/lib/accountDeletion/deleteAccount').deleteAccount;
-    let AccountDeletionError: typeof import('../src/lib/accountDeletion/deleteAccount').AccountDeletionError;
+    let mod: typeof import('../src/lib/accountDeletion/deleteAccount');
+    let store: typeof import('../src/lib/offline/localWorkoutStore');
     jest.isolateModules(() => {
-      ({
-        deleteAccount,
-        AccountDeletionError,
-      } = require('../src/lib/accountDeletion/deleteAccount'));
+      mod = require('../src/lib/accountDeletion/deleteAccount');
+      store = require('../src/lib/offline/localWorkoutStore');
+    });
+    return { mod: mod!, store: store!, mockInvoke, mockSignOut };
+  }
+
+  afterEach(() => jest.dontMock('../src/lib/supabase/client'));
+
+  it('re-authenticates, calls the Edge Function with the caller token, then signs out locally and clears device data', async () => {
+    const { mod, store, mockInvoke, mockSignOut } = load({ data: { success: true }, error: null });
+    await store.upsert(userId, store.Collections.sessions, { id: 'session-1' });
+    const reauthenticate = jest.fn().mockResolvedValue(undefined);
+
+    await mod.deleteAccountWithReauth({
+      userId,
+      email: 'athlete@example.com',
+      password: 'correct',
+      reauthenticate,
     });
 
-    await expect(deleteAccount!('some-user-id')).rejects.toThrow(AccountDeletionError!);
+    expect(reauthenticate).toHaveBeenCalledWith('athlete@example.com', 'correct');
+    expect(reauthenticate.mock.invocationCallOrder[0]).toBeLessThan(
+      mockInvoke.mock.invocationCallOrder[0]!,
+    );
     expect(mockInvoke).toHaveBeenCalledWith(
       'delete-account',
-      expect.objectContaining({ headers: { Authorization: 'Bearer token-123' } }),
+      expect.objectContaining({ method: 'POST', headers: { Authorization: 'Bearer fresh-token' } }),
     );
+    // No user id is ever sent — the server derives it from the verified token.
+    expect(JSON.stringify(mockInvoke.mock.calls[0])).not.toContain(userId);
+    expect(mockSignOut).toHaveBeenCalledWith({ scope: 'local' });
+    expect(await store.listAll(userId, store.Collections.sessions)).toHaveLength(0);
+  });
 
-    jest.dontMock('../src/lib/supabase/client');
+  it('a failed re-authentication deletes nothing and keeps the user signed in', async () => {
+    const { mod, store, mockInvoke, mockSignOut } = load({ data: { success: true }, error: null });
+    await store.upsert(userId, store.Collections.sessions, { id: 'session-1' });
+
+    await expect(
+      mod.deleteAccountWithReauth({
+        userId,
+        email: 'athlete@example.com',
+        password: 'wrong',
+        reauthenticate: jest.fn().mockRejectedValue(new Error('Invalid login credentials')),
+      }),
+    ).rejects.toMatchObject({ code: 'reauth_failed' });
+
+    expect(mockInvoke).not.toHaveBeenCalled();
+    expect(mockSignOut).not.toHaveBeenCalled();
+    expect(await store.listAll(userId, store.Collections.sessions)).toHaveLength(1);
+  });
+
+  it('double submission starts only one deletion', async () => {
+    let finish!: (v: unknown) => void;
+    const { mod, mockInvoke } = load(() => new Promise((r) => (finish = r)));
+    const reauthenticate = jest.fn().mockResolvedValue(undefined);
+    const input = { userId, email: 'athlete@example.com', password: 'correct', reauthenticate };
+
+    const first = mod.deleteAccountWithReauth(input);
+    const second = mod.deleteAccountWithReauth(input);
+    expect(second).toBe(first);
+    await Promise.resolve();
+    await Promise.resolve();
+    finish({ data: { success: true }, error: null });
+    await Promise.all([first, second]);
+
+    expect(reauthenticate).toHaveBeenCalledTimes(1);
+    expect(mockInvoke).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([
+    [
+      httpError(403, { error: 'reauthentication_required', message: 'Re-enter your password.' }),
+      'reauth_required',
+    ],
+    [httpError(401, { error: 'invalid_session' }), 'session_expired'],
+    [httpError(500, { error: 'deletion_failed', message: 'try again' }), 'server'],
+    [httpError(404, {}), 'not_deployed'],
+    [{ name: 'FunctionsFetchError', message: 'Failed to send a request' }, 'network'],
+  ])(
+    'a server failure (%#) surfaces as %s and leaves the session and device data intact',
+    async (error, code) => {
+      const { mod, store, mockSignOut } = load({ data: null, error });
+      await store.upsert(userId, store.Collections.sessions, { id: 'session-1' });
+
+      await expect(
+        mod.deleteAccountWithReauth({
+          userId,
+          email: 'athlete@example.com',
+          password: 'correct',
+          reauthenticate: jest.fn().mockResolvedValue(undefined),
+        }),
+      ).rejects.toMatchObject({ code });
+
+      expect(mockSignOut).not.toHaveBeenCalled();
+      expect(await store.listAll(userId, store.Collections.sessions)).toHaveLength(1);
+    },
+  );
+
+  it('can be retried after a failure', async () => {
+    const results = [
+      { data: null, error: { name: 'FunctionsFetchError', message: 'offline' } },
+      { data: { success: true }, error: null },
+    ];
+    const { mod, mockInvoke, mockSignOut } = load(async () => results.shift());
+    const input = {
+      userId,
+      email: 'athlete@example.com',
+      password: 'correct',
+      reauthenticate: jest.fn().mockResolvedValue(undefined),
+    };
+
+    await expect(mod.deleteAccountWithReauth(input)).rejects.toMatchObject({ code: 'network' });
+    await expect(mod.deleteAccountWithReauth(input)).resolves.toBeUndefined();
+    expect(mockInvoke).toHaveBeenCalledTimes(2);
+    expect(mockSignOut).toHaveBeenCalledTimes(1);
   });
 });

@@ -36,6 +36,10 @@ export interface DemoEnrollment {
   defer_week0_sprint_test: boolean;
   current_week_override: number | null;
   restart_anchor_date: string | null;
+  /** Mirrors program_enrollments.restarted_from_enrollment_id (Restart Program). Absent on runs created before it existed. */
+  restarted_from_enrollment_id?: string | null;
+  /** Mirrors program_enrollments.archived_at. */
+  archived_at?: string | null;
   created_at: string;
 }
 
@@ -103,10 +107,78 @@ export async function createDemoEnrollment(
     defer_week0_sprint_test: input.defer_week0_sprint_test,
     current_week_override: null,
     restart_anchor_date: null,
+    restarted_from_enrollment_id: null,
+    archived_at: null,
     created_at: new Date().toISOString(),
   };
   await writeJson(demoStorageKeys.enrollment(userId), enrollment);
   return enrollment;
+}
+
+/** Archived (no longer current) demo runs, newest first. */
+export async function getDemoEnrollmentHistory(userId: string): Promise<DemoEnrollment[]> {
+  return (await readJson<DemoEnrollment[]>(demoStorageKeys.enrollmentHistory(userId))) ?? [];
+}
+
+export class DemoRestartError extends Error {
+  constructor(
+    readonly code: 'not_found' | 'not_current',
+    message: string,
+  ) {
+    super(message);
+  }
+}
+
+/**
+ * Demo-mode mirror of the `restart_program` RPC: moves the current run into
+ * history (status 'restarted') and makes a fresh run current. Idempotent for
+ * a repeated `currentEnrollmentId`, like the server version. Callers
+ * serialize calls (see enrollmentService.restartProgram).
+ */
+export async function restartDemoEnrollment(
+  userId: string,
+  currentEnrollmentId: string,
+  newStartDate: string,
+): Promise<DemoEnrollment> {
+  const current = await getDemoEnrollment(userId);
+  if (current && current.restarted_from_enrollment_id === currentEnrollmentId) {
+    return current;
+  }
+  if (!current || current.id !== currentEnrollmentId) {
+    const history = await getDemoEnrollmentHistory(userId);
+    if (history.some((e) => e.id === currentEnrollmentId)) {
+      throw new DemoRestartError('not_current', 'This program run is no longer current.');
+    }
+    throw new DemoRestartError('not_found', 'Program run not found.');
+  }
+  if (current.status !== 'active' && current.status !== 'paused') {
+    throw new DemoRestartError('not_current', 'This program run is no longer current.');
+  }
+
+  const now = new Date().toISOString();
+  const archived: DemoEnrollment = { ...current, status: 'restarted', archived_at: now };
+  const next: DemoEnrollment = {
+    id: Crypto.randomUUID(),
+    user_id: userId,
+    program_version_id: current.program_version_id,
+    start_date: newStartDate,
+    status: 'active',
+    defer_week0_sprint_test: current.defer_week0_sprint_test,
+    current_week_override: null,
+    restart_anchor_date: null,
+    restarted_from_enrollment_id: current.id,
+    archived_at: null,
+    created_at: now,
+  };
+  // History first: if the second write fails, the old run is still current
+  // and a retry archives it again (de-duplicated by id) — never lost.
+  const history = await getDemoEnrollmentHistory(userId);
+  await writeJson(demoStorageKeys.enrollmentHistory(userId), [
+    archived,
+    ...history.filter((e) => e.id !== archived.id),
+  ]);
+  await writeJson(demoStorageKeys.enrollment(userId), next);
+  return next;
 }
 
 export async function updateDemoEnrollment(
@@ -163,6 +235,7 @@ export async function deleteDemoUserData(userId: string): Promise<void> {
   await Promise.all([
     removeKey(demoStorageKeys.profile(userId)),
     removeKey(demoStorageKeys.enrollment(userId)),
+    removeKey(demoStorageKeys.enrollmentHistory(userId)),
     removeKey(demoStorageKeys.notificationPreferences(userId)),
     removeKey(demoStorageKeys.exerciseMaxes(userId)),
   ]);

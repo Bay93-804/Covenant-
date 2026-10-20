@@ -366,6 +366,20 @@ export default function ProgressScreen() {
       <ExerciseSection />
       <ReadinessSection />
 
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => router.push('/(tabs)/progress/past-runs')}
+      >
+        <Card className="mb-4">
+          <AppText variant="h3" color="primary" style={{ marginBottom: 4 }}>
+            Past program runs
+          </AppText>
+          <AppText variant="bodySm" color="secondary">
+            Workouts, testing and check-ins from runs you restarted.
+          </AppText>
+        </Card>
+      </Pressable>
+
       <Divider className="my-2" />
       <AppText variant="caption" color="muted" style={{ marginTop: 8, marginBottom: 20 }}>
         {tierLabel(null)} results simply mean not enough data to classify yet — never a fabricated

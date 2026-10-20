@@ -135,7 +135,7 @@ See `mobile/.env.example` for the full annotated list. Summary:
 | `EXPO_PUBLIC_APP_ENV` | App bundle (client) | Set automatically per EAS profile — `development`/`preview`/`production`. A `production` build with no Supabase URL/key refuses to start rather than silently using demo mode (`src/lib/env.ts`'s `isMisconfiguredProductionBuild`). |
 | `EXPO_PUBLIC_PRIVACY_URL` / `EXPO_PUBLIC_SUPPORT_URL` | App bundle (client) | Shown on the Profile screen; see [§15](#15-privacy--support-requirements) |
 | `SUPABASE_SERVICE_ROLE_KEY` | `scripts/seed-supabase.ts` only, run from a trusted machine/CI | Seeding program content — **never** in the app bundle, **never** committed |
-| `SUPABASE_URL` / `SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY` | Supabase Edge Function secrets (`supabase secrets set`) | `delete-account` function only — see [§9](#9-deploying-the-delete-account-edge-function) |
+| `SUPABASE_URL` / `SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY` | Injected automatically into Supabase Edge Functions (reserved names — not set by hand) | `delete-account` function only — see [§9](#9-deploying-the-delete-account-edge-function) |
 
 **For local development:** `cp mobile/.env.example mobile/.env` and fill in the two
 `EXPO_PUBLIC_*` values (or leave them blank to use demo mode).
@@ -228,24 +228,62 @@ After a successful submit, in App Store Connect → TestFlight:
 
 ## 9. Deploying the delete-account Edge Function
 
-**Not deployed in this phase — the function exists at
-`mobile/supabase/functions/delete-account/index.ts` but has not been pushed to any Supabase
-project.** Account deletion in Supabase mode will show a clear "not available yet" error in the
-app until this is done (see `src/lib/accountDeletion/deleteAccount.ts`).
+**Not deployed yet.** Account deletion in Supabase mode shows "Account deletion isn't available
+on this server yet" until this section is done. It needs both the migrations and the function.
+
+**1. Apply the new migrations** (additive only — no existing migration was edited):
+
+- `20261020000001_program_restart.sql` — `program_enrollments.archived_at`, the
+  one-current-run-per-user unique index, and the `restart_program` RPC.
+- `20261020000002_account_data_deletion.sql` — the `delete_user_data` function the Edge Function
+  calls (executable by `service_role` only).
+
+Before applying, check whether any user already has more than one current run (possible before
+the unique index existed). The migration keeps the newest one current and marks the others
+`abandoned` (`archived_at` set; nothing deleted) — run this first if you want to review them:
+
+```sql
+select user_id, count(*) from program_enrollments
+where status in ('active', 'paused') group by user_id having count(*) > 1;
+```
 
 ```bash
 cd mobile
 supabase link --project-ref <your-project-ref>
-supabase functions deploy delete-account
-supabase secrets set SUPABASE_URL=https://<project>.supabase.co
-supabase secrets set SUPABASE_ANON_KEY=<anon-key>
-supabase secrets set SUPABASE_SERVICE_ROLE_KEY=<service-role-key>
+supabase db push            # applies only migrations not yet applied
 ```
-The service-role key here lives only in Supabase's managed function environment — never in git,
-never in the mobile app bundle. See the header comment in
-`mobile/supabase/functions/delete-account/index.ts` for the full security rationale (the function
-verifies the caller's own session token before using the service-role client, so it can only ever
-delete the caller's own account).
+
+**2. Deploy the function** (JWT verification stays ON — do not pass `--no-verify-jwt`):
+
+```bash
+supabase functions deploy delete-account
+```
+
+No `supabase secrets set` is needed: `SUPABASE_URL`, `SUPABASE_ANON_KEY` and
+`SUPABASE_SERVICE_ROLE_KEY` are injected into every Edge Function automatically (names starting
+with `SUPABASE_` are reserved and can't be set as custom secrets). The service-role key therefore
+exists only in Supabase's managed function environment — never in git, never in the app bundle.
+
+**How it stays safe** (see `supabase/functions/delete-account/handler.ts`):
+
+- The only account it ever deletes is the one proven by the caller's access token, verified with
+  Supabase Auth. It accepts no user-id parameter.
+- It requires a *recent* sign-in: the token's `amr` timestamp must be under 10 minutes old. The app
+  re-signs-in with the password the user just typed, so this always passes for a real attempt, while
+  a stolen long-lived session can't delete the account.
+- All app data is deleted in one transaction (`delete_user_data`), then the auth user. If the second
+  step fails, the user stays signed in and can simply retry; both steps are idempotent.
+
+**3. Verify on the real project** (with a throwaway test account, never a real athlete):
+
+1. In the app: Profile → Danger Zone → Delete Account → enter password, type `DELETE`, confirm.
+   The app returns to Sign In; signing in again with that account fails.
+2. In the SQL editor, confirm nothing remains for that user id:
+   `select count(*) from program_enrollments where user_id = '<id>';` (repeat for
+   `workout_sessions`, `testing_results`, `profiles`, …) and that `auth.users` has no row for it.
+3. A wrong password shows "That password is incorrect. Nothing was deleted."
+4. Do steps 1–3 in a **TestFlight/production build** — production builds use the EAS `production`
+   environment variables, not your local `.env`, so a misconfigured URL/key only shows up there.
 
 ## 10. Build-number / version-code increment procedure
 

@@ -14,6 +14,7 @@ export default function ProgressLayout() {
       }}
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="past-runs" options={{ title: 'Past Program Runs' }} />
     </Stack>
   );
 }

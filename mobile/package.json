@@ -69,7 +69,8 @@
     "seed:print": "cross-env TS_NODE_PROJECT=tsconfig.scripts.json ts-node scripts/seed-print.ts",
     "seed:supabase": "cross-env TS_NODE_PROJECT=tsconfig.scripts.json ts-node scripts/seed-supabase.ts",
     "export:web": "expo export --platform web",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "test:db": "bash scripts/test-db.sh"
   },
   "private": true
 }

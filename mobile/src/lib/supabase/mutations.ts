@@ -116,3 +116,44 @@ export async function updateEnrollment(
   if (error) throw error;
   return data;
 }
+
+/** Any one of the user's runs, current or archived (RLS limits it to the caller's own rows). */
+export async function getEnrollmentById(id: string) {
+  const supabase = requireSupabase();
+  const { data, error } = await supabase
+    .from('program_enrollments')
+    .select('*')
+    .eq('id', id)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+/** Past (no longer current) program runs, newest first. */
+export async function listArchivedEnrollments(userId: string) {
+  const supabase = requireSupabase();
+  const { data, error } = await supabase
+    .from('program_enrollments')
+    .select('*')
+    .eq('user_id', userId)
+    .in('status', ['restarted', 'abandoned', 'completed'])
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+}
+
+/**
+ * Archives `currentEnrollmentId` and creates a new active run starting
+ * Week 1 on `newStartDate`, in one transaction (see
+ * supabase/migrations/20261020000001_program_restart.sql). Idempotent for
+ * a repeated `currentEnrollmentId`.
+ */
+export async function restartProgramRpc(currentEnrollmentId: string, newStartDate: string) {
+  const supabase = requireSupabase();
+  const { data, error } = await supabase.rpc('restart_program', {
+    p_current_enrollment_id: currentEnrollmentId,
+    p_new_start_date: newStartDate,
+  });
+  if (error) throw error;
+  return data;
+}

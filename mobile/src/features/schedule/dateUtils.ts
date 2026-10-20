@@ -47,6 +47,11 @@ export function isMonday(iso: IsoDate): boolean {
   return isoWeekdayIndex(iso) === 0;
 }
 
+/** `iso` itself when it's a Monday, otherwise the following Monday. */
+export function nextMondayOnOrAfter(iso: IsoDate): IsoDate {
+  return addDays(iso, (7 - isoWeekdayIndex(iso)) % 7);
+}
+
 /**
  * Renders "now" as a `YYYY-MM-DD` string in a given IANA timezone. This is
  * the one place wall-clock/timezone conversion happens — everything else in

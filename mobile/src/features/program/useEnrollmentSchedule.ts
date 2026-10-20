@@ -8,27 +8,25 @@
  */
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-import {
-  getCurrentEnrollmentForUser,
-  getEnrollmentPauseEvents,
-} from '../../lib/enrollment/enrollmentService';
+import { getCurrentEnrollmentForUser } from '../../lib/enrollment/enrollmentService';
 import { useAuth } from '../../lib/auth/AuthContext';
 import type { EnrollmentScheduleInput } from '../schedule/scheduleEngine';
-import { todayIso } from '../schedule/dateUtils';
+import { isoDateInTimeZone, todayIso } from '../schedule/dateUtils';
+import {
+  buildScheduleInput,
+  fetchScheduleInputForEnrollment,
+  getDeviceTimeZone,
+} from './enrollmentScheduleInput';
 
-export function getDeviceTimeZone(): string {
-  try {
-    return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
-  } catch {
-    return 'UTC';
-  }
-}
+export { fetchScheduleInputForEnrollment, getDeviceTimeZone };
 
 export interface EnrollmentScheduleContext {
   enrollmentId: string;
   scheduleInput: EnrollmentScheduleInput;
   status: 'active' | 'paused' | 'completed' | 'restarted' | 'abandoned';
   todayIso: string;
+  /** The current run's creation date in the device timezone (`YYYY-MM-DD`). */
+  createdOnIso: string | null;
 }
 
 async function fetchEnrollmentScheduleContext(
@@ -37,20 +35,16 @@ async function fetchEnrollmentScheduleContext(
   const enrollment = await getCurrentEnrollmentForUser(userId);
   if (!enrollment) return null;
 
-  const pauseEvents = await getEnrollmentPauseEvents(userId, enrollment.id);
   const timezone = getDeviceTimeZone();
 
   return {
     enrollmentId: enrollment.id,
     status: enrollment.status,
     todayIso: todayIso(timezone),
-    scheduleInput: {
-      startDate: enrollment.startDate,
-      timezone,
-      currentWeekOverride: enrollment.currentWeekOverride,
-      restartAnchorDate: enrollment.restartAnchorDate,
-      pauseEvents,
-    },
+    createdOnIso: enrollment.createdAt
+      ? isoDateInTimeZone(new Date(enrollment.createdAt), timezone)
+      : null,
+    scheduleInput: await buildScheduleInput(userId, enrollment, timezone),
   };
 }
 

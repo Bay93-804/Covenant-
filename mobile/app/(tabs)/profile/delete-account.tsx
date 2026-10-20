@@ -1,22 +1,21 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { View } from 'react-native';
 
 import { AppText, Button, Card, Screen, TextField } from '../../../src/design-system';
 import {
-  deleteAccount,
   AccountDeletionError,
+  deleteAccountWithReauth,
 } from '../../../src/lib/accountDeletion/deleteAccount';
 import { useAuth } from '../../../src/lib/auth/AuthContext';
 
 const CONFIRM_PHRASE = 'DELETE';
 
 /**
- * Production-review-ready account deletion: explains exactly what's
- * deleted, requires re-entering the password (reauthentication) and typing
- * a confirmation phrase (accidental-deletion guard) before the destructive
- * action is enabled at all. See src/lib/accountDeletion/deleteAccount.ts
- * for what actually happens in each mode.
+ * Self-service account deletion: explains exactly what's deleted, requires
+ * re-entering the password (reauthentication, also enforced server-side)
+ * and typing DELETE before the destructive action is enabled. See
+ * src/lib/accountDeletion/deleteAccount.ts for what happens in each mode.
  */
 export default function DeleteAccountScreen() {
   const { user, isDemoMode, signIn, signOut } = useAuth();
@@ -24,63 +23,72 @@ export default function DeleteAccountScreen() {
   const [confirmText, setConfirmText] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const submitting = useRef(false);
 
-  const canSubmit = password.length > 0 && confirmText.trim().toUpperCase() === CONFIRM_PHRASE;
+  const canSubmit = password.length > 0 && confirmText.trim() === CONFIRM_PHRASE && !loading;
 
   async function handleDelete() {
+    if (submitting.current) return;
     if (!user?.email) {
       setError('No signed-in account found.');
       return;
     }
+    submitting.current = true;
     setError(null);
     setLoading(true);
     try {
-      // Reauthentication: prove the password is still correct right now,
-      // immediately before the destructive call — a stale, still-valid
-      // session token alone is not treated as sufficient for this action.
-      await signIn(user.email, password);
-      await deleteAccount(user.id);
+      await deleteAccountWithReauth({
+        userId: user.id,
+        email: user.email,
+        password,
+        reauthenticate: signIn,
+      });
+      // Session is already cleared locally; this also clears the React
+      // Query cache so nothing from the deleted account stays in memory.
       await signOut().catch(() => {});
       router.replace('/(auth)/sign-in');
     } catch (e) {
-      if (e instanceof AccountDeletionError) {
-        setError(e.message);
-      } else {
-        setError(e instanceof Error ? e.message : 'Incorrect password, or deletion failed.');
-      }
-    } finally {
+      setError(
+        e instanceof AccountDeletionError
+          ? e.message
+          : 'Account deletion failed. Nothing was deleted — please try again.',
+      );
+      if (e instanceof AccountDeletionError && e.code === 'reauth_failed') setPassword('');
+      submitting.current = false;
       setLoading(false);
     }
   }
 
   return (
     <Screen scroll>
-      <AppText variant="h2" color="danger" style={{ marginTop: 16, marginBottom: 16 }}>
+      <AppText variant="overline" color="danger" style={{ marginTop: 16 }}>
+        DANGER ZONE
+      </AppText>
+      <AppText variant="h2" color="danger" style={{ marginBottom: 16 }}>
         Delete your account
       </AppText>
 
       <Card className="mb-4" emphasized>
         <AppText variant="body" color="primary" style={{ marginBottom: 8 }}>
-          This permanently deletes:
+          Deletion is permanent. It removes:
         </AppText>
         <AppText variant="bodySm" color="secondary" style={{ marginBottom: 4 }}>
-          • Your profile, program enrollment, and notification preferences
+          • Your sign-in, profile, and notification preferences
         </AppText>
         <AppText variant="bodySm" color="secondary" style={{ marginBottom: 4 }}>
-          • Every logged workout, set, and readiness/safety-adjustment entry
+          • Every program run — current and archived — with all logged workouts and sets
         </AppText>
         <AppText variant="bodySm" color="secondary" style={{ marginBottom: 4 }}>
-          • Every Week 0/6/12 testing result and RHR morning reading
+          • Readiness check-ins, safety adjustments, and pickup-sport entries
         </AppText>
         <AppText variant="bodySm" color="secondary" style={{ marginBottom: 4 }}>
-          • Your exercise maxes, personal records, and pickup-sport journal entries
+          • Every Week 0/6/12 testing result, exercise max, and personal record
         </AppText>
         <AppText variant="bodySm" color="secondary" style={{ marginBottom: 8 }}>
-          • All of the above as stored locally on this device
-          {isDemoMode ? '' : ', and in the cloud'}
+          • All of the above stored on this device{isDemoMode ? '' : ' and in the cloud'}
         </AppText>
-        <AppText variant="bodySm" color="danger">
-          This cannot be undone.
+        <AppText variant="bodySm" color="danger" weight="600">
+          This cannot be undone, and Coach Conde cannot recover it.
         </AppText>
       </Card>
 
@@ -98,29 +106,41 @@ export default function DeleteAccountScreen() {
         required
         secureTextEntry
         autoComplete="password"
+        textContentType="password"
         value={password}
         onChangeText={setPassword}
+        editable={!loading}
       />
 
       <TextField
         label={`Type ${CONFIRM_PHRASE} to confirm`}
         required
         autoCapitalize="characters"
+        autoCorrect={false}
         value={confirmText}
         onChangeText={setConfirmText}
+        editable={!loading}
       />
 
       {error ? (
-        <AppText variant="bodySm" color="danger" style={{ marginBottom: 12 }}>
-          {error}
-        </AppText>
+        <View accessibilityLiveRegion="polite" accessibilityRole="alert">
+          <AppText variant="bodySm" color="danger" style={{ marginBottom: 12 }}>
+            {error}
+          </AppText>
+        </View>
       ) : null}
 
-      <View className="gap-3">
-        <Button variant="danger" onPress={handleDelete} loading={loading} disabled={!canSubmit}>
+      <View className="gap-3 mb-8">
+        <Button
+          variant="danger"
+          onPress={handleDelete}
+          loading={loading}
+          disabled={!canSubmit}
+          testID="confirm-delete-account"
+        >
           Permanently Delete Account
         </Button>
-        <Button variant="secondary" onPress={() => router.back()}>
+        <Button variant="secondary" onPress={() => router.back()} disabled={loading}>
           Cancel
         </Button>
       </View>
