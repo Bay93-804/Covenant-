@@ -1,22 +1,50 @@
-import { router } from 'expo-router';
-import { useState } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useMemo, useState } from 'react';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 
 import { AppText, Badge, Card, Screen } from '../../../src/design-system';
 import { semanticColor } from '../../../src/design-system/tokens';
 import { getProgramContent } from '../../../src/content';
+import { ProgramCalendar } from '../../../src/features/program/ProgramCalendar';
+import { testingDaysByDate } from '../../../src/features/program/monthCalendar';
 import { useEnrollmentSchedule } from '../../../src/features/program/useEnrollmentSchedule';
-import { useProgramCalendar } from '../../../src/features/program/useProgramCalendar';
+import {
+  useProgramCalendar,
+  type DayCalendarEntry,
+} from '../../../src/features/program/useProgramCalendar';
+import { buildTestingWindows } from '../../../src/features/testing/testingSchedule';
 
 type BlockFilter = 'all' | 1 | 2 | 3;
 
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
 export default function ProgramScreen() {
   const content = getProgramContent();
-  const { isLoading: scheduleLoading } = useEnrollmentSchedule();
+  const { focusDate } = useLocalSearchParams<{ focusDate?: string }>();
+  const { data: scheduleContext, isLoading: scheduleLoading } = useEnrollmentSchedule();
   const { data: weeks, isLoading: calendarLoading } = useProgramCalendar();
   const [filter, setFilter] = useState<BlockFilter>('all');
 
-  if (scheduleLoading || calendarLoading || !weeks) {
+  const entriesByDate = useMemo(() => {
+    const map = new Map<string, DayCalendarEntry>();
+    for (const week of weeks ?? [])
+      for (const day of week.days) map.set(day.scheduledDay.date, day);
+    return map;
+  }, [weeks]);
+
+  const testingByDate = useMemo(
+    () =>
+      scheduleContext
+        ? testingDaysByDate(
+            buildTestingWindows(scheduleContext.scheduleInput),
+            scheduleContext.scheduleInput.startDate,
+            scheduleContext.createdOnIso,
+          )
+        : new Map(),
+    [scheduleContext],
+  );
+
+  if (scheduleLoading || calendarLoading || !weeks || !scheduleContext) {
     return (
       <Screen>
         <ActivityIndicator style={{ marginTop: 60 }} />
@@ -37,6 +65,19 @@ export default function ProgramScreen() {
       </AppText>
       <AppText variant="body" color="secondary" style={{ marginBottom: 16 }}>
         {content.meta.durationWeeks} weeks · {content.meta.daysPerWeekTrained} training days/week
+      </AppText>
+
+      <ProgramCalendar
+        key={focusDate ?? 'today'}
+        todayIso={scheduleContext.todayIso}
+        initialDate={focusDate && ISO_DATE.test(focusDate) ? focusDate : null}
+        week1StartDate={scheduleContext.scheduleInput.startDate}
+        entriesByDate={entriesByDate}
+        testingByDate={testingByDate}
+      />
+
+      <AppText variant="overline" color="accent" style={{ marginTop: 16, marginBottom: 8 }}>
+        12-WEEK OVERVIEW
       </AppText>
 
       <View className="flex-row gap-2 mb-5 flex-wrap">

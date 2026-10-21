@@ -182,7 +182,7 @@ supabase/
 ├── migrations/                 Numbered SQL migrations (schema, indexes, FKs, RLS) — testing_sessions/
 │                                 testing_results already existed from Phase 2; migrations added in
 │                                 Phase 4's correction round and Phase 5 (see below)
-└── functions/delete-account/   Edge Function for account deletion — not deployed by default (Phase 5)
+└── functions/delete-account/   Edge Function for account deletion (handler.ts holds the tested logic)
 scripts/                       validate-program.ts · seed-print.ts · seed-supabase.ts
 __tests__/                     Jest unit/integration tests (program content, onboarding, workout, testing, progress)
 e2e/                           Playwright mobile-web end-to-end specs (routing.spec.ts, full-flow.spec.ts, helpers.ts)
@@ -436,8 +436,9 @@ the physical-device QA checklist and the exact remaining manual steps, lives in
   `src/features/shared/ConnectivityBanner.tsx`, shown across the signed-in app when Supabase is
   configured but unreachable.
 - **Account deletion:** `app/(tabs)/profile/delete-account.tsx` (password reauthentication + typed
-  confirmation), `src/lib/accountDeletion/deleteAccount.ts`, and a not-yet-deployed
-  `supabase/functions/delete-account/` Edge Function (the client never holds a service-role key).
+  confirmation), `src/lib/accountDeletion/deleteAccount.ts`, and the
+  `supabase/functions/delete-account/` Edge Function (the client never holds a service-role key) —
+  see "Restart Program, account deletion, and the program calendar" below.
   Demo mode also gets a separate "Reset Local Demo Data" control (Profile tab).
 - **Sign-out clears the React Query cache** (`AuthContext.tsx`) so no query result from the
   outgoing account is visible for even one frame to the next account on the same device.
@@ -450,6 +451,28 @@ the physical-device QA checklist and the exact remaining manual steps, lives in
   actually running an EAS build, submitting to TestFlight, deploying the Edge Function, or creating
   the live Supabase project — all reserved for Baylor's explicit authorization, per
   `../docs/phase5/RELEASE_GUIDE.md` §13.
+
+## Restart Program, account deletion, and the program calendar
+
+- **Program calendar** (Program tab): a Sunday-first month grid with previous/next/Today controls,
+  markers for today, the selected day, scheduled / completed / missed-or-incomplete / rest days and
+  testing days, and that day's agenda underneath. Pure date logic lives in
+  `src/features/program/monthCalendar.ts` (string-only `YYYY-MM-DD` math — no timezone drift); the
+  UI is `src/features/program/ProgramCalendar.tsx`. The 12-week overview list remains below it.
+- **Restart Program** (Profile → Program Settings): archives the current run (`status =
+'restarted'`, `archived_at` set) and creates a new active run whose Week 1, Day 1 is the next
+  Monday. Server side this is the transactional, idempotent `restart_program` RPC; a partial unique
+  index guarantees one current (active or paused) run per user. Nothing is copied or deleted —
+  archived runs and everything logged in them are listed under Progress → Past program runs, and
+  their sessions are always rebuilt against their own run's schedule.
+- **Delete Account** (Profile → Danger Zone): password re-entry + typing `DELETE`, then the
+  `delete-account` Edge Function (recent-auth check, one-transaction data deletion via
+  `delete_user_data`, then the auth user), then local sign-out and on-device data wipe. Deployment:
+  `docs/phase5/RELEASE_GUIDE.md` §9.
+- **Database tests:** `npm run test:db` applies every migration to a throwaway Postgres container
+  (Docker required) with a stand-in `auth` schema and runs `supabase/tests/db/*.test.sql` —
+  restart idempotency and concurrency, the one-current-run constraint, history preservation, and
+  that one user can never delete another user's data.
 
 ## What remains for Phase 6+
 

@@ -7,6 +7,7 @@ import type { OnboardingData } from '../../features/onboarding/schema';
 import {
   addDemoExerciseMax,
   createDemoEnrollment,
+  getDemoEnrollment,
   upsertDemoNotificationPreferences,
   upsertDemoProfile,
 } from '../demo/demoContentStore';
@@ -14,6 +15,7 @@ import { isSupabaseConfigured } from '../env';
 import {
   createExerciseMax,
   createProgramEnrollment,
+  getCurrentEnrollment,
   upsertNotificationPreferences,
   upsertProfile,
 } from '../supabase/mutations';
@@ -96,16 +98,18 @@ export interface EnrollmentStatusResult {
 }
 
 export async function getEnrollmentStatus(userId: string): Promise<EnrollmentStatusResult> {
+  // A paused run is still the user's current run — treating it as "no
+  // enrollment" would send them back through onboarding, which would then
+  // collide with the one-current-run constraint.
   if (isSupabaseConfigured) {
-    const { getActiveEnrollment } = await import('../supabase/mutations');
-    const enrollment = await getActiveEnrollment(userId);
+    const enrollment = await getCurrentEnrollment(userId);
     return { hasActiveEnrollment: Boolean(enrollment), startDate: enrollment?.start_date ?? null };
   }
 
-  const { getDemoEnrollment } = await import('../demo/demoContentStore');
   const enrollment = await getDemoEnrollment(userId);
+  const isCurrent = enrollment?.status === 'active' || enrollment?.status === 'paused';
   return {
-    hasActiveEnrollment: Boolean(enrollment && enrollment.status === 'active'),
-    startDate: enrollment?.start_date ?? null,
+    hasActiveEnrollment: isCurrent,
+    startDate: isCurrent ? enrollment.start_date : null,
   };
 }

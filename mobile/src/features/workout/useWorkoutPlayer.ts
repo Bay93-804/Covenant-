@@ -8,6 +8,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useAuth } from '../../lib/auth/AuthContext';
+import { fetchScheduleInputForEnrollment } from '../program/enrollmentScheduleInput';
 import { useEnrollmentSchedule } from '../program/useEnrollmentSchedule';
 import { addDays } from '../schedule/dateUtils';
 import { buildScheduledDay } from '../schedule/scheduleEngine';
@@ -36,11 +37,20 @@ export interface WorkoutPlayerData {
 async function fetchWorkoutPlayerData(
   userId: string,
   sessionId: string,
-  scheduleInput: Parameters<typeof buildScheduledDay>[0],
+  currentEnrollmentId: string,
+  currentScheduleInput: Parameters<typeof buildScheduledDay>[0],
 ): Promise<WorkoutPlayerData> {
   const session = await getSessionById(userId, sessionId);
   if (!session) throw new Error(`Workout session ${sessionId} not found`);
 
+  // A session from an archived run (Restart Program) is resolved against
+  // its own run's schedule so its week/day — and so its plan — stay exactly
+  // what they were when it was trained.
+  const scheduleInput =
+    session.enrollment_id === currentEnrollmentId
+      ? currentScheduleInput
+      : ((await fetchScheduleInputForEnrollment(userId, session.enrollment_id)) ??
+        currentScheduleInput);
   const scheduledDay = buildScheduledDay(scheduleInput, session.scheduled_date);
   const readinessEntry = await getReadinessEntry(userId, session.scheduled_date);
 
@@ -89,7 +99,13 @@ export function useWorkoutPlayerData(sessionId: string) {
 
   return useQuery({
     queryKey: ['workout-player', user?.id, sessionId],
-    queryFn: () => fetchWorkoutPlayerData(user!.id, sessionId, scheduleContext!.scheduleInput),
+    queryFn: () =>
+      fetchWorkoutPlayerData(
+        user!.id,
+        sessionId,
+        scheduleContext!.enrollmentId,
+        scheduleContext!.scheduleInput,
+      ),
     enabled: Boolean(user && sessionId && scheduleContext),
   });
 }

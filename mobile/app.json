@@ -56,6 +56,9 @@
         "projectId": "9de5d5d2-1c1d-488f-ae3a-45bc9aa36d75"
       }
     },
-    "owner": "bayc93"
+    "owner": "bayc93",
+    "updates": {
+      "url": "https://u.expo.dev/9de5d5d2-1c1d-488f-ae3a-45bc9aa36d75"
+    }
   }
 }
